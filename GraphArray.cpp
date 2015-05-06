@@ -1,21 +1,36 @@
-#include "GraphArray.hpp"
+#include "GraphArray.h"
 #include <iostream>
 using namespace std;
 
 GraphArray::GraphArray(int V) :numberOfVertices(V) {
+	content = new int[numberOfVertices * numberOfVertices];
 
+	for(int i = 0; i < numberOfVertices * numberOfVertices; i++)
+		content[i] = 0;
 }
 
-GraphArray::~GraphArray() {
+//GraphArray::~GraphArray() {
 	//dtor
-}
+//}
 
 int GraphArray::getNumberOfVertices() {
-	return numberOfvertices;
+	return numberOfVertices;
 }
 
 void GraphArray::setNumberOfVertices(int val) {
 	numberOfVertices = val;
+}
+
+void GraphArray::printGraphAsArray(void) {
+	int row = numberOfVertices;
+	int gSize = numberOfVertices * numberOfVertices;
+
+    for(int i = 1; i <= gSize; i++) {
+    	cout << content[i-1] << " ";
+
+        if (i % row == 0)
+			cout << endl;
+    }
 }
 
 // when making const Object the function must be const
