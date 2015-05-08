@@ -11,6 +11,7 @@ class GraphArray {
 	protected:
 	private:
 		int numberOfVertices;
+		int size;
 		int* content;
 };
 

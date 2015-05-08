@@ -1,17 +1,19 @@
 #include "GraphArray.h"
 #include <iostream>
+#include <algorithm>
+
 using namespace std;
 
 GraphArray::GraphArray(int V) :numberOfVertices(V) {
-	content = new int[numberOfVertices * numberOfVertices];
+	size = numberOfVertices * numberOfVertices;
+	content = new int[size];
 
-	for(int i = 0; i < numberOfVertices * numberOfVertices; i++)
-		content[i] = 0;
+	fill(content, content+size, 0);
 }
 
-//GraphArray::~GraphArray() {
-	//dtor
-//}
+GraphArray::~GraphArray() {
+	delete content;
+}
 
 int GraphArray::getNumberOfVertices() {
 	return numberOfVertices;
