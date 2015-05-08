@@ -31,6 +31,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="GraphArray.cpp" />
+		<Unit filename="GraphArray.h" />
+		<Unit filename="GraphArrayClient.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

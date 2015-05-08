@@ -35,6 +35,17 @@ void GraphArray::printGraphAsArray(void) {
     }
 }
 
+void GraphArray::addEdge(int v1, int v2) {
+	content[v1 * numberOfVertices + v2] = 1;
+	content[v2 * numberOfVertices + v1] = 1;
+}
+
+bool GraphArray::isConnected(int v1, int v2) {
+	if (content[v1 * numberOfVertices + v2] && content[v2 * numberOfVertices + v1])
+		return true;
+	return false;
+}
+
 // when making const Object the function must be const
 // by adding const keyword after the params list before { or ;
 //void constObject::printing() const {
