@@ -4,7 +4,7 @@ using namespace std;
 
 int main () {
 	GraphArray testGraph(10);
-	//cout << testGraph.getNumberOfVertices() << endl;
+	cout << testGraph.getNumberOfVertices() << endl;
 
 	testGraph.addEdge(2, 5);
 	testGraph.addEdge(2, 8);
