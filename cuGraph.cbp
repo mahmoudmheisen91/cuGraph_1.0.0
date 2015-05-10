@@ -34,6 +34,8 @@
 		<Unit filename="GraphArray.cpp" />
 		<Unit filename="GraphArray.h" />
 		<Unit filename="GraphArrayClient.cpp" />
+		<Unit filename="include/GraphVertexOutOfBoundsException.h" />
+		<Unit filename="src/GraphVertexOutOfBoundsException.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

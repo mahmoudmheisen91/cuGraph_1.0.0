@@ -1,12 +1,23 @@
 # depslib dependency file v1.0
-1431086308 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
+1431245045 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
 	"GraphArray.h"
+	"GraphVertexOutOfBoundsException.h"
 	<iostream>
 	<algorithm>
 
-1431086314 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
+1431087489 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
 
-1431086116 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
+1431245052 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
 	"GraphArray.h"
+	"GraphVertexOutOfBoundsException.h"
 	<iostream>
+	<algorithm>
+
+1431244898 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphVertexOutOfBoundsException.h
+	<exception>
+
+1431245228 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphVertexOutOfBoundsException.cpp
+	"GraphVertexOutOfBoundsException.h"
+	<iostream>
+	<exception>
 

@@ -1,4 +1,5 @@
 #include "GraphArray.h"
+#include "GraphVertexOutOfBoundsException.h"
 #include <iostream>
 #include <algorithm>
 
@@ -32,6 +33,8 @@ void GraphArray::printGraphAsArray(void) {
 }
 
 void GraphArray::addEdge(int v1, int v2) {
+	checkVertixName(v1);
+	checkVertixName(v2);
 	content[v1 * numberOfVertices + v2] = 1;
 	content[v2 * numberOfVertices + v1] = 1;
 }
@@ -43,9 +46,9 @@ bool GraphArray::isConnected(int v1, int v2) {
 }
 
 void GraphArray::checkVertixName(int vert) {
-
+	if (vert < 0 || vert >= numberOfVertices)
+		throw new GraphVertexOutOfBoundsException();
 }
-
 
 
 
