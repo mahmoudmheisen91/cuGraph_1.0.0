@@ -16,6 +16,10 @@ GraphArray::~GraphArray() {
 	delete content;
 }
 
+GraphArray::GraphArray(const GraphArray& x)
+	: numberOfVertices(x.numberOfVertices), size(x.size), content(x.content)
+{}
+
 int GraphArray::getNumberOfVertices() {
 	return numberOfVertices;
 }
@@ -39,15 +43,16 @@ void GraphArray::addEdge(int v1, int v2) {
 	content[v2 * numberOfVertices + v1] = 1;
 }
 
-bool GraphArray::isConnected(int v1, int v2) {
+bool GraphArray::isDirectlyConnected(int v1, int v2) {
 	if (content[v1 * numberOfVertices + v2] && content[v2 * numberOfVertices + v1])
 		return true;
 	return false;
 }
 
 void GraphArray::checkVertixName(int vert) {
+	GraphArray testGraph = this.GraphArray;
 	if (vert < 0 || vert >= numberOfVertices)
-		throw new GraphVertexOutOfBoundsException();
+		throw new GraphVertexOutOfBoundsException(testGraph, vert);
 }
 
 

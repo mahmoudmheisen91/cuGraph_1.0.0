@@ -7,7 +7,7 @@ using namespace std;
 class GraphVertexOutOfBoundsException: public exception
 {
 	public:
-		GraphVertexOutOfBoundsException();
+		GraphVertexOutOfBoundsException(GraphArray g, int vert);
 		virtual const char* what() const throw();
 	protected:
 	private:
