@@ -1,16 +1,18 @@
 #include "GraphVertexOutOfBoundsException.h"
-#include "GraphArray.h"
 #include <iostream>
 #include <exception>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
-GraphVertexOutOfBoundsException::GraphVertexOutOfBoundsException(GraphArray g, int vert) {
-	cout << what(g, vert) << endl;
+GraphVertexOutOfBoundsException::GraphVertexOutOfBoundsException(int size, int vert) {
+	cout << what(size, vert) << endl;
 }
 
-const char* GraphVertexOutOfBoundsException::what(GraphArray g, int vert) const throw() {
-	string s = "Vertix " + vert + "is outside of graph range [0 - " + g.getNumberOfVertices() + "]";
+string GraphVertexOutOfBoundsException::what(int size, int vert) const throw() {
+	stringstream sstm;
+	sstm << "Vertix " << vert << " is outside of graph range [0 >> " << size-1 << "]";
+	string s = sstm.str();;
     return s;
 }

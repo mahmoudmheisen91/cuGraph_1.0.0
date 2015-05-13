@@ -50,9 +50,8 @@ bool GraphArray::isDirectlyConnected(int v1, int v2) {
 }
 
 void GraphArray::checkVertixName(int vert) {
-	GraphArray testGraph = this.GraphArray;
 	if (vert < 0 || vert >= numberOfVertices)
-		throw new GraphVertexOutOfBoundsException(testGraph, vert);
+		throw new GraphVertexOutOfBoundsException(numberOfVertices, vert);
 }
 
 

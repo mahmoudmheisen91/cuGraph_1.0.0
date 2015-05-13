@@ -2,13 +2,14 @@
 #define GRAPHVERTEXOUTOFBOUNDSEXCEPTION_H_
 
 #include <exception>
+#include <string>
 using namespace std;
 
 class GraphVertexOutOfBoundsException: public exception
 {
 	public:
-		GraphVertexOutOfBoundsException(GraphArray g, int vert);
-		virtual const char* what() const throw();
+		GraphVertexOutOfBoundsException(int size, int vert);
+		virtual string what(int size, int vert) const throw();
 	protected:
 	private:
 };
