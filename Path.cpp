@@ -21,3 +21,32 @@ Path::~Path() {
 	delete edgeTo;
 }
 
+void Path::dfs(GraphArray G, int u) {
+	visited[u] = true;
+
+	for(int v = 0; v < size; v++) {
+		if(!visited[v] && M[u][v] ) {
+			dfs(v);
+			edgeTo[v] = u;
+		}
+	}
+}
+
+bool Path::hasPathTo(int v) {
+	return visited[v];
+}
+/*
+
+ public Iterable<Integer> pathTo(int v)
+ {
+ if (!hasPathTo(v)) return null;
+ Stack<Integer> path = new Stack<Integer>();
+ for (int x = v; x != s; x = edgeTo[x])
+ path.push(x);
+ path.push(s);
+ return path;
+ }
+*/
+
+
+
