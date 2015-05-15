@@ -9,7 +9,7 @@ int main () {
 	GraphArray testGraph(10);
 	cout << testGraph.getNumberOfVertices() << endl;
 
-	testGraph.addEdge(12, 5);
+	testGraph.addEdge(0, 5);
 	testGraph.addEdge(2, 8);
 	testGraph.printGraphAsArray();
 

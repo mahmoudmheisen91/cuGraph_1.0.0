@@ -17,8 +17,10 @@
 	<exception>
 	<string>
 
-1431246949 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphVertexOutOfBoundsException.cpp
+1431511881 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphVertexOutOfBoundsException.cpp
 	"GraphVertexOutOfBoundsException.h"
 	<iostream>
 	<exception>
+	<string>
+	<sstream>
 
