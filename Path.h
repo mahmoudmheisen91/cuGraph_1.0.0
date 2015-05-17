@@ -6,16 +6,16 @@
 class Path
 {
 	public:
-		Path(GraphArray G, int s);
-		//virtual ~Path();
+		Path(GraphArray *G, int s);
+		virtual ~Path();
 		bool hasPathTo(int v);
 	protected:
 	private:
-		//int fromHere;
+		int fromHere;
 		int size;
 		bool* visited;
 		int* edgeTo;
-		void dfs(GraphArray G, int v);
+		void dfs(GraphArray *G, int v);
 };
 
 #endif // PATH_H_

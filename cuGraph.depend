@@ -7,7 +7,7 @@
 
 1431846013 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
 
-1431846193 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
+1431852195 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
@@ -25,11 +25,9 @@
 	<string>
 	<sstream>
 
-1431846228 /home/redapple/Programming/CUDA_C_WS/cuGraph/Path.h
+1431852415 /home/redapple/Programming/CUDA_C_WS/cuGraph/Path.h
 	"GraphArray.h"
 
-1431846297 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/Path.cpp
+1431851927 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/Path.cpp
 	"Path.h"
-	<algorithm>
-	<iostream>
 

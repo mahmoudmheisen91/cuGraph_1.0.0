@@ -5,30 +5,30 @@
 using namespace std;
 
 // Find paths in G from s:
-Path::Path(GraphArray G, int s) {
+Path::Path(GraphArray *G, int s) {
 	// init data structures:
-	//fromHere = s;
-	//size = G.getNumberOfVertices();
-	//visited = new bool[size];
-	//edgeTo = new int[size];
+	fromHere = s;
+	size = G->getNumberOfVertices();
+	visited = new bool[size];
+	edgeTo = new int[size];
 
-	//fill(visited, visited+size, false);
-	//fill(edgeTo, edgeTo+size, -1);
+	fill(visited, visited+size, false);
+	fill(edgeTo, edgeTo+size, -1);
 
 	// find vertices connected to s:
-	//dfs(G, s);
+	dfs(G, s);
 }
 
-//Path::~Path() {
-//	delete visited;
-//	delete edgeTo;
-//}
+Path::~Path() {
+	delete visited;
+	delete edgeTo;
+}
 
-void Path::dfs(GraphArray G, int u) {
+void Path::dfs(GraphArray *G, int u) {
 	visited[u] = true;
 
 	for(int v = 0; v < size; v++) {
-		if(!visited[v] && G.content[u * G.getNumberOfVertices() + v]) {
+		if(!visited[v] && G->content[u * G->getNumberOfVertices() + v]) {
 			Path::dfs(G, v);
 			edgeTo[v] = u;
 		}
@@ -38,8 +38,8 @@ void Path::dfs(GraphArray G, int u) {
 bool Path::hasPathTo(int v) {
 	return visited[v];
 }
-/*
 
+/*
  public Iterable<Integer> pathTo(int v)
  {
  if (!hasPathTo(v)) return null;

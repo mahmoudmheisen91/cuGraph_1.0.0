@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 
-bool isConnected(GraphArray g, int v1, int v2);
+bool isConnected(GraphArray *g, int v1, int v2);
 
 using namespace std;
 
@@ -18,14 +18,14 @@ int main () {
 
 	cout << testGraph.isDirectlyConnected(2, 4) << endl;
 	cout << testGraph.isDirectlyConnected(8, 2) << endl;
-	cout << isConnected(testGraph, 5, 8) << endl;
+	cout << isConnected(&testGraph, 5, 8) << endl;
 
-    return 1;
+    return 0;
 }
 
-bool isConnected(GraphArray g, int v1, int v2) {
+bool isConnected(GraphArray *g, int v1, int v2) {
 
 	Path p(g, v1);
-	return 1;//p.hasPathTo(v2);
+	return p.hasPathTo(v2);
 }
 
