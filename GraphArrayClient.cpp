@@ -18,14 +18,8 @@ int main () {
 
 	cout << testGraph.isDirectlyConnected(2, 4) << endl;
 	cout << testGraph.isDirectlyConnected(8, 2) << endl;
-	cout << isConnected(&testGraph, 5, 8) << endl;
+	cout << testGraph.isConnected(5, 8) << endl;
 
     return 0;
-}
-
-bool isConnected(GraphArray *g, int v1, int v2) {
-
-	Path p(g, v1);
-	return p.hasPathTo(v2);
 }
 

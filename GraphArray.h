@@ -10,7 +10,7 @@ class GraphArray {
 		void printGraphAsArray(void);
 		void addEdge(int v1, int v2);
 		bool isDirectlyConnected(int v1, int v2);
-		//bool isConnected(int v1, int v2);
+		bool isConnected(int v1, int v2);
 		int* content;
 	protected:
 	private:

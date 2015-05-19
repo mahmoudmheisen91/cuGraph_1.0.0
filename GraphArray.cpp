@@ -1,6 +1,6 @@
 #include "GraphArray.h"
 #include "GraphVertexOutOfBoundsException.h"
-//#include "Path.h"
+#include "Path.h"
 #include <iostream>
 #include <algorithm>
 
@@ -52,13 +52,13 @@ bool GraphArray::isDirectlyConnected(int v1, int v2) {
 	return false;
 }
 
-//bool GraphArray::isConnected(int v1, int v2) {
-//	checkVertixName(v1);
-//	checkVertixName(v2);
+bool GraphArray::isConnected(int v1, int v2) {
+	checkVertixName(v1);
+	checkVertixName(v2);
 
-//	Path p(*this, v1);
-//	return p.hasPathTo(v2);
-//}
+	Path p(this, v1);
+	return p.hasPathTo(v2);
+}
 
 void GraphArray::checkVertixName(int vert) {
 	if (vert < 0 || vert >= numberOfVertices)
