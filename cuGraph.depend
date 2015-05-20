@@ -1,14 +1,14 @@
 # depslib dependency file v1.0
-1432042122 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
+1432089809 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
 	<iostream>
 	<algorithm>
 
-1432042040 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
+1432093384 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
 
-1432042106 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
+1432088337 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
@@ -29,8 +29,15 @@
 1431852415 /home/redapple/Programming/CUDA_C_WS/cuGraph/Path.h
 	"GraphArray.h"
 
-1431852401 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/Path.cpp
+1432089889 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/Path.cpp
 	"Path.h"
 	<algorithm>
 	<iostream>
+
+1432089741 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/StackPointer.cpp
+	"StackPointer.h"
+	<algorithm>
+	<iostream>
+
+1432088741 /home/redapple/Programming/CUDA_C_WS/cuGraph/StackPointer.h
 

@@ -28,8 +28,8 @@ void Path::dfs(GraphArray *G, int u) {
 	visited[u] = true;
 
 	for(int v = 0; v < size; v++) {
-		if(!visited[v] && G->content[u * G->getNumberOfVertices() + v]) {
-			Path::dfs(G, v);
+		if(!visited[v] && G->content[u * size + v]) {
+			dfs(G, v);
 			edgeTo[v] = u;
 		}
 	}

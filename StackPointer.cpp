@@ -8,6 +8,6 @@ StackPointer::StackPointer() {
 	//ctor
 }
 
-void StackPointer::Getsize() {
+int StackPointer::getSize() {
 	return size;
 }
