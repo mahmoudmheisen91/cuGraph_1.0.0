@@ -14,11 +14,14 @@ int main () {
 
 	testGraph.addEdge(2, 5);
 	testGraph.addEdge(2, 8);
+	testGraph.addEdge(3, 8);
 	testGraph.printGraphAsArray();
 
 	cout << testGraph.isDirectlyConnected(2, 4) << endl;
 	cout << testGraph.isDirectlyConnected(8, 2) << endl;
 	cout << testGraph.isConnected(5, 8) << endl;
+	cout << testGraph.isDirectlyConnected(5, 8) << endl;
+	cout << testGraph.isConnected(5, 3) << endl;
 
     return 0;
 }
