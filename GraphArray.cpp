@@ -3,6 +3,8 @@
 #include "Path.h"
 #include <iostream>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -25,7 +27,11 @@ int GraphArray::getNumberOfVertices() {
 }
 
 int GraphArray::getNumberOfEdges() {
-	return numberOfVertices;
+	return numberOfEdges;
+}
+
+int *GraphArray::getContent() {
+	return content;
 }
 
 int GraphArray::getSize() {
@@ -71,6 +77,22 @@ bool GraphArray::isConnected(int v1, int v2) {
 
 	Path p(this, v1);
 	return p.hasPathTo(v2);
+}
+
+void GraphArray::fillByBaselineER(int E, double p) {
+	srand(time(0));
+	double theta;
+
+	int l, m;
+	for(int i = 0; i < E; i++) {
+		theta = (double)rand() / RAND_MAX;
+
+		if (theta < p) {
+			l = i / numberOfVertices;
+			m = i % numberOfVertices;
+			addEdge(l, m);
+		}
+	}
 }
 
 void GraphArray::checkVertixName(int vert) {

@@ -24,9 +24,14 @@ int main () {
 	cout << testGraph.isConnected(5, 8) << endl;
 	cout << testGraph.isDirectlyConnected(5, 8) << endl;
 	cout << testGraph.isConnected(5, 3) << endl;
-*/
+
 	OriginalERGraph er1(10, 0.8);
 	er1.printGraphAsArray();
+*/
+	GraphArray testGraph2(10);
+	testGraph2.fillByBaselineER(50, 0.5);
+	testGraph2.printGraphAsArray();
+	cout << "number of edges = " << testGraph2.getNumberOfEdges() << endl;
 
     return 0;
 }

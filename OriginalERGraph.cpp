@@ -15,7 +15,7 @@ OriginalERGraph::OriginalERGraph(int V, double p) {
 		for(int j = 0; j < V && j != i; j++) {
 			theta = (double)rand() / RAND_MAX;
 
-			if (theta > p)
+			if (theta < p)
 				graph->addEdge(i, j);
 		}
 	}
