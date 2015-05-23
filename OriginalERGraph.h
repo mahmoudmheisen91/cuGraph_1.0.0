@@ -1,11 +1,13 @@
-#ifndef GRAPHARRAY_H_
-#define GRAPHARRAY_H_
+#ifndef ORIGINALERGRAPH_H_
+#define ORIGINALERGRAPH_H_
 
-class GraphArray {
+#include "GraphArray.h"
+
+
+class OriginalERGraph {
 	public:
-		GraphArray();
-		GraphArray(int numberOfVertices);
-		virtual ~GraphArray();
+		OriginalERGraph(int V, double p);
+		virtual ~OriginalERGraph();
 		int getNumberOfVertices();
 		int getNumberOfEdges();
 		int getSize();
@@ -14,13 +16,9 @@ class GraphArray {
 		void removeEdge(int v1, int v2);
 		bool isDirectlyConnected(int v1, int v2);
 		bool isConnected(int v1, int v2);
-		int* content;
 	protected:
 	private:
-		int size;
-		int numberOfVertices;
-		int numberOfEdges;
-		void checkVertixName(int vert);
+		GraphArray *graph;
 };
 
-#endif // GRAPHARRAY_H_
+#endif // ORIGINALERGRAPH_H_

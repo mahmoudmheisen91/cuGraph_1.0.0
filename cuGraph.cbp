@@ -34,8 +34,14 @@
 		<Unit filename="GraphArray.cpp" />
 		<Unit filename="GraphArray.h" />
 		<Unit filename="GraphArrayClient.cpp" />
-		<Unit filename="include/GraphVertexOutOfBoundsException.h" />
-		<Unit filename="src/GraphVertexOutOfBoundsException.cpp" />
+		<Unit filename="GraphVertexOutOfBoundsException.cpp" />
+		<Unit filename="GraphVertexOutOfBoundsException.h" />
+		<Unit filename="OriginalERGraph.cpp" />
+		<Unit filename="OriginalERGraph.h" />
+		<Unit filename="Path.cpp" />
+		<Unit filename="Path.h" />
+		<Unit filename="StackPointer.cpp" />
+		<Unit filename="StackPointer.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

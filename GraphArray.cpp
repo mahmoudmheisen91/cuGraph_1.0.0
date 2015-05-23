@@ -6,6 +6,8 @@
 
 using namespace std;
 
+GraphArray::GraphArray() {}
+
 GraphArray::GraphArray(int V) :numberOfVertices(V) {
 	size = numberOfVertices * numberOfVertices;
 	numberOfEdges = 0;

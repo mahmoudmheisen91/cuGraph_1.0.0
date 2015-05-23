@@ -1,19 +1,22 @@
 # depslib dependency file v1.0
-1432089809 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
+1432371296 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
 	<iostream>
 	<algorithm>
 
-1432093384 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
+1432371280 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
 
-1432088337 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
+1432371814 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
 	<iostream>
 	<algorithm>
+	"OriginalERGraph.h"
+	<cstdlib>
+	<ctime>
 
 1431511392 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphVertexOutOfBoundsException.h
 	<exception>
@@ -40,4 +43,14 @@
 	<iostream>
 
 1432088741 /home/redapple/Programming/CUDA_C_WS/cuGraph/StackPointer.h
+
+1432372003 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/OriginalERGraph.cpp
+	"OriginalERGraph.h"
+	"GraphArray.h"
+	<iostream>
+	<cstdlib>
+	<ctime>
+
+1432372022 /home/redapple/Programming/CUDA_C_WS/cuGraph/OriginalERGraph.h
+	"GraphArray.h"
 
