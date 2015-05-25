@@ -1,5 +1,6 @@
 #include "GraphArray.h"
 #include "GraphVertexOutOfBoundsException.h"
+#include "GraphEdgeOutOfBoundsException.h"
 #include "Path.h"
 #include <iostream>
 #include <algorithm>
@@ -12,7 +13,7 @@ using namespace std;
 GraphArray::GraphArray() {}
 
 GraphArray::GraphArray(int V) :numberOfVertices(V) {
-	size = numberOfVertices * numberOfVertices;
+	size = pow(numberOfVertices, 2);
 	numberOfEdges = 0;
 	content = new int[size];
 
@@ -49,6 +50,9 @@ void GraphArray::printGraphAsArray(void) {
 }
 
 void GraphArray::addEdge(int v1, int v2) {
+	if(isFullyConnected()) // method
+//		throw new GraphEdgeOutOfBoundsException(size, edge); //change with other exception
+
 	checkVertixName(v1);
 	checkVertixName(v2);
 	content[v1 * numberOfVertices + v2] = 1;
@@ -57,6 +61,9 @@ void GraphArray::addEdge(int v1, int v2) {
 }
 
 void GraphArray::removeEdge(int v1, int v2) {
+	if(isEmpty()) // method
+//		throw new GraphEdgeOutOfBoundsException(size, edge); //change with other exception
+
 	checkVertixName(v1);
 	checkVertixName(v2);
 	content[v1 * numberOfVertices + v2] = 0;
@@ -80,7 +87,22 @@ bool GraphArray::isConnected(int v1, int v2) {
 	return p.hasPathTo(v2);
 }
 
+bool GraphArray::isFullyConnected() {
+	if(numberOfEdges == pow(numberOfVertices, 2))
+		return true;
+
+	return false;
+}
+
+bool GraphArray::isEmpty() { // from edge prespective not vertix (because vertices is constant (cuda))
+	if(numberOfEdges == 0)
+		return true;
+
+	return false;
+}
+
 void GraphArray::fillByBaselineER(int E, double p) {
+	checkEdgeRange(E);
 	srand(time(0));
 	double theta;
 
@@ -97,6 +119,7 @@ void GraphArray::fillByBaselineER(int E, double p) {
 }
 
 void GraphArray::fillByZER(int E, double p) {
+	checkEdgeRange(E);
 	srand(time(0));
 	double theta, logp;
 
@@ -117,6 +140,7 @@ void GraphArray::fillByZER(int E, double p) {
 }
 
 void GraphArray::fillByPreZER(int E, double p, int m) {
+	checkEdgeRange(E);
 	srand(time(0));
 	double theta, logp;
 	double *F = new double[m+1];
@@ -133,11 +157,12 @@ void GraphArray::fillByPreZER(int E, double p, int m) {
 		while(j <= m) {
 			if(F[j] > theta) {
 				k = j;
-				break;
+				break; // must break from j while loop not i while loop
 			}
 			j++;
 		}
 
+		// if could not find k from the upper loop
 		if(j == m+1) { // rare to happen for large m value
 			logp = log10f(1-theta)/log10f(1-p);
 			k = max(0, (int)ceil(logp) - 1);
@@ -158,6 +183,10 @@ void GraphArray::checkVertixName(int vert) {
 		throw new GraphVertexOutOfBoundsException(numberOfVertices, vert);
 }
 
+void GraphArray::checkEdgeRange(int edge) {
+	if (edge < 0 || edge > size)
+		throw new GraphEdgeOutOfBoundsException(size, edge);
+}
 
 
 

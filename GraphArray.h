@@ -15,6 +15,8 @@ class GraphArray {
 		void removeEdge(int v1, int v2);
 		bool isDirectlyConnected(int v1, int v2);
 		bool isConnected(int v1, int v2);
+		bool isEmpty();
+		bool isFullyConnected();
 		void fillByBaselineER(int E, double p);
 		void fillByZER(int E, double p);
 		void fillByPreZER(int E, double p, int m);
@@ -25,6 +27,7 @@ class GraphArray {
 		int numberOfVertices;
 		int numberOfEdges;
 		void checkVertixName(int vert);
+		void checkEdgeRange(int edge);
 };
 
 #endif // GRAPHARRAY_H_
