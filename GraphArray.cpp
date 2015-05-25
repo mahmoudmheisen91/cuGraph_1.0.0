@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 using namespace std;
 
@@ -88,6 +89,26 @@ void GraphArray::fillByBaselineER(int E, double p) {
 		theta = (double)rand() / RAND_MAX;
 
 		if (theta < p) {
+			l = i / numberOfVertices;
+			m = i % numberOfVertices;
+			addEdge(l, m);
+		}
+	}
+}
+
+void GraphArray::fillByZER(int E, double p) {
+	srand(time(0));
+	double theta, logp;
+
+	int l, m, k, i = -1;
+	while (i < E) {
+		theta = (double)rand() / RAND_MAX;
+		logp = log10f(theta)/log10f(1-p);
+
+		k = max(0, (int)ceil(logp) - 1);
+		i += k + 1;
+
+		if(i < E) { // equavelent to: Discard last edge, because i > E
 			l = i / numberOfVertices;
 			m = i % numberOfVertices;
 			addEdge(l, m);

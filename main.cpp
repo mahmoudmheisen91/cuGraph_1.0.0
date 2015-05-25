@@ -27,11 +27,16 @@ int main () {
 
 	OriginalERGraph er1(10, 0.8);
 	er1.printGraphAsArray();
-*/
+
 	GraphArray testGraph2(10);
 	testGraph2.fillByBaselineER(50, 0.5);
 	testGraph2.printGraphAsArray();
 	cout << "number of edges = " << testGraph2.getNumberOfEdges() << endl;
+*/
+	GraphArray testGraph3(10);
+	testGraph3.fillByZER(100, 0.5);
+	testGraph3.printGraphAsArray();
+	cout << "number of edges = " << testGraph3.getNumberOfEdges() << endl;
 
     return 0;
 }

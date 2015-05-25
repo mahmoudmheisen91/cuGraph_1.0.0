@@ -16,6 +16,7 @@ class GraphArray {
 		bool isDirectlyConnected(int v1, int v2);
 		bool isConnected(int v1, int v2);
 		void fillByBaselineER(int E, double p);
+		void fillByZER(int E, double p);
 	protected:
 	private:
 		int size;
