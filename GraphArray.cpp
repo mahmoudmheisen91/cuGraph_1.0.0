@@ -84,14 +84,14 @@ void GraphArray::fillByBaselineER(int E, double p) {
 	srand(time(0));
 	double theta;
 
-	int l, m;
+	int v1, v2;
 	for(int i = 0; i < E; i++) {
 		theta = (double)rand() / RAND_MAX;
 
 		if (theta < p) {
-			l = i / numberOfVertices;
-			m = i % numberOfVertices;
-			addEdge(l, m);
+			v1 = i / numberOfVertices;
+			v2 = i % numberOfVertices;
+			addEdge(v1, v2);
 		}
 	}
 }
@@ -100,7 +100,7 @@ void GraphArray::fillByZER(int E, double p) {
 	srand(time(0));
 	double theta, logp;
 
-	int l, m, k, i = -1;
+	int v1, v2, k, i = -1;
 	while (i < E) {
 		theta = (double)rand() / RAND_MAX;
 		logp = log10f(theta)/log10f(1-p);
@@ -109,9 +109,46 @@ void GraphArray::fillByZER(int E, double p) {
 		i += k + 1;
 
 		if(i < E) { // equavelent to: Discard last edge, because i > E
-			l = i / numberOfVertices;
-			m = i % numberOfVertices;
-			addEdge(l, m);
+			v1 = i / numberOfVertices;
+			v2 = i % numberOfVertices;
+			addEdge(v1, v2);
+		}
+	}
+}
+
+void GraphArray::fillByPreZER(int E, double p, int m) {
+	srand(time(0));
+	double theta, logp;
+	double *F = new double[m+1];
+
+	for(int i = 0; i <= m; i++) {
+		F[i] = 1 - pow(1-p, i+1);
+	}
+
+	int v1, v2, k, j, i = -1;
+	while(i < E) {
+		theta = (double)rand() / RAND_MAX;
+
+		j = 0;
+		while(j <= m) {
+			if(F[j] > theta) {
+				k = j;
+				break;
+			}
+			j++;
+		}
+
+		if(j == m+1) { // rare to happen for large m value
+			logp = log10f(1-theta)/log10f(1-p);
+			k = max(0, (int)ceil(logp) - 1);
+		}
+
+		i += k + 1;
+
+		if(i < E) { // equavelent to: Discard last edge, because i > E
+			v1 = i / numberOfVertices;
+			v2 = i % numberOfVertices;
+			addEdge(v1, v2);
 		}
 	}
 }

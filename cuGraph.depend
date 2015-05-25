@@ -9,7 +9,7 @@
 	<ctime>
 	<cmath>
 
-1432576555 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
+1432578341 /home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArray.h
 
 1432371814 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/GraphArrayClient.cpp
 	"GraphArray.h"
@@ -57,7 +57,7 @@
 1432375956 /home/redapple/Programming/CUDA_C_WS/cuGraph/OriginalERGraph.h
 	"GraphArray.h"
 
-1432577691 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/main.cpp
+1432577721 source:/home/redapple/Programming/CUDA_C_WS/cuGraph/main.cpp
 	"GraphArray.h"
 	"GraphVertexOutOfBoundsException.h"
 	"Path.h"
