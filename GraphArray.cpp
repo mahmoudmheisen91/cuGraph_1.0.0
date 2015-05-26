@@ -50,8 +50,8 @@ void GraphArray::printGraphAsArray(void) {
 }
 
 void GraphArray::addEdge(int v1, int v2) {
-	if(isFullyConnected()) // method
-//		throw new GraphEdgeOutOfBoundsException(size, edge); //change with other exception
+	if(isFullyConnected()) // TODO: method
+//		throw new GraphEdgeOutOfBoundsException(size, edge); // TODO: change with other exception
 
 	checkVertixName(v1);
 	checkVertixName(v2);
@@ -61,14 +61,26 @@ void GraphArray::addEdge(int v1, int v2) {
 }
 
 void GraphArray::removeEdge(int v1, int v2) {
-	if(isEmpty()) // method
-//		throw new GraphEdgeOutOfBoundsException(size, edge); //change with other exception
+	if(isEmpty()) // TODO: method
+//		throw new GraphEdgeOutOfBoundsException(size, edge); // TODO: change with other exception
 
 	checkVertixName(v1);
 	checkVertixName(v2);
-	content[v1 * numberOfVertices + v2] = 0;
-	content[v2 * numberOfVertices + v1] = 0;
-	numberOfEdges--;
+
+	if(isDirectlyConnected(v1, v2)) {
+
+		content[v1 * numberOfVertices + v2] = 0;
+		content[v2 * numberOfVertices + v1] = 0;
+		numberOfEdges--;
+	}
+}
+
+void GraphArray::clear() { // TODO: clear content instead
+	for(int i = 0; i < numberOfVertices; i++) {
+		for(int j = 0; j < numberOfVertices; j++) {
+			removeEdge(i, j);
+		}
+	}
 }
 
 bool GraphArray::isDirectlyConnected(int v1, int v2) {
@@ -129,6 +141,32 @@ void GraphArray::fillByZER(int E, double p) {
 		logp = log10f(theta)/log10f(1-p);
 
 		k = max(0, (int)ceil(logp) - 1);
+		i += k + 1;
+
+		if(i < E) { // equavelent to: Discard last edge, because i > E
+			v1 = i / numberOfVertices;
+			v2 = i % numberOfVertices;
+			addEdge(v1, v2);
+		}
+	}
+}
+
+void GraphArray::fillByPreLogZER(int E, double p) {
+	checkEdgeRange(E);
+	srand(time(0));
+	double *logp, c;
+
+	c = log10f(1-p);
+
+	for(int i = 0; i < RAND_MAX; i++) {
+		logp[i] = log10f(i/ RAND_MAX);
+	}
+
+	int theta, v1, v2, k, i = -1;
+	while (i < E) {
+		theta = rand();
+
+		k = max(0, (int)ceil(logp[theta] / c) - 1);
 		i += k + 1;
 
 		if(i < E) { // equavelent to: Discard last edge, because i > E

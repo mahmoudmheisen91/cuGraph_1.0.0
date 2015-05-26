@@ -17,9 +17,11 @@ class GraphArray {
 		bool isConnected(int v1, int v2);
 		bool isEmpty();
 		bool isFullyConnected();
-		void fillByBaselineER(int E, double p);
+		void fillByBaselineER(int E, double p); // TODO: check p
 		void fillByZER(int E, double p);
+		void fillByPreLogZER(int E, double p);
 		void fillByPreZER(int E, double p, int m);
+		void clear();
 	protected:
 	private:
 		int size;
