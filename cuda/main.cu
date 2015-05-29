@@ -9,16 +9,17 @@ int main(int argc, char **argv) {
 	float *PRNG, *dev_PRNG;
 	
 	// allocate host memory:
-	int a = 102400;
+	int size = pow(2, 27);
+	int a = size / (B*N);
 	host_masterSeed = new int[1];
 	host_itemsPerThread = new int[1];
-	host_PRNG = new float[a*N];
-	PRNG = new float[a*N];
+	host_PRNG = new float[size];
+	PRNG = new float[size];
 	
 	// allocate device memory:
 	cudaMalloc((void**)&dev_masterSeed, sizeof(int));
 	cudaMalloc((void**)&dev_itemsPerThread, sizeof(int));
-	cudaMalloc((void**)&dev_PRNG, a * N * sizeof(float));
+	cudaMalloc((void**)&dev_PRNG, size * sizeof(float));
 	
 	// fill 
 	host_masterSeed[0] = time(0);
@@ -31,39 +32,62 @@ int main(int argc, char **argv) {
 	cudaMemcpy(dev_masterSeed, host_masterSeed, sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_itemsPerThread, host_itemsPerThread, sizeof(int), cudaMemcpyHostToDevice);
 	
+	float time1, time2;
+	cudaEvent_t start, stop; 
+
 	// start Device kernal:
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop);
+	cudaEventRecord(start, 0); 
 	random_number_generator_kernal<<<gridSize, blockSize>>>(dev_masterSeed, dev_itemsPerThread, dev_PRNG);
+	cudaEventRecord(stop, 0); 
+	cudaEventSynchronize(stop);  
+	cudaEventElapsedTime(&time1, start, stop); 
+	cudaEventDestroy(start); 
+	cudaEventDestroy(stop);
 	
 	// start Host Kernal:
-	random_number_generator_host(host_masterSeed, host_itemsPerThread, PRNG);
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop);
+	cudaEventRecord(start, 0); 
+	random_number_generator_host(host_masterSeed, &size, PRNG);
+	cudaEventRecord(stop, 0); 
+	cudaEventSynchronize(stop);  
+	cudaEventElapsedTime(&time2, start, stop); 
+	cudaEventDestroy(start); 
+	cudaEventDestroy(stop);
+	
+	// print time:
+	cout << time1 << " " << time2 << endl;
 	
 	// copy device vars to host vars:
-	cudaMemcpy(host_PRNG, dev_PRNG, a * N * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(host_PRNG, dev_PRNG, size * sizeof(float), cudaMemcpyDeviceToHost);
 	
 	// print output:
-	int num = 2;
+	/*
+	int num = 10;
 	int result[num];
 	fill(result, result+num, 0);
 	
-	for(int i = 0; i < a * N; i++) {
+	for(int i = 0; i < size; i++) {
 		result[(int)(host_PRNG[i]*num)]++;
 	}
 	
-	cout << "avg = " << a * N / num << endl;
+	cout << "avg = " << size / num << endl;
 	for(int i = 0; i < num; i++) {
 		cout << result[i] << " ";
 	}
 	
 	fill(result, result+num, 0);
 	
-	for(int i = 0; i < a * N; i++) {
+	for(int i = 0; i < size; i++) {
 		result[(int)(PRNG[i]*num)]++;
 	}
 	
 	cout <<endl;
 	for(int i = 0; i < num; i++) {
 		cout << result[i] << " ";
-	}
+	}*/
 	
 	// free host memory:
 	delete host_masterSeed;
@@ -84,8 +108,8 @@ __global__ void random_number_generator_kernal(int *masterSeed, int *itemsPerThr
 	long int m = 2147483647;                 // 2^31 − 1
 	float rec  = 1.0 / m;
 	
-	long int seed = *masterSeed + threadIdx.x;
-	
+	long int seed = *masterSeed + threadIdx.x + blockIdx.x;
+	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	long int theta;
 	long int temp;
 	int to = *itemsPerThread;
@@ -93,11 +117,28 @@ __global__ void random_number_generator_kernal(int *masterSeed, int *itemsPerThr
 		temp = seed * a;                       // seed = Xn , c = 0
 		theta = temp - m * floor(temp * rec);  // is the same as (temp mod m) ((Xn * a) mod m)
 		seed = theta;
-		PRNG[i + to * threadIdx.x] = (float)theta/m;
+		PRNG[i + to * tid] = (float)theta/m;
 	}
 }
 
 
+__host__ void random_number_generator_host(int *masterSeed, int *itemsPerThread, float *PRNG) {
+	long int a = 16807;
+	long int m = 2147483647;
+	float rec = 1.0 / m;
+	
+	int threadId = 0;
+	long int seed = (*masterSeed) + threadId;
+
+	long int theta;
+	long int temp;
+	for (int i = 0; i < *itemsPerThread; i++) {
+		temp = seed * a;
+		theta = temp - m * floor(temp * rec);
+		seed = theta;
+		PRNG[i] = (float)theta/m;
+	}
+}
 
 
 

@@ -9,9 +9,11 @@
 #include <cuda.h>
 #include <ctime>
 #include <algorithm>
+#include <math.h>
 
-#define N 1024
-#define gridSize 1
+#define N pow(2, 4)
+#define B pow(2, 12)
+#define gridSize B
 #define blockSize N
 
 using namespace std;
