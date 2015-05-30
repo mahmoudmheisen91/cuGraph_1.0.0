@@ -18,7 +18,7 @@
 
 using namespace std;
 
-__global__ void random_number_generator_kernal(int *masterSeed, int *itemsPerThread, float *PRNG);
+__global__ void random_number_generator_kernal(int *masterSeed, int *size, float *PRNG);
 __host__ void random_number_generator_host(int *masterSeed, int *itemsPerThread, float *PRNG);
 __host__ void grid_block_test_case(int numB, int numT);
 __host__ void performance_benchmark(int from, int to);

@@ -22,7 +22,7 @@ __global__ void random_number_generator_kernal(int *masterSeed, int *itemsPerThr
 __host__ void random_number_generator_host(int *masterSeed, int *itemsPerThread, float *PRNG);
 __host__ void grid_block_test_case(int numB, int numT);
 __host__ void performance_benchmark(int from, int to);
-void sample_run(int size);
+void sample_run(int size, int num);
 
 #endif
 
