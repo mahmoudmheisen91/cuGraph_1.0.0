@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
 	//performance_benchmark(26, 30);
 	
 	int num = 10;
-	int size = 200000000;//pow(2, 28);
+	int size = pow(2, 28);
 	sample_run(size, num);
 	
     return 0;

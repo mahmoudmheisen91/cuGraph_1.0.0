@@ -5,8 +5,8 @@ void sample_run(int size, int num) {
 	int *host_masterSeed, *host_size, *dev_masterSeed, *dev_size;
 	float *host_PRNG, *dev_PRNG, time1;
 	cudaEvent_t start, stop; 
-	dim3 grid(B-1, 2);
-	dim3 block(blockSize, 2);
+	dim3 grid(gridSize-1);
+	dim3 block(blockSize);
 	
 	// allocate host memory:
 	host_masterSeed = new int[1];
@@ -19,7 +19,7 @@ void sample_run(int size, int num) {
 	cudaMalloc((void**)&dev_PRNG, size * sizeof(float));
 	
 	// fill 
-	host_masterSeed[0] = time(0);
+	host_masterSeed[0] = time(0) - 1000000000; // between 1 and m-1
 	host_size[0] = size;
 	
 	// copy host vars to device vars:
@@ -58,7 +58,7 @@ void sample_run(int size, int num) {
 			mx = host_PRNG[i];
 		}
 	}
-
+//cout<<"ti: "<< time(0) << endl;
 	cout<<"Maximum number is: "<< mx << endl;
 	cout<<"Minimum number is: "<< mn << endl;
 
@@ -67,10 +67,14 @@ void sample_run(int size, int num) {
 	fill(result, result+num, 0);
 	int avg = size / num;
 	for(int i = 0; i < size; i++) {
-		cout<< host_PRNG[i] << " ";
+		//cout<< host_PRNG[i] << " ";
 		result[(int)(host_PRNG[i]*num)]++;
 	}
 	
+	for(int i = 0; i < 200; i++) {
+		cout<< host_PRNG[i] << " ";
+	}
+	cout << endl;
 	for(int i = 0; i < num; i++) {
 		cout << (100.0*result[i]/avg)/num << " ";
 	}
