@@ -7,9 +7,9 @@ CUDACC := nvcc
 CUDACC_FLAGS :=
 
 # project files:
-FILES := random_number_generator_kernal.cu random_number_generator_host.cu grid_block_test_case.cu performance_benchmark.cu sample_run.cu
+FILES := random_number_generator_kernal.cu  sample_run.cu
 
-##################### Build Rules ########################
+##################### Build Rules ########################random_number_generator_host.cu grid_block_test_case.cu performance_benchmark.cu
 
 all: cuMain
 

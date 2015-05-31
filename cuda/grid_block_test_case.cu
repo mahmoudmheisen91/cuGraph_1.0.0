@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "main.cuh"
 
 __host__ void  grid_block_test_case(int numB, int numT) {
 	int *host_masterSeed, *host_itemsPerThread, *dev_masterSeed, *dev_itemsPerThread, b, n, a;

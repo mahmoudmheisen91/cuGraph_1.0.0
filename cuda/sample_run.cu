@@ -5,9 +5,10 @@ void sample_run(int size, int num) {
 	int *host_masterSeed, *host_size, *dev_masterSeed, *dev_size;
 	float *host_PRNG, *dev_PRNG, time1;
 	cudaEvent_t start, stop; 
+	
 	dim3 grid(gridSize-1);
 	dim3 block(blockSize);
-	
+
 	// allocate host memory:
 	host_masterSeed = new int[1];
 	host_size = new int[1];

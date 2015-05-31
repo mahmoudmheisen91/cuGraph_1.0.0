@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "main.cuh"
 
 __host__ void random_number_generator_host(int *masterSeed, int *itemsPerThread, float *PRNG) {
 	long int a = 16807;

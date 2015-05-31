@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "main.cuh"
 
 __host__ void performance_benchmark(int from, int to) {
 	int *host_masterSeed, *host_itemsPerThread, *dev_masterSeed, *dev_itemsPerThread, a, size;
@@ -28,7 +28,7 @@ __host__ void performance_benchmark(int from, int to) {
 		cudaEventCreate(&start); 
 		cudaEventCreate(&stop);
 		cudaEventRecord(start, 0); 
-		random_number_generator_kernal<<<gridSize-1, blockSize>>>(dev_masterSeed, dev_itemsPerThread, dev_PRNG);
+		random_number_generator_kernal<<<grid, block>>>(dev_masterSeed, dev_itemsPerThread, dev_PRNG);
 		cudaEventRecord(stop, 0); 
 		cudaEventSynchronize(stop);  
 		cudaEventElapsedTime(&time1, start, stop); 

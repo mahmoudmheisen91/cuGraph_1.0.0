@@ -10,8 +10,8 @@ __host__ void  grid_block_test_case(int numB, int numT) {
 	host_masterSeed = new int[1];
 	host_masterSeed[0] = time(0);
 	host_itemsPerThread = new int[1];
-	//host_PRNG = new float[size];
-	cudaMallocHost ((void **) &host_PRNG, size);
+	host_PRNG = new float[size];
+	//cudaMallocHost ((void **) &host_PRNG, size);
 	cudaMalloc((void**)&dev_masterSeed, sizeof(int));
 	cudaMalloc((void**)&dev_itemsPerThread, sizeof(int));
 	cudaMalloc((void**)&dev_PRNG, size * sizeof(float));

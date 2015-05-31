@@ -16,8 +16,8 @@ __host__ void performance_benchmark(int from, int to) {
 		
 		size = pow(2, i);
 		PRNG = new float[size];
-		cudaMallocHost ((void **) &host_PRNG, size);
-		//host_PRNG = new float[size];
+		//cudaMallocHost ((void **) &host_PRNG, size);
+		host_PRNG = new float[size];
 		cudaMalloc((void**)&dev_PRNG, size * sizeof(float));
 		
 		a = size / ((B-1)*N);
@@ -28,7 +28,7 @@ __host__ void performance_benchmark(int from, int to) {
 		cudaEventCreate(&start); 
 		cudaEventCreate(&stop);
 		cudaEventRecord(start, 0); 
-		random_number_generator_kernal<<<gridSize-1, blockSize>>>(dev_masterSeed, dev_itemsPerThread, dev_PRNG);
+		random_number_generator_kernal<<<grid, block>>>(dev_masterSeed, dev_itemsPerThread, dev_PRNG);
 		cudaEventRecord(stop, 0); 
 		cudaEventSynchronize(stop);  
 		cudaEventElapsedTime(&time1, start, stop); 
