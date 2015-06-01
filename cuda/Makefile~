@@ -7,16 +7,16 @@ CUDACC := nvcc
 CUDACC_FLAGS :=
 
 # project files:
-FILES := random_number_generator_kernal.cu random_number_generator_host.cu grid_block_test_case.cu performance_benchmark.cu sample_run.cu
+FILES := scan_algorithms.cu #scan_kernal.cu test_scan.cu 
 
-##################### Build Rules ########################
+##################### Build Rules ########################random_number_generator_host.cu grid_block_test_case.cu performance_benchmark.cu
 
 all: cuMain
 
 clean: 
 	rm -f cuMain
 
-cuMain: main.cu
+cuMain: mainPPS.cu
 	$(CUDACC) $(CUDACC_FLAGS) -o $@ $< $(FILES)
 	
 ##########################################################

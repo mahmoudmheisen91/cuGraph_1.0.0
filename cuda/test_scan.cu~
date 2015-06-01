@@ -1,6 +1,6 @@
-#include "mainPPS.hpp"
+#include "main.hpp"
 
-void sample_run(int size, int num) {
+void test_scan(int size, int num) {
 	// declare host and device variable:
 	int *host_masterSeed, *host_size, *dev_masterSeed, *dev_size;
 	float *host_PRNG, *dev_PRNG, time1;
@@ -43,43 +43,6 @@ void sample_run(int size, int num) {
 	
 	// copy device vars to host vars:
 	cudaMemcpy(host_PRNG, dev_PRNG, size * sizeof(float), cudaMemcpyDeviceToHost);
-	
-	float mn,mx;
-
-	mn=host_PRNG[0];
-	mx=host_PRNG[0];
-	for(int i=1;i<size;i++)
-	{
-		if(mn>host_PRNG[i])
-		{
-			mn=host_PRNG[i];
-		}
-		else if(mx<host_PRNG[i])
-		{
-			mx = host_PRNG[i];
-		}
-	}
-//cout<<"ti: "<< time(0) << endl;
-	cout<<"Maximum number is: "<< mx << endl;
-	cout<<"Minimum number is: "<< mn << endl;
-
-	// print output:
-	int result[num];
-	fill(result, result+num, 0);
-	int avg = size / num;
-	for(int i = 0; i < size; i++) {
-		//cout<< host_PRNG[i] << " ";
-		result[(int)(host_PRNG[i]*num)]++;
-	}
-	
-	for(int i = 0; i < 200; i++) {
-		//cout<< host_PRNG[i] << " ";
-	}
-	cout << endl;
-	for(int i = 0; i < num; i++) {
-		cout << (100.0*result[i]/avg)/num << " ";
-	}
-	cout << endl << endl;
 	
 	// free host memory:
 	delete host_masterSeed;
