@@ -1,0 +1,18 @@
+################################################################
+			LTE 4.0G Simulator
+################################################################
+
+src file :
+  | >> statics.c
+  | >> resources.c
+  | >> plots.c
+  | >> phy_layer.c
+  | >> modulation.c
+  | >> main.c
+  | >> lte_turbo_encoder.c
+  | >> lte_adc.c
+  | >> interleaver.c
+  | >> gnu_plot_i.c
+  | >> generators.c
+
+################################################################

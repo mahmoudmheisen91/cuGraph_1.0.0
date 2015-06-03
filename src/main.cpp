@@ -39,8 +39,8 @@ int main () {
 	cout << "number of edges = " << testGraph3.getNumberOfEdges() << endl;
 */
 	GraphArray testGraph4(10);
-	testGraph4.fillByPreZER(20, 0.5, 8);
-	testGraph4.clear();
+	testGraph4.fillByPreZER(100, 0.5, 8);
+	//testGraph4.clear();
 	testGraph4.printGraphAsArray();
 	cout << "number of edges = " << testGraph4.getNumberOfEdges() << endl;
 

@@ -1,0 +1,22 @@
+########## the compilers and their flags #################
+
+# the compilers:
+CUDACC := nvcc
+
+# flags:
+CUDACC_FLAGS :=
+
+# project files:
+FILES := scan_algorithms.cu scan_kernal.cu test_scan.cu 
+
+##################### Build Rules ########################
+
+all: cuMain
+
+clean: 
+	rm -f cuMain
+
+cuMain: main.cu
+	$(CUDACC) $(CUDACC_FLAGS) -o $@ $< $(FILES)
+	
+##########################################################
