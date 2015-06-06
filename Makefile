@@ -22,8 +22,7 @@ DRAWO   := $(shell pwd)/obj/draw.o
 vpath %.cpp $(shell pwd)/src
 
 # C++ Sources:
-CPPSOURCES += main.cpp GraphArray.cpp Path.cpp GraphVertexOutOfBoundsException.cpp
-CPPSOURCES += GraphEdgeOutOfBoundsException.cpp 
+CPPSOURCES += main.cpp Graph.cpp Path.cpp Exceptions.cpp
 
 # C++ Objects:
 OBJECTS = $(patsubst %.cpp,obj/%.o,$(CPPSOURCES))

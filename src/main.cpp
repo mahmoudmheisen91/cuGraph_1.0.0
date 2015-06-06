@@ -1,11 +1,11 @@
-#include "GraphArray.h"
-#include "GraphVertexOutOfBoundsException.h"
-#include "Path.h"
 #include <iostream>
 #include <algorithm>
-#include "OriginalERGraph.h"
 #include <cstdlib>
 #include <ctime>
+
+#include "Path.h"
+#include "Graph.h"
+#include "Exceptions.h"
 
 using namespace std;
 
@@ -38,7 +38,7 @@ int main () {
 	testGraph3.printGraphAsArray();
 	cout << "number of edges = " << testGraph3.getNumberOfEdges() << endl;
 */
-	GraphArray testGraph4(10);
+    Graph testGraph4(10);
 	testGraph4.fillByPreZER(100, 0.5, 8);
 	//testGraph4.clear();
 	testGraph4.printGraphAsArray();

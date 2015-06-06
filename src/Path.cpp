@@ -5,7 +5,7 @@
 using namespace std;
 
 // Find paths in G from s:
-Path::Path(GraphArray *G, int s) {
+Path::Path(Graph *G, int s) {
 	// init data structures:
 	fromHere = s;
 	size = G->getNumberOfVertices();
@@ -24,7 +24,7 @@ Path::~Path() {
 	delete edgeTo;
 }
 
-void Path::dfs(GraphArray *G, int u) {
+void Path::dfs(Graph *G, int u) {
 	visited[u] = true;
 	int *content = G->getContent();
 	for(int v = 0; v < size; v++) {

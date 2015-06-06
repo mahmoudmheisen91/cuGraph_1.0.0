@@ -22,8 +22,7 @@ DRAWO   := $(shell pwd)/obj/draw.o
 vpath %.cpp $(shell pwd)/src
 
 # C++ Sources:
-CPPSOURCES += main.cpp GraphArray.cpp Path.cpp GraphVertexOutOfBoundsException.cpp
-CPPSOURCES += GraphEdgeOutOfBoundsException.cpp polygon.cpp
+CPPSOURCES += main.cpp Graph.cpp Path.cpp GraphVertexOutOfBoundsException.cpp
 
 # C++ Objects:
 OBJECTS = $(patsubst %.cpp,obj/%.o,$(CPPSOURCES))
@@ -32,7 +31,7 @@ OBJECTS = $(patsubst %.cpp,obj/%.o,$(CPPSOURCES))
 EXECUTABLE = cuGraph_1.0.0
 
 # Shell Commands:
-all: obj/draw.o $(EXECUTABLE) polygon
+all: obj/draw.o $(EXECUTABLE) examples/polygon
 
 run: 
 	./bin/$(EXECUTABLE)
@@ -48,13 +47,13 @@ obj/draw.o: $(DRAWCPP) $(DRAWH)
 	$(QT4C) $(DRAWCPP) | $(CPP) $(STDLIBS) $(CFLAGS2) $(DRAWCPP) -o $@
 
 obj/%.o : %.cpp
-	$(CPP) -o $@ $< $(CFLAGS1) $(HEADERS) $(DRAWH)	
+	$(CPP) -o $@ $< $(CFLAGS1) $(HEADERS)	
 	
 $(EXECUTABLE): $(OBJECTS)
 	$(OBJECTS) | $(CPP) -o bin/$@ $^ $(HEADERS) $(LIBSFLAGS)
 
-polygon: $(DRAWO)
-	$(OBJECTS) | $(CPP) -o bin/$@ $^ $(HEADERS) $(DRAWH) $(LIBSFLAGS) $(PRJLIBS)
+examples/polygon: $(DRAWO)
+	$(CPP) -o bin/polygon $^ $(DRAWH) $(LIBSFLAGS) $(PRJLIBS) examples/polygon.cpp
 
 
 

@@ -1,12 +1,12 @@
 #ifndef PATH_H_
 #define PATH_H_
 
-#include "GraphArray.h"
+#include "Graph.h"
 
 class Path
 {
 	public:
-		Path(GraphArray *G, int s);
+        Path(Graph *G, int s);
 		virtual ~Path();
 		bool hasPathTo(int v);
 	protected:
@@ -15,7 +15,7 @@ class Path
 		int size;
 		bool* visited;
 		int* edgeTo;
-		void dfs(GraphArray *G, int v);
+        void dfs(Graph *G, int v);
 };
 
 #endif // PATH_H_
