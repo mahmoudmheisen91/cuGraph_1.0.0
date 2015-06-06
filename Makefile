@@ -1,26 +1,30 @@
 # define the C++ compiler to use:
-CC = g++
+CXX = g++
+MOCQT4 = moc-qt4
+FILES1 := $(shell pwd)/lib/draw.cpp 
+FILES2 := $(shell pwd)/lib/draw.h
+FILES3 := $(shell pwd)/obj/draw.o
 
 # define any compile-time flags:
 CFLAGS = -c -Wall
 
 # define any directories containing header files other than /usr/include:
-INCLUDES = -I$(shell pwd)/inc -I$(shell pwd)/data
+INCLUDES = -I$(shell pwd)/inc -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
 
 # define library paths in addition to /usr/lib:
-LFLAGS =
+LFLAGS = -I$(shell pwd)/lib
 
 # define any libraries to link into executable:
-LIBS = -lm
+LIBS = -lm -lQtCore -lQtGui
 
-# define paths for .c files:
+# define paths for .cpp files:
 vpath %.cpp $(shell pwd)/src
 
-# define the C source files:
+# define the C++ source files:
 SOURCES = main.cpp GraphArray.cpp Path.cpp GraphVertexOutOfBoundsException.cpp \
-			GraphEdgeOutOfBoundsException.cpp
+			GraphEdgeOutOfBoundsException.cpp 
 
-# define the C object files:
+# define the C++ object files:
 OBJECTS = $(patsubst %.cpp,obj/%.o,$(SOURCES))
 
 # define the executable file:
@@ -30,18 +34,24 @@ GRAPH: $(SOURCES) $(EXECUTABLE)
 
 # build executable:
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) -o $@ $^ $(INCLUDES) $(LIBS) $(LFLAGS)
+	$(CXX) -o bin/$@ $^ $(INCLUDES) $(LIBS) $(LFLAGS)
 
+examples/polygon: $(FILES3)
+	$(CXX) -o bin/polygon $^ $(FILES2) $(LIBS) $(LFLAGS) examples/polygon.cpp
+	
 # if any OBJECTS must be built then obj must be built first:
 $(OBJECTS): | obj
 
 # replacement rule for building .o's from .cpp's:
 obj/%.o : %.cpp
-	$(CC) -o $@ $< $(CFLAGS) $(INCLUDES)
+	$(CXX) -o $@ $< $(CFLAGS) $(INCLUDES)
 
+obj/draw.o: $(FILES1) $(FILES2) 
+	$(MOCQT4) $(FILES1) | $(CXX) $(INCLUDES) -c -x c++ - -include $(FILES1) -o $@
+	
 # run command:
 run:
-	./$(EXECUTABLE)
+	./bin/polygon
 
 # clean command: remove object files:
 clean:
