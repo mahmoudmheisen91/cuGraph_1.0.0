@@ -1,61 +1,60 @@
-# define the C++ compiler to use:
-CXX = g++
-MOCQT4 = moc-qt4
-FILES1 := $(shell pwd)/lib/draw.cpp 
-FILES2 := $(shell pwd)/lib/draw.h
-FILES3 := $(shell pwd)/obj/draw.o
+# Compilers Definitions:
+CPP  = g++
+QT4C = moc-qt4
+NVCC = nvcc
 
-# define any compile-time flags:
-CFLAGS = -c -Wall
+# Compilers Flags:
+CFLAGS1   = -c -Wall 
+CFLAGS2   = -c -x c++ - -include
+LIBSFLAGS = -lm -lQtCore -lQtGui 
 
-# define any directories containing header files other than /usr/include:
-INCLUDES = -I$(shell pwd)/inc -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
+# Library Directories:
+HEADERS = -I$(shell pwd)/inc 
+STDLIBS = -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui 
+PRJLIBS = -I$(shell pwd)/lib 
 
-# define library paths in addition to /usr/lib:
-LFLAGS = -I$(shell pwd)/lib
+# Project Directories:
+DRAWCPP := $(shell pwd)/lib/draw.cpp 
+DRAWH   := $(shell pwd)/lib/draw.h
+DRAWO   := $(shell pwd)/obj/draw.o
 
-# define any libraries to link into executable:
-LIBS = -lm -lQtCore -lQtGui
-
-# define paths for .cpp files:
+# C++ Paths:
 vpath %.cpp $(shell pwd)/src
 
-# define the C++ source files:
-SOURCES = main.cpp GraphArray.cpp Path.cpp GraphVertexOutOfBoundsException.cpp \
-			GraphEdgeOutOfBoundsException.cpp 
+# C++ Sources:
+CPPSOURCES += main.cpp GraphArray.cpp Path.cpp GraphVertexOutOfBoundsException.cpp
+CPPSOURCES += GraphEdgeOutOfBoundsException.cpp polygon.cpp
 
-# define the C++ object files:
-OBJECTS = $(patsubst %.cpp,obj/%.o,$(SOURCES))
+# C++ Objects:
+OBJECTS = $(patsubst %.cpp,obj/%.o,$(CPPSOURCES))
 
-# define the executable file:
+# Executable file:
 EXECUTABLE = cuGraph_1.0.0
 
-GRAPH: $(SOURCES) $(EXECUTABLE)
+# Shell Commands:
+all: obj/draw.o $(EXECUTABLE) polygon
 
-# build executable:
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) -o bin/$@ $^ $(INCLUDES) $(LIBS) $(LFLAGS)
-
-examples/polygon: $(FILES3)
-	$(CXX) -o bin/polygon $^ $(FILES2) $(LIBS) $(LFLAGS) examples/polygon.cpp
-	
-# if any OBJECTS must be built then obj must be built first:
-$(OBJECTS): | obj
-
-# replacement rule for building .o's from .cpp's:
-obj/%.o : %.cpp
-	$(CXX) -o $@ $< $(CFLAGS) $(INCLUDES)
-
-obj/draw.o: $(FILES1) $(FILES2) 
-	$(MOCQT4) $(FILES1) | $(CXX) $(INCLUDES) -c -x c++ - -include $(FILES1) -o $@
-	
-# run command:
-run:
+run: 
 	./bin/$(EXECUTABLE)
 
-# clean command: remove object files:
 clean:
 	$(RM) $(shell pwd)/obj/*.o 
+	$(RM) $(shell pwd)/bin/*
 	$(RM) $(shell pwd)/src/*~ 
-	$(RM) *~ $(EXECUTABLE)
+	$(RM) $(shell pwd)/src/cuda/*~ 
+
+# Build Commands:
+obj/draw.o: $(DRAWCPP) $(DRAWH) 
+	$(QT4C) $(DRAWCPP) | $(CPP) $(STDLIBS) $(CFLAGS2) $(DRAWCPP) -o $@
+
+obj/%.o : %.cpp
+	$(CPP) -o $@ $< $(CFLAGS1) $(HEADERS) $(DRAWH)	
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(OBJECTS) | $(CPP) -o bin/$@ $^ $(HEADERS) $(LIBSFLAGS)
+
+polygon: $(DRAWO)
+	$(OBJECTS) | $(CPP) -o bin/$@ $^ $(HEADERS) $(DRAWH) $(LIBSFLAGS) $(PRJLIBS)
+
+
 
