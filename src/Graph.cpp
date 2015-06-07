@@ -3,13 +3,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-
 #include "Path.h"
 #include "Graph.h"
 #include "Exceptions.h"
 
 using namespace std;
-
+using namespace draw;
 Graph::Graph() {}
 
 Graph::Graph(int V) :numberOfVertices(V) {
@@ -18,42 +17,189 @@ Graph::Graph(int V) :numberOfVertices(V) {
 	content = new int[size];
 
 	fill(content, content+size, 0);
+
+    // Default values:
+    direction = UN_DIRECTED;
+    loop = SELF_LOOP;
+    defaultSettings.rangeMin = -1000;
+    defaultSettings.rangeMax = 1000;
+    defaultSettings.color = BLACK;
+    defaultSettings.penWidth = 5;
+    defaultSettings.transparency = 0;
+    defaultSettings.fontSize = 12;
+    defaultSettings.windowWidth = 512;
+    defaultSettings.windowHeight = 512;
 }
 
-Graph::~Graph() {
+Graph::~Graph(void) {
 	delete content;
 }
 
-void Graph::clear() { // TODO: clear content instead
-    for(int i = 0; i < numberOfVertices; i++) {
-        for(int j = 0; j < numberOfVertices; j++) {
-            removeEdge(i, j);
-        }
+void Graph::setType(int dir, int lp) {
+    direction = dir;
+    loop = lp;
+}
+
+void Graph::setDrawSettings(Settings sets) {
+    defaultSettings.rangeMin = sets.rangeMin;
+    defaultSettings.rangeMax = sets.rangeMax;
+    defaultSettings.color = sets.color;
+    defaultSettings.penWidth = sets.penWidth;
+    defaultSettings.transparency = sets.transparency;
+    defaultSettings.fontSize = sets.fontSize;
+    defaultSettings.windowWidth = sets.windowWidth;
+    defaultSettings.windowHeight = sets.windowHeight;
+}
+
+void Graph::draw(void) {
+    setrange(defaultSettings.rangeMin, defaultSettings.rangeMax);
+    setcolor(defaultSettings.color);
+    setpenwidth(defaultSettings.penWidth);
+    settransparency(defaultSettings.transparency);
+    setfontsize(defaultSettings.fontSize);
+    setwindowsize(defaultSettings.windowWidth, defaultSettings.windowHeight);
+
+    // Pseudo-code for the algorithm by Fruchterman and Reingold [FR91]:
+    // http://cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf - page 5:
+    int W = defaultSettings.windowWidth;
+    int L = defaultSettings.windowHeight;
+    int area = W * L;
+    double **g = (double **)malloc(numberOfVertices * sizeof(double *));
+    for (int i=0; i<numberOfVertices; i++)
+        g[i] = (double *)malloc(4 * sizeof(double));
+
+    // g[0] = disp.x, g[1] = disp.y, g[2] = pos.x, g[3] = pos.y
+    for (int i=0; i<numberOfVertices; i++) {
+        g[i][2] = (rand() / (double)RAND_MAX) * W;
+        g[i][3] = (rand() / (double)RAND_MAX) * L;
+        cout << "rnd" << g[i][2] << " " << g[i][3] << endl;
     }
+
+    double K = sqrt(area/numberOfVertices);
+    int iterations = 1;
+    int t = 1000;
+    double segma[2];
+
+    for(int i = 1; i <= iterations; i++) {
+        // calculate repulsive forces:
+        for (int v=0; v<numberOfVertices; v++) {
+            g[v][0] = 0;
+            g[v][1] = 0;
+            for (int u=0; u<numberOfVertices; u++) {
+                if (u != v) {
+                    segma[0] = g[v][2] - g[u][2];
+                    segma[1] = g[v][3] - g[u][3];
+
+                    g[v][0] += (segma[0] / length(segma)) * fr(length(segma), K);
+                    g[v][1] += (segma[1] / length(segma)) * fr(length(segma), K);
+                }
+            }
+        }
+
+        // calculate attractive forces:
+        for (int v=0; v<numberOfVertices; v++) {
+            for (int u=0; u<numberOfVertices; u++) {
+                if (isDirectlyConnected(v, u)) {
+                    segma[0] = g[v][2] - g[u][2];
+                    segma[1] = g[v][3] - g[u][3];
+
+                    g[v][0] -= (segma[0] / length(segma)) * fa(length(segma), K);
+                    g[v][1] -= (segma[1] / length(segma)) * fa(length(segma), K);
+
+                    g[u][0] += (segma[0] / length(segma)) * fa(length(segma), K);
+                    g[u][1] += (segma[1] / length(segma)) * fa(length(segma), K);
+                }
+            }
+        }
+
+        // limit max displacement to temperature t:
+        for (int v=0; v<numberOfVertices; v++) {
+            double array[2] = {g[v][0], g[v][1]};
+            g[v][2] += (g[v][0] / length(array)) * min(g[v][0], (double)t);
+            g[v][3] += (g[v][1] / length(array)) * min(g[v][1], (double)t);
+
+            g[v][2] = min((double)W/2, max(-W/(double)2, g[v][2]));
+            g[v][3] = min((double)L/2, max(-L/(double)2, g[v][3]));
+        }
+
+        // reduce the temperature as the layout approaches a better configuration:
+        t = cool(t);
+    }
+
+    for (int v=0; v<numberOfVertices; v++) {
+        cout << g[v][2] << " " << g[v][3] << endl;
+        point(g[v][2], g[v][3]);
+    }
+
+        /*
+        area:= W ∗ L; {W and L are the width and length of the frame}
+        G := (V, E); {the vertices are assigned random initial positions}
+        k := p area/|V |;
+        function fa(x) := begin return x2/k end;
+        function fr(x) := begin return k2/x end;
+        for i := 1 to iterations do begin
+        {calculate repulsive forces}
+        for v in V do begin
+        {each vertex has two vectors: .pos and .disp
+        v.disp := 0;
+        for u in V do
+        if (u 6= v) then begin
+        {δ is the difference vector between the positions of the two vertices}
+        δ := v.pos − u.pos;
+        v.disp := v.disp + (δ/|δ|) ∗ fr(|δ|)
+        end
+        end
+        {calculate attractive forces}
+        for e in E do begin
+        {each edges is an ordered pair of vertices .vand.u}
+        δ := e.v.pos − e.u.pos;
+        e.v.disp := e.v.disp − (δ/|δ|) ∗ fa(|δ|);
+        e.u.disp := e.u.disp + (δ/|δ|) ∗ fa(|δ|)
+        end
+        {limit max displacement to temperature t and prevent from displacement outside frame}
+        for v in V do begin
+        v.pos := v.pos + (v.disp/|v.disp|) ∗ min(v.disp, t);
+        v.pos.x := min(W/2, max(−W/2, v.pos.x));
+        v.pos.y := min(L/2, max(−L/2, v.pos.y))
+        end
+        {reduce the temperature as the layout approaches a better configuration}
+        t := cool(t)
+        end
+        */
+}
+
+void Graph::clear(void) {
+    delete content;
+    numberOfEdges = 0;
+    content = new int[size];
+    fill(content, content+size, 0);
 }
 
 void Graph::addEdge(int v1, int v2) {
-    if(isFullyConnected()) // TODO: method
-//		throw new GraphEdgeOutOfBoundsException(size, edge); // TODO: change with other exception
+    if(isFullyConnected())
+        throw new GraphEdgeOutOfBoundsException(size, pow(numberOfEdges, 2));
 
     checkVertixName(v1);
     checkVertixName(v2);
     content[v1 * numberOfVertices + v2] = 1;
-    content[v2 * numberOfVertices + v1] = 1;
+
+    if (direction == UN_DIRECTED)
+        content[v2 * numberOfVertices + v1] = 1;
     numberOfEdges++;
 }
-// acycle graph
+
 void Graph::removeEdge(int v1, int v2) {
-    if(isEmpty()) // TODO: method
-//		throw new GraphEdgeOutOfBoundsException(size, edge); // TODO: change with other exception
+    if(isEmpty())
+        throw new GraphEdgeOutOfBoundsException(size, 0);
 
     checkVertixName(v1);
     checkVertixName(v2);
 
     if(isDirectlyConnected(v1, v2)) {
-
         content[v1 * numberOfVertices + v2] = 0;
-        content[v2 * numberOfVertices + v1] = 0;
+
+        if (direction == UN_DIRECTED)
+            content[v2 * numberOfVertices + v1] = 0;
         numberOfEdges--;
     }
 }
@@ -67,7 +213,8 @@ void Graph::printGraphAsArray(void) {
     }
 }
 
-bool Graph::isEmpty() { // from edge prespective not vertix (because vertices is constant (cuda))
+// from edge prespective not vertix (because vertices is constant (cuda))
+bool Graph::isEmpty(void) {
     if(numberOfEdges == 0)
         return true;
 
@@ -82,7 +229,7 @@ bool Graph::isConnected(int v1, int v2) {
     return p.hasPathTo(v2);
 }
 
-bool Graph::isFullyConnected() {
+bool Graph::isFullyConnected(void) {
     if(numberOfEdges == pow(numberOfVertices, 2))
         return true;
 
@@ -92,8 +239,14 @@ bool Graph::isFullyConnected() {
 bool Graph::isDirectlyConnected(int v1, int v2) {
     checkVertixName(v1);
     checkVertixName(v2);
-    if (content[v1 * numberOfVertices + v2] && content[v2 * numberOfVertices + v1])
-        return true;
+
+    if (direction == UN_DIRECTED) {
+        if (content[v1 * numberOfVertices + v2] && content[v2 * numberOfVertices + v1])
+            return true;
+    } else {
+        if (content[v1 * numberOfVertices + v2])
+            return true;
+    }
     return false;
 }
 
@@ -200,19 +353,19 @@ void Graph::fillByPreZER(int E, double p, int m) {
 	}
 }
 
-int Graph::getSize() {
+int Graph::getSize(void) {
     return size;
 }
 
-int *Graph::getContent() {
+int *Graph::getContent(void) {
     return content;
 }
 
-int Graph::getNumberOfEdges() {
+int Graph::getNumberOfEdges(void) {
     return numberOfEdges;
 }
 
-int Graph::getNumberOfVertices() {
+int Graph::getNumberOfVertices(void) {
     return numberOfVertices;
 }
 
@@ -223,7 +376,25 @@ void Graph::checkVertixName(int vert) {
 }
 
 void Graph::checkEdgeRange(int edge) {
-    //if (edge < 0 || edge > size)
-        //throw new GraphEdgeOutOfBoundsException(size, edge);
+    if (edge < 0 || edge > size)
+        throw new GraphEdgeOutOfBoundsException(size, edge);
 }
+
+double fa(double x, double k) {
+    return pow(x, 2) / k;
+}
+
+double fr(double x, double k) {
+    return pow(k, 2) / x ;
+}
+
+double length(double array[2]) {
+    return sqrt(pow(array[0], 2) + pow(array[1], 2));
+}
+
+int cool(int t) {
+    return t;
+}
+
+
 
