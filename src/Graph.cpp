@@ -93,6 +93,10 @@ void Graph::draw(void) {
         sprintf(str,"%d",v);
         text(str, g[v][0], g[v][1]);
     }
+
+    char str[50];
+    sprintf(str,"Number of Vertices = %d, Number of Edges = %d", numberOfVertices, numberOfEdges);
+    text(str, 180, 600 - 15);
 }
 
 void Graph::clear(void) {
