@@ -11,14 +11,14 @@ using namespace std;
 int main () {
     Graph g1(10);
     //g1.setType(DIRECTED, SELF_LOOP);
-    g1.fillByBaselineER(50, 0.5);
+    g1.fillByBaselineER(100, 0.5);
     //cout << g1.getNumberOfVertices() << endl;
     //cout << g1.getNumberOfEdges() << endl;
 
     //g1.addEdge(2, 5);
     //g1.addEdge(2, 8);
     //g1.addEdge(3, 8);
-    g1.printGraphAsArray();
+    //g1.printGraphAsArray();
 
     //cout << g1.isDirectlyConnected(2, 5) << endl;
     //cout << g1.isDirectlyConnected(8, 2) << endl;

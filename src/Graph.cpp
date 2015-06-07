@@ -6,6 +6,7 @@
 #include "Path.h"
 #include "Graph.h"
 #include "Exceptions.h"
+#include <cstdio>
 
 using namespace std;
 using namespace draw;
@@ -21,14 +22,14 @@ Graph::Graph(int V) :numberOfVertices(V) {
     // Default values:
     direction = UN_DIRECTED;
     loop = SELF_LOOP;
-    defaultSettings.rangeMin = -1000;
-    defaultSettings.rangeMax = 1000;
+    defaultSettings.rangeMin = 0;
+    defaultSettings.rangeMax = 600;
     defaultSettings.color = BLACK;
-    defaultSettings.penWidth = 5;
+    defaultSettings.penWidth = 1;
     defaultSettings.transparency = 0;
     defaultSettings.fontSize = 12;
-    defaultSettings.windowWidth = 512;
-    defaultSettings.windowHeight = 512;
+    defaultSettings.windowWidth = 1200;
+    defaultSettings.windowHeight = 600;
 }
 
 Graph::~Graph(void) {
@@ -52,120 +53,46 @@ void Graph::setDrawSettings(Settings sets) {
 }
 
 void Graph::draw(void) {
-    setrange(defaultSettings.rangeMin, defaultSettings.rangeMax);
+    setxrange(defaultSettings.rangeMin, defaultSettings.windowWidth);
+    setyrange(defaultSettings.rangeMin, defaultSettings.windowHeight);
     setcolor(defaultSettings.color);
     setpenwidth(defaultSettings.penWidth);
     settransparency(defaultSettings.transparency);
     setfontsize(defaultSettings.fontSize);
     setwindowsize(defaultSettings.windowWidth, defaultSettings.windowHeight);
 
-    // Pseudo-code for the algorithm by Fruchterman and Reingold [FR91]:
-    // http://cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf - page 5:
-    int W = defaultSettings.windowWidth;
-    int L = defaultSettings.windowHeight;
-    int area = W * L;
+    int W = defaultSettings.windowWidth - 60;
+    int L = defaultSettings.windowHeight - 60;
     double **g = (double **)malloc(numberOfVertices * sizeof(double *));
     for (int i=0; i<numberOfVertices; i++)
-        g[i] = (double *)malloc(4 * sizeof(double));
+        g[i] = (double *)malloc(2 * sizeof(double));
 
-    // g[0] = disp.x, g[1] = disp.y, g[2] = pos.x, g[3] = pos.y
     for (int i=0; i<numberOfVertices; i++) {
-        g[i][2] = (rand() / (double)RAND_MAX) * W;
-        g[i][3] = (rand() / (double)RAND_MAX) * L;
-        cout << "rnd" << g[i][2] << " " << g[i][3] << endl;
-    }
-
-    double K = sqrt(area/numberOfVertices);
-    int iterations = 1;
-    int t = 1000;
-    double segma[2];
-
-    for(int i = 1; i <= iterations; i++) {
-        // calculate repulsive forces:
-        for (int v=0; v<numberOfVertices; v++) {
-            g[v][0] = 0;
-            g[v][1] = 0;
-            for (int u=0; u<numberOfVertices; u++) {
-                if (u != v) {
-                    segma[0] = g[v][2] - g[u][2];
-                    segma[1] = g[v][3] - g[u][3];
-
-                    g[v][0] += (segma[0] / length(segma)) * fr(length(segma), K);
-                    g[v][1] += (segma[1] / length(segma)) * fr(length(segma), K);
-                }
-            }
-        }
-
-        // calculate attractive forces:
-        for (int v=0; v<numberOfVertices; v++) {
-            for (int u=0; u<numberOfVertices; u++) {
-                if (isDirectlyConnected(v, u)) {
-                    segma[0] = g[v][2] - g[u][2];
-                    segma[1] = g[v][3] - g[u][3];
-
-                    g[v][0] -= (segma[0] / length(segma)) * fa(length(segma), K);
-                    g[v][1] -= (segma[1] / length(segma)) * fa(length(segma), K);
-
-                    g[u][0] += (segma[0] / length(segma)) * fa(length(segma), K);
-                    g[u][1] += (segma[1] / length(segma)) * fa(length(segma), K);
-                }
-            }
-        }
-
-        // limit max displacement to temperature t:
-        for (int v=0; v<numberOfVertices; v++) {
-            double array[2] = {g[v][0], g[v][1]};
-            g[v][2] += (g[v][0] / length(array)) * min(g[v][0], (double)t);
-            g[v][3] += (g[v][1] / length(array)) * min(g[v][1], (double)t);
-
-            g[v][2] = min((double)W/2, max(-W/(double)2, g[v][2]));
-            g[v][3] = min((double)L/2, max(-L/(double)2, g[v][3]));
-        }
-
-        // reduce the temperature as the layout approaches a better configuration:
-        t = cool(t);
+        g[i][0] = 30 + (rand() / (double)RAND_MAX) * W;
+        g[i][1] = 30 + (rand() / (double)RAND_MAX) * L;
     }
 
     for (int v=0; v<numberOfVertices; v++) {
-        cout << g[v][2] << " " << g[v][3] << endl;
-        point(g[v][2], g[v][3]);
+        for (int u=0; u<numberOfVertices; u++) {
+            if (isDirectlyConnected(v, u) && (u != v)) {
+                setcolor(BLACK);
+                line(g[v][0], g[v][1], g[u][0], g[u][1]);
+            }
+        }
     }
 
-        /*
-        area:= W ∗ L; {W and L are the width and length of the frame}
-        G := (V, E); {the vertices are assigned random initial positions}
-        k := p area/|V |;
-        function fa(x) := begin return x2/k end;
-        function fr(x) := begin return k2/x end;
-        for i := 1 to iterations do begin
-        {calculate repulsive forces}
-        for v in V do begin
-        {each vertex has two vectors: .pos and .disp
-        v.disp := 0;
-        for u in V do
-        if (u 6= v) then begin
-        {δ is the difference vector between the positions of the two vertices}
-        δ := v.pos − u.pos;
-        v.disp := v.disp + (δ/|δ|) ∗ fr(|δ|)
-        end
-        end
-        {calculate attractive forces}
-        for e in E do begin
-        {each edges is an ordered pair of vertices .vand.u}
-        δ := e.v.pos − e.u.pos;
-        e.v.disp := e.v.disp − (δ/|δ|) ∗ fa(|δ|);
-        e.u.disp := e.u.disp + (δ/|δ|) ∗ fa(|δ|)
-        end
-        {limit max displacement to temperature t and prevent from displacement outside frame}
-        for v in V do begin
-        v.pos := v.pos + (v.disp/|v.disp|) ∗ min(v.disp, t);
-        v.pos.x := min(W/2, max(−W/2, v.pos.x));
-        v.pos.y := min(L/2, max(−L/2, v.pos.y))
-        end
-        {reduce the temperature as the layout approaches a better configuration}
-        t := cool(t)
-        end
-        */
+    for (int v=0; v<numberOfVertices; v++) {
+        setcolor(LIME);
+        int nodes = adjacentNodes(v);
+        filled_circle(g[v][0], g[v][1], 5 + nodes);
+    }
+
+    for (int v=0; v<numberOfVertices; v++) {
+        setcolor(BLACK);
+        char str[10];
+        sprintf(str,"%d",v);
+        text(str, g[v][0], g[v][1]);
+    }
 }
 
 void Graph::clear(void) {
@@ -211,6 +138,15 @@ void Graph::printGraphAsArray(void) {
         if (i % numberOfVertices == 0)
             cout << endl;
     }
+}
+
+int Graph::adjacentNodes(int v) {
+    int ret = 0;
+    for (int i=0; i<numberOfVertices; i++) {
+        if(isDirectlyConnected(v, i))
+            ret++;
+    }
+    return ret;
 }
 
 // from edge prespective not vertix (because vertices is constant (cuda))
@@ -393,7 +329,7 @@ double length(double array[2]) {
 }
 
 int cool(int t) {
-    return t;
+    return t - 50;
 }
 
 

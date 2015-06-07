@@ -30,6 +30,7 @@ class Graph {
 		void addEdge(int v1, int v2);
 		void removeEdge(int v1, int v2);
         void printGraphAsArray(void);
+        int adjacentNodes(int v);
 
         bool isEmpty(void);
         bool isConnected(int v1, int v2);
