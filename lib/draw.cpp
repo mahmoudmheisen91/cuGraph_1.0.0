@@ -8,9 +8,6 @@
 #include <QMetaObject>
 #include <time.h>
 #include <iostream>
-#ifdef DRAW_UNMUTE
-#include <phonon/phonon>
-#endif
  
 namespace draw {
 
