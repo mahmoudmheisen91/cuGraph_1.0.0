@@ -11,7 +11,7 @@ using namespace std;
 namespace cuGraph {
 
     Editor::Editor() : QWidget(0) {
-        this->r = 0; this->g = 0; this->b = 0;
+        color.setColor(0, 0, 0);
         lineWidth = 1;
         this->setFixedSize(1300, 650);
         this->move(60, 60);
@@ -22,7 +22,7 @@ namespace cuGraph {
         (*map).fill();
     }
 
-    void Editor::line(double x0, double y0, double x1, double y1) {
+    void Editor::line(Point p0, Point p1) {
         QThread::yieldCurrentThread();
 
         QPen pen;
@@ -30,16 +30,16 @@ namespace cuGraph {
         pen.setCapStyle(Qt::RoundCap);
         pen.setJoinStyle(Qt::RoundJoin);
         pen.setWidth(lineWidth);
-        pen.setBrush(QColor(r, g, b, 255));
+        pen.setBrush(QColor(color.red, color.green, color.blue, 255));
 
         QPainter painter(map);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setPen(pen);
 
-        painter.drawLine(QPointF(x0, y0), QPointF(x1, y1));
+        painter.drawLine(QPointF(p0.x, p0.y), QPointF(p1.x, p1.y));
     }
 
-    void Editor::arrow(double x0, double y0, double x1, double y1) {
+    void Editor::arrow(Point p0, Point p1) {
         QThread::yieldCurrentThread();
 
         QPen pen;
@@ -47,16 +47,16 @@ namespace cuGraph {
         pen.setCapStyle(Qt::RoundCap);
         pen.setJoinStyle(Qt::RoundJoin);
         pen.setWidth(lineWidth);
-        pen.setBrush(QColor(r, g, b, 255));
+        pen.setBrush(QColor(color.red, color.green, color.blue, 255));
 
         QPainter painter(map);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setPen(pen);
 
-        painter.drawLine(QPointF(x0, y0), QPointF(x1, y1));
+        painter.drawLine(QPointF(p0.x, p0.y), QPointF(p1.x, p1.y));
     }
 
-    void Editor::circle(double x, double y, double rr) {
+    void Editor::circle(Point p, double rad) {
         QThread::yieldCurrentThread();
 
         QPen border;
@@ -65,31 +65,31 @@ namespace cuGraph {
 
         QBrush filling;
         filling.setStyle(Qt::SolidPattern);
-        filling.setColor(QColor(r, g, b, 255));
+        filling.setColor(QColor(color.red, color.green, color.blue, 255));
 
         QPainter painter(map);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setBrush(filling);
         painter.setPen(border);
 
-        painter.drawEllipse(QPointF(x, y), rr, rr);
+        painter.drawEllipse(QPointF(p.x, p.y), rad, rad);
     }
 
-    void Editor::text(QString text, double x, double y) {
+    void Editor::text(Point p, QString text) {
         QThread::yieldCurrentThread();
 
         QPen pen;
         pen.setStyle(Qt::SolidLine);
         pen.setCapStyle(Qt::RoundCap);
         pen.setJoinStyle(Qt::RoundJoin);
-        pen.setBrush(QColor(r, g, b, 255));
+        pen.setBrush(QColor(color.red, color.green, color.blue, 255));
 
         QPainter painter(map);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setFont(QFont("Arial", 12));
         painter.setPen(pen);
 
-        painter.drawText(QPointF(x+5, y+15), text);
+        painter.drawText(QPointF(p.x+5, p.y+15), text);
     }
 
     void Editor::setLineWidth(double w) {
@@ -98,12 +98,10 @@ namespace cuGraph {
         this->lineWidth = w;
     }
 
-    void Editor::setcolor(int rnew, int gnew, int bnew) {
+    void Editor::setColor(Color newColor) {
         QThread::yieldCurrentThread();
 
-        this->r = rnew;
-        this->g = gnew;
-        this->b = bnew;
+        color.setColor(newColor.red, newColor.green, newColor.blue);
     }
 
     void Editor::save(QString filename) {

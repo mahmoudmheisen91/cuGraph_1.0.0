@@ -10,11 +10,12 @@ int main(int argc, char** argv) {
     QApplication app(argc, argv);
 
     Editor editor;
-    editor.setcolor(0, 127, 0);
-    editor.text("Mahmoud Nidal Ibrahim Mheisen", 0, 0);
-    editor.circle(600,300,20);
+    editor.setColor(Color(0, 127, 0));
+    editor.text(Point(0, 0), "Mahmoud Nidal Ibrahim Mheisen");
+    editor.circle(Point(600, 300),20);
     editor.setLineWidth(5);
-    editor.line(0,0,600,600);
+    editor.setColor(Color(127, 127, 127));
+    editor.line(Point(0, 0), Point(600, 600));
     editor.save("testImage.png");
 
     int a = 10;
