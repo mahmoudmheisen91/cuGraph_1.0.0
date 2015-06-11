@@ -4,32 +4,38 @@
 namespace cuGraph {
 
     struct Color {
-        int red;
-        int green;
-        int blue;
+        int red, blue, green;
 
-        Color() {
-            red = 0; green = 0; blue = 0;
-        }
+        Color() {}
 
         Color(int r, int g, int b) {
             red = r; green = g; blue = b;
         }
 
-        void setColor(int r, int g, int b) {
+        void set(int r, int g, int b) {
             red = r; green = g; blue = b;
+        }
+
+        void set(Color c) {
+            set(c.red, c.green, c.blue);
         }
     };
 
     struct Point {
-        int x, y;
+        double x, y;
 
-        Point() {
-            x = 0; y = 0;
+        Point() {}
+
+        Point(double x0, double y0) {
+            x = x0; y = y0;
         }
 
-        Point(int x0, int y0) {
+        void set(double x0, double y0) {
             x = x0; y = y0;
+        }
+
+        void set(Point p) {
+            set(p.x, p.y);
         }
     };
 }
