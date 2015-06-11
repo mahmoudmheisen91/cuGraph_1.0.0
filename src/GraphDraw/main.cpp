@@ -13,18 +13,9 @@ int main(int argc, char** argv) {
     editor.setColor(Color(0, 127, 0));
     editor.text(Point(0, 0), "Mahmoud Nidal Ibrahim Mheisen");
     editor.circle(Point(600, 300),20);
-    editor.setLineWidth(4);
-    editor.doubleArrowLine(Point(200, 300), Point(250, 60));
-
-    editor.setColor(Color(255, 0, 0));
-    editor.circle(Point(1000, 300),10);
-
-    editor.setColor(Color(0, 0, 127));
-    editor.line(Point(200, 400), Point(600, 500));
-
-    editor.setColor(Color(80, 60, 50));
-    editor.arrowLine(Point(800, 50), Point(1100, 300));
-
+    editor.setLineWidth(5);
+    editor.setColor(Color(127, 127, 127));
+    editor.line(Point(0, 0), Point(600, 600));
     editor.save("testImage.png");
 
     int a = 10;
