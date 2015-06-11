@@ -2,7 +2,9 @@
 #define GRAPH_H_
 // acycle graph
 
-#include "draw.h"
+#include "Editor.h"
+
+using namespace cuGraph;
 
 typedef struct _settings {
     double rangeMin;
@@ -24,7 +26,7 @@ class Graph {
         void setType(int dir, int lp);
         void setDrawSettings(Settings sets);
 
-        void draw(void);
+        //void draw(void);
 
         void clear(void);
 		void addEdge(int v1, int v2);

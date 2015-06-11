@@ -9,7 +9,8 @@
 #include <cstdio>
 
 using namespace std;
-using namespace draw;
+using namespace cuGraph;
+
 Graph::Graph() {}
 
 Graph::Graph(int V) :numberOfVertices(V) {
@@ -24,7 +25,7 @@ Graph::Graph(int V) :numberOfVertices(V) {
     loop = SELF_LOOP;
     defaultSettings.rangeMin = 0;
     defaultSettings.rangeMax = 600;
-    defaultSettings.color = BLACK;
+    defaultSettings.color = Color();
     defaultSettings.penWidth = 1;
     defaultSettings.transparency = 0;
     defaultSettings.fontSize = 12;
@@ -51,7 +52,7 @@ void Graph::setDrawSettings(Settings sets) {
     defaultSettings.windowWidth = sets.windowWidth;
     defaultSettings.windowHeight = sets.windowHeight;
 }
-
+/*
 void Graph::draw(void) {
     setxrange(defaultSettings.rangeMin, defaultSettings.windowWidth);
     setyrange(defaultSettings.rangeMin, defaultSettings.windowHeight);
@@ -98,7 +99,7 @@ void Graph::draw(void) {
     sprintf(str,"Number of Vertices = %d, Number of Edges = %d", numberOfVertices, numberOfEdges);
     text(str, 180, 600 - 15);
 }
-
+*/
 void Graph::clear(void) {
     delete content;
     numberOfEdges = 0;

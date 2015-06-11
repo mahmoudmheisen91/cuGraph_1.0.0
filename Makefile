@@ -4,47 +4,40 @@ QT4C = moc-qt4
 NVCC = nvcc
 
 # Compilers Flags:
-CFLAGS    = -c -Wall 
-LIBSFLAGS = -lm -lQtCore -lQtGui 
+FLAGS = -g -Wall -lQtCore -lQtGui
 
 # Library Directories:
-HEADERS = -I$(shell pwd)/inc 
-STDLIBS = -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui 
-PRJLIBS = -I$(shell pwd)/lib 
-
-# Project Directories:
-DRAWCPP := $(shell pwd)/lib/draw.cpp 
-DRAWH   := $(shell pwd)/lib/draw.h
-DRAWO   := $(shell pwd)/lib/draw.o
-
-# C++ Paths:
-vpath %.cpp $(shell pwd)/src
+INCL = -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
+OFLAGS = $(INCL) -Wall -Wno-unreachable-code -Wno-return-type
 
 # C++ Sources:
-CPPSOURCES += main.cpp Graph.cpp Path.cpp Exceptions.cpp
+CPPSOURCES += src/main.cpp src/Graph.cpp src/Path.cpp src/Exceptions.cpp
 
 # Executable file:
 EXECUTABLE = cuGraph_1.0.0
 
 # Shell Commands:
-all: lib/draw.o $(EXECUTABLE) 
+all: src/Editor.o $(EXECUTABLE)
 
 run: 
 	./bin/$(EXECUTABLE)
 
 clean:
-	$(RM) $(shell pwd)/lib/*.o 
 	$(RM) $(shell pwd)/bin/*
 	$(RM) $(shell pwd)/src/*~ 
+	$(RM) $(shell pwd)/src/*.o 
+	$(RM) $(shell pwd)/*~ 
 	$(RM) $(shell pwd)/src/cuda/*~ 
+	$(RM) $(shell pwd)/src/GraphDraw/*~ 
 	$(RM) $(shell pwd)/*.png 
 
 # Build Commands:
-lib/draw.o: $(DRAWCPP) $(DRAWH) 
-	$(QT4C) $(DRAWCPP) | $(CPP) $(STDLIBS) $(CFLAGS) -x c++ - -include $(DRAWCPP) -o $@
-
-$(EXECUTABLE): $(CPPSOURCES) $(DRAWO)
-	$(CPP) -o bin/$@ $^ $(HEADERS) $(DRAWH) $(LIBSFLAGS) $(PRJLIBS)
+src/Editor.o: src/Editor.cpp src/Editor.h
+	$(PATCH)
+	$(QT4C) src/Editor.h | $(CXX) $(OFLAGS) -c -x c++ - -include src/Editor.cpp -o src/Editor.o
 	
+$(EXECUTABLE): $(CPPSOURCES) src/Editor.h
+	$(CPP) $^ $(INCL) src/Editor.o $(FLAGS) -o bin/$@
+
 
 

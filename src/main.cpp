@@ -1,51 +1,42 @@
-#include <iostream>
-#include <algorithm>
-#include <cstdlib>
-#include <ctime>
-
-#include "draw.h"
 #include "Graph.h"
+#include "Editor.h"
+#include <QApplication>
+#include <iostream>
 
 using namespace std;
+using namespace cuGraph;
 
-int main () {
+int main(int argc, char** argv) {
     Graph g1(10);
-    //g1.setType(DIRECTED, SELF_LOOP);
     g1.fillByBaselineER(100, 0.5);
-    //cout << g1.getNumberOfVertices() << endl;
-    //cout << g1.getNumberOfEdges() << endl;
 
-    //g1.addEdge(2, 5);
-    //g1.addEdge(2, 8);
-    //g1.addEdge(3, 8);
-    //g1.printGraphAsArray();
+    QAtomicInt retcode(0);
+    QApplication app(argc, argv);
 
-    //cout << g1.isDirectlyConnected(2, 5) << endl;
-    //cout << g1.isDirectlyConnected(8, 2) << endl;
-    //cout << g1.isConnected(5, 8) << endl;
-    //cout << g1.isDirectlyConnected(5, 8) << endl;
-    //cout << g1.isConnected(5, 3) << endl;
-    //cout << g1.getNumberOfEdges() << endl;
-    g1.draw();
+    Editor editor;
+    editor.setColor(Color(0, 127, 0));
+    editor.text(Point(0, 0), "Mahmoud Nidal Ibrahim Mheisen");
+    editor.circle(Point(600, 300),20);
+    editor.setLineWidth(4);
+    editor.doubleArrowLine(Point(200, 300), Point(250, 60));
 
-	/*
-	GraphArray testGraph2(10);
-	testGraph2.fillByBaselineER(50, 0.5);
-	testGraph2.printGraphAsArray();
-	cout << "number of edges = " << testGraph2.getNumberOfEdges() << endl;
+    editor.setColor(Color(255, 0, 0));
+    editor.circle(Point(1000, 300),10);
 
-	GraphArray testGraph3(10);
-	testGraph3.fillByZER(100, 0.5);
-	testGraph3.printGraphAsArray();
-	cout << "number of edges = " << testGraph3.getNumberOfEdges() << endl;
+    editor.setColor(Color(0, 0, 127));
+    editor.line(Point(200, 400), Point(600, 500));
 
-    Graph testGraph4(10);
-	testGraph4.fillByPreZER(100, 0.5, 8);
-    testGraph4.clear();
-	testGraph4.printGraphAsArray();
-	cout << "number of edges = " << testGraph4.getNumberOfEdges() << endl;
-    */
-    return 0;
+    editor.setColor(Color(80, 60, 50));
+    editor.arrowLine(Point(800, 50), Point(1100, 300));
+
+    editor.save("testImage.png");
+
+    int a = 10;
+    a = a+1;
+    std::cout << a << std::endl;
+
+    app.exec(); // wait until window is closed
+    return retcode; // after finishing pass result to main
 }
 
 
