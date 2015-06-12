@@ -13,11 +13,14 @@ namespace cuGraph {
     class Graph {
         friend class GraphDraw;
         friend class Path;
+        friend class GraphIO;
 
         public:
             Graph();
             Graph(int numberOfVertices);
             virtual ~Graph();
+
+//            Graph& operator=(const Graph &g);
 
             void readText(string file_name);
             void writeText(string file_name);
@@ -31,7 +34,6 @@ namespace cuGraph {
             void clear(void);
             void addEdge(int v1, int v2);
             void removeEdge(int v1, int v2);
-            void printGraphAsArray(void);
             int adjacentNodes(int v);
 
             bool isEmpty(void);

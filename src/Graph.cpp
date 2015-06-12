@@ -8,8 +8,11 @@
 #include "Exceptions.h"
 #include <stdio.h>
 #include <fstream>
-
+#include <assert.h>
 #include <string>
+#include <cstdlib>
+#include <cstring>
+
 using namespace std;
 
 namespace cuGraph {
@@ -49,6 +52,20 @@ namespace cuGraph {
     Graph::~Graph(void) {
         delete content;
     }
+
+//    Graph &Graph::operator =(const Graph &other) {
+//        // Check for self-assignment!
+//        assert(this != &other);     // self-assignment check not required
+//        delete content;         // delete this storage
+//        content = new int[other.size];  // move
+//        memcpy(content, other.content, size);
+//        numberOfVertices = other.numberOfVertices;
+//        numberOfEdges = other.numberOfEdges;
+//        direction = other.direction;
+//        loop = other.loop;
+
+//        return *this;
+//    }
 
     void Graph::readText(string file_name) {
         char *cstr = &file_name[0u];
@@ -94,22 +111,29 @@ namespace cuGraph {
         myfile.open(cstr);
         myfile << "graph {" << "\n";
 
-        for(int i=0; i < numberOfVertices; i++) {
-            for(int j=0; j < numberOfVertices; j++) {
-                if(direction == UN_DIRECTED) {
+        if(direction == UN_DIRECTED) {
+            for(int i=0; i < numberOfVertices; i++) {
+                for(int j=0; j < numberOfVertices; j++) {
                     if(isDirectlyConnected(i, j)) {
                         removeEdge(j, i);
                         myfile << "\t" << i <<" -- " << j << ";\n";
                     }
                 }
             }
-        }
 
-        if(direction == UN_DIRECTED) {
             for(int i=0; i < numberOfVertices; i++) {
                 for(int j=0; j < numberOfVertices; j++) {
                     if(isDirectlyConnected(i, j)) {
                         addEdge(j, i);
+                    }
+                }
+            }
+        }
+        else {
+            for(int i=0; i < numberOfVertices; i++) {
+                for(int j=0; j < numberOfVertices; j++) {
+                    if(isDirectlyConnected(i, j)) {
+                        myfile << "\t" << i <<" -> " << j << ";\n";
                     }
                 }
             }
@@ -159,15 +183,6 @@ namespace cuGraph {
             if (direction == UN_DIRECTED)
                 content[v2 * numberOfVertices + v1] = 0;
             numberOfEdges--;
-        }
-    }
-
-    void Graph::printGraphAsArray(void) {
-        for(int i = 1; i <= size; i++) {
-            cout << content[i-1] << " ";
-
-            if (i % numberOfVertices == 0)
-                cout << endl;
         }
     }
 
@@ -336,14 +351,5 @@ namespace cuGraph {
             throw new GraphNumberOfVertexOutOfBoundsException(verts);
     }
 }
-
-
-
-
-
-
-
-
-
 
 

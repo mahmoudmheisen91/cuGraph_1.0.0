@@ -3,6 +3,7 @@
 #include "Editor.h"
 #include <QApplication>
 #include <iostream>
+#include "graphStream.h"
 
 using namespace std;
 using namespace cuGraph;
@@ -10,6 +11,9 @@ using namespace cuGraph;
 int main(int argc, char** argv) {
     Graph g1(10);
     g1.fillByBaselineER(100, 0.5);
+
+    Graph *g3;
+    g3 = &g1;
 
     int a = 10;
     a = a+1;
@@ -23,9 +27,12 @@ int main(int argc, char** argv) {
     //g1.writeGML("src/texts/gmelo.gml");
 
     GraphDraw draw(argc, argv);
-    draw.setGraph(&g1);
+    draw.setGraph(g3);
     draw.randomPositions();
     draw.exec();
+
+    GraphIO gio("src/gmls/gmleo");
+    gio << g1;
 }
 
 
