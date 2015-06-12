@@ -1,13 +1,15 @@
 #include <iostream>
 #include <algorithm>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
 #include "Path.h"
 #include "Graph.h"
 #include "Exceptions.h"
-#include <cstdio>
+#include <stdio.h>
+#include <fstream>
 
+#include <string>
 using namespace std;
 
 namespace cuGraph {
@@ -28,6 +30,55 @@ namespace cuGraph {
 
     Graph::~Graph(void) {
         delete content;
+    }
+
+    void Graph::readText(char *file_name) {
+        ifstream myfile;
+        myfile.open(file_name);
+
+        myfile >> numberOfVertices;
+        myfile >> numberOfEdges;
+
+        int v1, v2;
+        while (myfile >> v1) {
+            myfile >> v2;
+            content[v1 * numberOfVertices + v2] = 1;
+        }
+        myfile.close();
+    }
+
+    void Graph::writeText(char* file_name) {
+        ofstream myfile;
+        myfile.open(file_name);
+        myfile << numberOfVertices << "\n";
+        myfile << numberOfEdges << "\n";
+
+        for(int i=0; i < numberOfVertices; i++) {
+            for(int j=0; j < numberOfVertices; j++) {
+                if(isDirectlyConnected(i, j)) {
+                    myfile << i << "\t" << j << "\n";
+                }
+            }
+        }
+
+        myfile.close();
+    }
+
+    void Graph::writeGML(char* file_name) {
+        ofstream myfile;
+        myfile.open(file_name);
+        myfile << "graph {" << "\n";
+
+        for(int i=0; i < numberOfVertices; i++) {
+            for(int j=0; j < numberOfVertices; j++) {
+                if(isDirectlyConnected(i, j)) {
+                    myfile << "\t" << i <<" -- " << j << ";\n";
+                }
+            }
+        }
+
+        myfile << "}" << "\n";
+        myfile.close();
     }
 
     void Graph::setType(int dir, int lp) {

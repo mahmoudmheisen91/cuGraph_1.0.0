@@ -13,12 +13,19 @@ int main(int argc, char** argv) {
 
     int a = 10;
     a = a+1;
-    std::cout << a << std::endl;
+    cout << a << endl;
 
-    GraphDraw draw(argc, argv);
-    draw.setGraph(&g1);
-    draw.randomPositions();
-    draw.exec();
+    g1.writeText("src/texts/g1_10_100_0.5");
+    Graph g2(10);
+    g2.readText("src/texts/g1_10_100_0.5");
+    g2.writeText("src/texts/g1_10_100_0.5_2");
+
+    g1.writeGML("src/texts/gmelo.gml");
+
+    //GraphDraw draw(argc, argv);
+    //draw.setGraph(&g1);
+    //draw.randomPositions();
+    //draw.exec();
 }
 
 

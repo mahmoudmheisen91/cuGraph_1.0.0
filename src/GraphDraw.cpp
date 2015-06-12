@@ -52,7 +52,10 @@ namespace cuGraph {
         for (int v = 0; v < verts; v++) {
             for (int u = 0; u < verts; u++) {
                 if (g_global->isDirectlyConnected(v, u)) {
-                    draw_editor->line(Point(posx[v], posy[v]), Point(posx[u], posy[u]));
+                    if(graph_direction == UN_DIRECTED)
+                        draw_editor->line(Point(posx[v], posy[v]), Point(posx[u], posy[u]));
+                    else
+                        draw_editor->arrowLine(Point(posx[v], posy[v]), Point(posx[u], posy[u]));
                 }
             }
         }
@@ -73,6 +76,8 @@ namespace cuGraph {
         char str[100];
         sprintf(str, "Number of Vertices = %d, Number of Edges = %d", verts, edges);
         draw_editor->text(Point(190, 15), str);
+
+        draw_editor->save("name.png");
 
         app->exec(); // wait until window is closed
     }

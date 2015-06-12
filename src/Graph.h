@@ -7,6 +7,10 @@
 #define SELF_LOOP       2 // TODO: conect loop with the generators
 #define NO_SELF_LOOP    3
 
+#include <iostream>
+
+using namespace std;
+
 namespace cuGraph {
 
     class Graph {
@@ -14,6 +18,12 @@ namespace cuGraph {
             Graph();
             Graph(int numberOfVertices);
             virtual ~Graph();
+
+            void readText(char *file_name);
+            void writeText(char *file_name);
+
+            void readGML(char *file_name);
+            void writeGML(char *file_name);
 
             void setType(int dir, int lp);
             int getDir();
