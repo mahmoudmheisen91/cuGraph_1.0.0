@@ -22,6 +22,8 @@ namespace cuGraph {
             void setLineWidth(double width);
             void setColor(Color newColor);
             void save(QString filename);
+            double getHeight();
+            double getWidth();
 
         protected:
             void paintEvent(QPaintEvent *);
@@ -31,6 +33,7 @@ namespace cuGraph {
             QPixmap* map;
             Color color;
             double lineWidth;
+            double height, width;
             Point midPoint(Point p0, Point p1);
             void arrow(Point p0, Point p1);
     };

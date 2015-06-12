@@ -38,6 +38,15 @@ namespace cuGraph {
             set(p.x, p.y);
         }
     };
+
+    typedef struct _settings {
+        Color node_color;
+        Color edge_color;
+        Color text_color;
+        int line_width;
+        bool is_numbered;
+        bool is_scalable;
+    } Settings;
 }
 
 #endif // DATATYPES_HPP

@@ -1,32 +1,13 @@
-Skip to content
-This repository
-Pull requests
-Issues
-Gist
- @mahmoudmheisen91
- Unwatch 1
-  Star 0
-  Fork 0
-mahmoudmheisen91/cuGraph_1.0.0
- tree: 13d9141851  cuGraph_1.0.0/src/GraphDraw/Editor.cpp
-@mahmoudmheisen91mahmoudmheisen91 an hour ago Add arrow line method to the Editor class
-1 contributor
-RawBlameHistory    165 lines (128 sloc)  4.573 kB
 #include "Editor.h"
 #include <QPainter>
-#include <QApplication>
-#include <QPixmap>
-#include <QWidget>
 #include <QThread>
 #include <math.h>
-#include <iostream>
-
-using namespace std;
 
 namespace cuGraph {
 
     Editor::Editor() : QWidget(0) {
-        setFixedSize(1300, 650);
+        height = 650; width = 1300;
+        setFixedSize(width, height);
         move(60, 60);
         setWindowTitle("cuGraph - draw");
         QWidget::show();
@@ -34,7 +15,7 @@ namespace cuGraph {
         color.set(0, 0, 0);
         lineWidth = 1;
         pen = new QPen;
-        map = new QPixmap(1300, 650);
+        map = new QPixmap(width, height);
         (*map).fill();
     }
 
@@ -96,7 +77,8 @@ namespace cuGraph {
         (*painter).setRenderHint(QPainter::Antialiasing, true);
         (*painter).setFont(QFont("Arial", 12));
         (*painter).setPen(*pen);
-        (*painter).drawText(QPointF(p.x+5, p.y+15), text);
+        QRectF rect(p.x-width/2, p.y-height/2, width, height);
+        (*painter).drawText(rect, Qt::AlignCenter, text);
         delete painter;
     }
 
@@ -113,6 +95,14 @@ namespace cuGraph {
     void Editor::save(QString filename) {
         QThread::yieldCurrentThread();
         map->save(filename);
+    }
+
+    double Editor::getHeight() {
+        return height;
+    }
+
+    double Editor::getWidth() {
+        return width;
     }
 
     void Editor::paintEvent(QPaintEvent *) {
@@ -175,6 +165,3 @@ namespace cuGraph {
 
 } // end of namespace
 
-
-Status API Training Shop Blog About
-© 2015 GitHub, Inc. Terms Privacy Security Contact

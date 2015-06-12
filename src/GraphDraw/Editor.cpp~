@@ -9,7 +9,7 @@ namespace cuGraph {
         height = 650; width = 1300;
         setFixedSize(width, height);
         move(60, 60);
-        setWindowTitle("cuGraph - editor");
+        setWindowTitle("cuGraph - draw");
         QWidget::show();
 
         color.set(0, 0, 0);
@@ -77,7 +77,7 @@ namespace cuGraph {
         (*painter).setRenderHint(QPainter::Antialiasing, true);
         (*painter).setFont(QFont("Arial", 12));
         (*painter).setPen(*pen);
-        QRectF rect(p.x-width/2, p.y-height/2, width, height);
+        QRectF rect(x-width/2, y-height/2, width, height);
         (*painter).drawText(rect, Qt::AlignCenter, text);
         delete painter;
     }
@@ -164,3 +164,4 @@ namespace cuGraph {
     }
 
 } // end of namespace
+
