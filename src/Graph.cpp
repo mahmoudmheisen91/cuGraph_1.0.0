@@ -14,9 +14,27 @@ using namespace std;
 
 namespace cuGraph {
 
-    Graph::Graph() {}
+    Graph::Graph() :numberOfVertices(0) {
+        size = 0;
+        numberOfEdges = 0;
+        content = NULL;
+
+        // Default values:
+        direction = UN_DIRECTED;
+        loop = SELF_LOOP;
+    }
+
+    // TODO: limitation: this will delete the contents
+    void Graph::setNumberOfVertices(int verts) {
+        checkVertixesBound(verts);
+        numberOfVertices = verts;
+        size = pow(numberOfVertices, 2);
+
+        clear();
+    }
 
     Graph::Graph(int V) :numberOfVertices(V) {
+        checkVertixesBound(V);
         size = pow(numberOfVertices, 2);
         numberOfEdges = 0;
         content = new int[size];
@@ -32,9 +50,11 @@ namespace cuGraph {
         delete content;
     }
 
-    void Graph::readText(char *file_name) {
+    void Graph::readText(string file_name) {
+        char *cstr = &file_name[0u];
+
         ifstream myfile;
-        myfile.open(file_name);
+        myfile.open(cstr);
 
         myfile >> numberOfVertices;
         myfile >> numberOfEdges;
@@ -47,9 +67,12 @@ namespace cuGraph {
         myfile.close();
     }
 
-    void Graph::writeText(char* file_name) {
+    void Graph::writeText(string file_name) {
+        char *cstr = &file_name[0u];
+
         ofstream myfile;
-        myfile.open(file_name);
+        myfile.open(cstr);
+
         myfile << numberOfVertices << "\n";
         myfile << numberOfEdges << "\n";
 
@@ -64,15 +87,30 @@ namespace cuGraph {
         myfile.close();
     }
 
-    void Graph::writeGML(char* file_name) {
+    void Graph::writeGML(string file_name) {
+        char *cstr = &file_name[0u];
+
         ofstream myfile;
-        myfile.open(file_name);
+        myfile.open(cstr);
         myfile << "graph {" << "\n";
 
         for(int i=0; i < numberOfVertices; i++) {
             for(int j=0; j < numberOfVertices; j++) {
-                if(isDirectlyConnected(i, j)) {
-                    myfile << "\t" << i <<" -- " << j << ";\n";
+                if(direction == UN_DIRECTED) {
+                    if(isDirectlyConnected(i, j)) {
+                        removeEdge(j, i);
+                        myfile << "\t" << i <<" -- " << j << ";\n";
+                    }
+                }
+            }
+        }
+
+        if(direction == UN_DIRECTED) {
+            for(int i=0; i < numberOfVertices; i++) {
+                for(int j=0; j < numberOfVertices; j++) {
+                    if(isDirectlyConnected(i, j)) {
+                        addEdge(j, i);
+                    }
                 }
             }
         }
@@ -86,16 +124,10 @@ namespace cuGraph {
         loop = lp;
     }
 
-    int Graph::getDir() {
-        return direction;
-    }
-
-    int Graph::getLp() {
-        return loop;
-    }
-
     void Graph::clear(void) {
-        delete content;
+        if(content != NULL)
+            delete content;
+
         numberOfEdges = 0;
         content = new int[size];
         fill(content, content+size, 0);
@@ -186,7 +218,7 @@ namespace cuGraph {
     }
 
     void Graph::fillByBaselineER(int E, double p) {// TODO: check p
-        checkEdgeRange(E);
+        checkEdgesBound(E);
         srand(time(0));
         double theta;
 
@@ -203,7 +235,7 @@ namespace cuGraph {
     }
 
     void Graph::fillByZER(int E, double p) {
-        checkEdgeRange(E);
+        checkEdgesBound(E);
         srand(time(0));
         double theta, logp;
 
@@ -224,7 +256,7 @@ namespace cuGraph {
     }
 
     void Graph::fillByPreLogZER(int E, double p) {
-        checkEdgeRange(E);
+        checkEdgesBound(E);
         srand(time(0));
         double *logp = new double[RAND_MAX];
         double c;
@@ -251,7 +283,7 @@ namespace cuGraph {
     }
 
     void Graph::fillByPreZER(int E, double p, int m) {
-        checkEdgeRange(E);
+        checkEdgesBound(E);
         srand(time(0));
         double theta, logp;
         double *F = new double[m+1];
@@ -289,30 +321,29 @@ namespace cuGraph {
         }
     }
 
-    int Graph::getSize(void) {
-        return size;
-    }
-
-    int *Graph::getContent(void) {
-        return content;
-    }
-
-    int Graph::getNumberOfEdges(void) {
-        return numberOfEdges;
-    }
-
-    int Graph::getNumberOfVertices(void) {
-        return numberOfVertices;
-    }
-
-
     void Graph::checkVertixName(int vert) {
         if (vert < 0 || vert >= numberOfVertices)
             throw new GraphVertexOutOfBoundsException(numberOfVertices, vert);
     }
 
-    void Graph::checkEdgeRange(int edge) {
+    void Graph::checkEdgesBound(int edge) {
         if (edge < 0 || edge > size)
             throw new GraphEdgeOutOfBoundsException(size, edge);
     }
+
+    void Graph::checkVertixesBound(int verts) {
+        if (verts <= 0)
+            throw new GraphNumberOfVertexOutOfBoundsException(verts);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

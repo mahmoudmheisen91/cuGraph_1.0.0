@@ -21,4 +21,12 @@ class GraphEdgeOutOfBoundsException : public exception {
     private:
 };
 
+class GraphNumberOfVertexOutOfBoundsException : public exception {
+    public:
+        GraphNumberOfVertexOutOfBoundsException(int verts);
+        virtual string what(int verts) const throw();
+    protected:
+    private:
+};
+
 #endif // EXCEPTIONS_H_

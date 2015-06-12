@@ -31,9 +31,9 @@ namespace cuGraph {
 
     void GraphDraw::setGraph(Graph *g) {
         g_global = g;
-        setGraphDrawType(g_global->getDir(), g_global->getLp());
-        verts = g_global->getNumberOfVertices();
-        edges = g_global->getNumberOfEdges();
+        setGraphDrawType(g_global->direction, g_global->loop);
+        verts = g_global->numberOfVertices;
+        edges = g_global->numberOfEdges;
 
         posx = new double[verts];
         posy = new double[verts];

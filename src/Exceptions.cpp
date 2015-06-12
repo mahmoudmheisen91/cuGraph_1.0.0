@@ -27,3 +27,14 @@ string GraphEdgeOutOfBoundsException::what(int size, int edge) const throw() {
     string s = sstm.str();
     return s;
 }
+
+GraphNumberOfVertexOutOfBoundsException::GraphNumberOfVertexOutOfBoundsException(int verts) {
+    cout << what(verts) << endl;
+}
+
+string GraphNumberOfVertexOutOfBoundsException::what(int verts) const throw() {
+    stringstream sstm;
+    sstm << "Number of Vertixes (" << verts << ") is <= 0 (";
+    string s = sstm.str();
+    return s;
+}

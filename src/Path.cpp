@@ -10,7 +10,7 @@ namespace cuGraph {
     Path::Path(Graph *G, int s) {
         // init data structures:
         fromHere = s;
-        size = G->getNumberOfVertices();
+        size = G->numberOfVertices;
         visited = new bool[size];
         edgeTo = new int[size];
 
@@ -28,7 +28,7 @@ namespace cuGraph {
 
     void Path::dfs(Graph *G, int u) {
         visited[u] = true;
-        int *content = G->getContent();
+        int *content = G->content;
         for(int v = 0; v < size; v++) {
             if(!visited[v] && content[u * size + v]) {
                 dfs(G, v);

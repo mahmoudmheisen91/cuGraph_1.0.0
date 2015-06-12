@@ -1,6 +1,11 @@
 #ifndef DATATYPES_HPP
 #define DATATYPES_HPP
 
+#define DIRECTED        0
+#define UN_DIRECTED     1
+#define SELF_LOOP       2 // TODO: conect loop with the generators
+#define NO_SELF_LOOP    3
+
 namespace cuGraph {
 
     struct Color {

@@ -17,15 +17,15 @@ int main(int argc, char** argv) {
 
     g1.writeText("src/texts/g1_10_100_0.5");
     Graph g2(10);
-    g2.readText("src/texts/g1_10_100_0.5");
-    g2.writeText("src/texts/g1_10_100_0.5_2");
+    //g2.readText("src/texts/g1_10_100_0.5");
+    //g2.writeText("src/texts/g1_10_100_0.5_2");
 
-    g1.writeGML("src/texts/gmelo.gml");
+    //g1.writeGML("src/texts/gmelo.gml");
 
-    //GraphDraw draw(argc, argv);
-    //draw.setGraph(&g1);
-    //draw.randomPositions();
-    //draw.exec();
+    GraphDraw draw(argc, argv);
+    draw.setGraph(&g1);
+    draw.randomPositions();
+    draw.exec();
 }
 
 

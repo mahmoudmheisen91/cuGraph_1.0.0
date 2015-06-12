@@ -2,32 +2,31 @@
 #define GRAPH_H_
 // acycle graph
 
-#define DIRECTED        0
-#define UN_DIRECTED     1
-#define SELF_LOOP       2 // TODO: conect loop with the generators
-#define NO_SELF_LOOP    3
-
 #include <iostream>
+#include <string>
+#include "dataTypes.h"
 
 using namespace std;
 
 namespace cuGraph {
 
     class Graph {
+        friend class GraphDraw;
+        friend class Path;
+
         public:
             Graph();
             Graph(int numberOfVertices);
             virtual ~Graph();
 
-            void readText(char *file_name);
-            void writeText(char *file_name);
+            void readText(string file_name);
+            void writeText(string file_name);
 
-            void readGML(char *file_name);
-            void writeGML(char *file_name);
+            void readGML(string file_name);
+            void writeGML(string file_name);
 
             void setType(int dir, int lp);
-            int getDir();
-            int getLp();
+            void setNumberOfVertices(int verts);
 
             void clear(void);
             void addEdge(int v1, int v2);
@@ -48,24 +47,18 @@ namespace cuGraph {
             void fillByPZER(int E, double p);
             void fillByPPreZER(int E, double p, int m);
 
-            int  getSize(void);
-            int* getContent(void);
-            int  getNumberOfEdges(void);
-            int  getNumberOfVertices(void);
-
         protected:
-
-        private:
             int  size;
             int* content;
             int  numberOfVertices;
             int  numberOfEdges;
-
             int direction;
             int loop;
 
+        private:
             void checkVertixName(int vert);
-            void checkEdgeRange(int edge);
+            void checkEdgesBound(int edge);
+            void checkVertixesBound(int verts);
         };
 }
 #endif // GRAPH_H_
