@@ -1,12 +1,9 @@
 #include "GraphDraw.h"
 #include <QApplication>
 #include <iostream>
+#include <math.h>
 
 namespace cuGraph {
-
-    GraphDraw::GraphDraw() {
-
-    }
 
     GraphDraw::GraphDraw(int argc, char** argv) {
         app = new QApplication(argc, argv);
@@ -18,7 +15,7 @@ namespace cuGraph {
         draw_settings.text_color = Color(0, 0, 0);
         draw_settings.line_width = 2;
         draw_settings.is_numbered = true;
-        draw_settings.is_scalable = true;
+        draw_settings.node_size = 15;
     }
 
     GraphDraw::~GraphDraw() {
@@ -44,7 +41,7 @@ namespace cuGraph {
         graph_loop = lp;
     }
 
-    void GraphDraw::exec() {
+    void GraphDraw::run(void) {
 
         draw_editor->setColor(draw_settings.edge_color);
         draw_editor->setLineWidth(draw_settings.line_width);
@@ -62,15 +59,16 @@ namespace cuGraph {
 
         draw_editor->setColor(draw_settings.node_color);
         for (int v = 0; v < verts; v++) {
-            int nodes = g_global->adjacentNodes(v);
-            draw_editor->circle(Point(posx[v], posy[v]), 2*nodes);
+            draw_editor->circle(Point(posx[v], posy[v]), draw_settings.node_size);
         }
 
-        draw_editor->setColor(draw_settings.text_color);
-        for (int v=0; v < verts; v++) {
-            char str[10];
-            sprintf(str, "%d", v);
-            draw_editor->text(Point(posx[v], posy[v]), str);
+        if(draw_settings.is_numbered) {
+            draw_editor->setColor(draw_settings.text_color);
+            for (int v=0; v < verts; v++) {
+                char str[10];
+                sprintf(str, "%d", v);
+                draw_editor->text(Point(posx[v], posy[v]), str);
+            }
         }
 
         char str[100];
@@ -82,7 +80,7 @@ namespace cuGraph {
         app->exec(); // wait until window is closed
     }
 
-    void GraphDraw::randomPositions() {
+    void GraphDraw::randomPositions(void) {
         int W = draw_editor->getWidth() - 60;
         int L = draw_editor->getHeight() - 60;
 
@@ -97,6 +95,6 @@ namespace cuGraph {
         draw_settings.edge_color = set.edge_color;
         draw_settings.line_width = set.line_width;
         draw_settings.is_numbered = set.is_numbered;
-        draw_settings.is_scalable = set.is_scalable;
     }
 }
+

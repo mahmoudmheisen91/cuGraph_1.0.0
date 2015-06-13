@@ -49,8 +49,8 @@ namespace cuGraph {
         Color edge_color;
         Color text_color;
         int line_width;
+        int node_size;
         bool is_numbered;
-        bool is_scalable;
     } Settings;
 }
 

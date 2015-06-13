@@ -5,24 +5,23 @@
 #include "Graph.h"
 
 namespace cuGraph {
+
     class GraphDraw {
 
         public:
-            GraphDraw();
             GraphDraw(int argc, char **argv);
             virtual ~GraphDraw();
-            void setGraphDrawType(int dir, int lp);
+
             void setGraph(Graph *g);
-            void exec();
-            void randomPositions();
             void setDrawSettings(Settings set);
+
+            void run(void);
+            void randomPositions(void);
 
         protected:
 
         private:
             double *posx, *posy;
-            int graph_direction;
-            int graph_loop;
             Settings draw_settings;
             int verts, edges;
             QApplication *app;

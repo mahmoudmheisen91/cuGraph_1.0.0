@@ -53,96 +53,6 @@ namespace cuGraph {
         delete content;
     }
 
-//    Graph &Graph::operator =(const Graph &other) {
-//        // Check for self-assignment!
-//        assert(this != &other);     // self-assignment check not required
-//        delete content;         // delete this storage
-//        content = new int[other.size];  // move
-//        memcpy(content, other.content, size);
-//        numberOfVertices = other.numberOfVertices;
-//        numberOfEdges = other.numberOfEdges;
-//        direction = other.direction;
-//        loop = other.loop;
-
-//        return *this;
-//    }
-
-    void Graph::readText(string file_name) {
-        char *cstr = &file_name[0u];
-
-        ifstream myfile;
-        myfile.open(cstr);
-
-        myfile >> numberOfVertices;
-        myfile >> numberOfEdges;
-
-        int v1, v2;
-        while (myfile >> v1) {
-            myfile >> v2;
-            content[v1 * numberOfVertices + v2] = 1;
-        }
-        myfile.close();
-    }
-
-    void Graph::writeText(string file_name) {
-        char *cstr = &file_name[0u];
-
-        ofstream myfile;
-        myfile.open(cstr);
-
-        myfile << numberOfVertices << "\n";
-        myfile << numberOfEdges << "\n";
-
-        for(int i=0; i < numberOfVertices; i++) {
-            for(int j=0; j < numberOfVertices; j++) {
-                if(isDirectlyConnected(i, j)) {
-                    myfile << i << "\t" << j << "\n";
-                }
-            }
-        }
-
-        myfile.close();
-    }
-
-    void Graph::writeGML(string file_name) {
-        char *cstr = &file_name[0u];
-
-        ofstream myfile;
-        myfile.open(cstr);
-        myfile << "graph {" << "\n";
-
-        if(direction == UN_DIRECTED) {
-            for(int i=0; i < numberOfVertices; i++) {
-                for(int j=0; j < numberOfVertices; j++) {
-                    if(isDirectlyConnected(i, j)) {
-                        removeEdge(j, i);
-                        myfile << "\t" << i <<" -- " << j << ";\n";
-                    }
-                }
-            }
-
-            for(int i=0; i < numberOfVertices; i++) {
-                for(int j=0; j < numberOfVertices; j++) {
-                    if(isDirectlyConnected(i, j)) {
-                        addEdge(j, i);
-                    }
-                }
-            }
-        }
-        else {
-            for(int i=0; i < numberOfVertices; i++) {
-                for(int j=0; j < numberOfVertices; j++) {
-                    if(isDirectlyConnected(i, j)) {
-                        myfile << "\t" << i <<" -> " << j << ";\n";
-                    }
-                }
-            }
-        }
-
-        myfile << "}" << "\n";
-        myfile.close();
-    }
-
     void Graph::setType(int dir, int lp) {
         direction = dir;
         loop = lp;
@@ -184,15 +94,6 @@ namespace cuGraph {
                 content[v2 * numberOfVertices + v1] = 0;
             numberOfEdges--;
         }
-    }
-
-    int Graph::adjacentNodes(int v) {
-        int ret = 0;
-        for (int i=0; i<numberOfVertices; i++) {
-            if(isDirectlyConnected(v, i))
-                ret++;
-        }
-        return ret;
     }
 
     // from edge prespective not vertix (because vertices is constant (cuda))

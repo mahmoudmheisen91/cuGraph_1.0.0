@@ -13,20 +13,13 @@ namespace cuGraph {
     class Graph {
         friend class GraphDraw;
         friend class Path;
-        friend class GraphIO;
+        friend class ogstream;
+        friend class igstream;
 
         public:
             Graph();
             Graph(int numberOfVertices);
             virtual ~Graph();
-
-//            Graph& operator=(const Graph &g);
-
-            void readText(string file_name);
-            void writeText(string file_name);
-
-            void readGML(string file_name);
-            void writeGML(string file_name);
 
             void setType(int dir, int lp);
             void setNumberOfVertices(int verts);
@@ -34,7 +27,6 @@ namespace cuGraph {
             void clear(void);
             void addEdge(int v1, int v2);
             void removeEdge(int v1, int v2);
-            int adjacentNodes(int v);
 
             bool isEmpty(void);
             bool isConnected(int v1, int v2);

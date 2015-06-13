@@ -11,7 +11,7 @@ INCL = -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
 OFLAGS = $(INCL) -Wall -Wno-unreachable-code -Wno-return-type
 
 # C++ Sources:
-CPPSOURCES += src/main.cpp src/Graph.cpp src/Path.cpp src/Exceptions.cpp src/GraphDraw.cpp src/graphStream.cpp
+CPPSOURCES += src/main.cpp src/Graph.cpp src/Path.cpp src/Exceptions.cpp  src/gstream.cpp
 
 # Executable file:
 EXECUTABLE = cuGraph_1.0.0
