@@ -1,9 +1,7 @@
 #include <iostream>
-#include "test_graph.h"
-#include "Graph.h"
+#include <test/functional_test.h>
 
 using namespace std;
-using namespace cuGraph;
 
 int main(int argc, char** argv) {
 

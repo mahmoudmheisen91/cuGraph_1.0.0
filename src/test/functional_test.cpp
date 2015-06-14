@@ -1,7 +1,7 @@
 #include <iostream>
-#include "test_graph.h"
-#include "Graph.h"
-#include "Exceptions.h"
+#include <test/functional_test.h>
+#include <main/Graph.h>
+#include <main/Exceptions.h>
 #include <assert.h>
 
 using namespace std;

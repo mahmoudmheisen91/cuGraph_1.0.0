@@ -16,10 +16,11 @@ GRAPH  = _release/Graph.o
 PATHC = _release/Path.o
 EXCEP = _release/Exceptions.o
 APP = output/bin/main/cuGraph_1.0.0
+FUNC_TEST = output/bin/test/functional_test
 
 # Shell Commands:
 all: $(EDITOR) $(EXCEP) $(GRAPH) $(PATHC) $(APP)
-test: $(EDITOR) $(EXCEP) $(GRAPH) $(PATHC) $(TEST)
+functional_test: $(EDITOR) $(EXCEP) $(GRAPH) $(PATHC) $(FUNC_TEST)
 
 clean:
 	$(RM) $(shell pwd)/output/GML/*~
@@ -40,6 +41,9 @@ clean:
 
 run: 
 	./$(APP)
+	
+run_functional_test: 
+	./$(FUNC_TEST)
 		
 # Build Commands:	
 $(EDITOR): src/main/Editor.cpp include/main/Editor.h
@@ -60,6 +64,10 @@ $(PATHC): src/main/Path.cpp _release/Graph.o
 $(APP): main.cpp \
 _release/Graph.o _release/Path.o _release/Exceptions.o
 	$(CPP) $^ $(INCFLAGS) -o $(APP)
+	
+$(FUNC_TEST): src/test/maintest.cpp src/test/functional_test.cpp \
+_release/Graph.o _release/Path.o _release/Exceptions.o include/test/functional_test.h
+	$(CPP) $^ $(INCFLAGS) -o $(FUNC_TEST)
 	
 #$(EXECUTABLE): $(CPPSOURCES) src/Editor.h
 #	$(CPP) $^ $(INCL) src/Editor.o $(FLAGS) -o bin/$@
