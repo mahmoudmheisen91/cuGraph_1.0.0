@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
     cout << g2.isEmpty() << endl;
     gis.close();
 
+    return 0;
 }
 
 

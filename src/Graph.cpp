@@ -25,10 +25,12 @@ namespace cuGraph {
         // Default values:
         direction = UN_DIRECTED;
         loop = SELF_LOOP;
+        isInit = false;
     }
 
     Graph::Graph(int V) :numberOfVertices(V) {
         checkVertixesBound(V);
+
         size = pow(numberOfVertices, 2);
         numberOfEdges = 0;
         content = new bool[size];
@@ -38,6 +40,8 @@ namespace cuGraph {
         // Default values:
         direction = UN_DIRECTED;
         loop = SELF_LOOP;
+
+        isInit = true;
     }
 
     Graph::~Graph(void) {
@@ -45,8 +49,10 @@ namespace cuGraph {
     }
 
     void Graph::setType(int dir, int lp) {
-        if(!isEmpty())
-            clear();
+        clear();
+
+        checkDir(dir);
+        checkLoop(lp);
 
         direction = dir;
         loop = lp;
@@ -55,6 +61,7 @@ namespace cuGraph {
     void Graph::setNumberOfVertices(int verts) {
         checkVertixesBound(verts);
 
+        isInit = true;
         numberOfVertices = verts;
         size = pow(numberOfVertices, 2);
 
@@ -71,6 +78,9 @@ namespace cuGraph {
     }
 
     void Graph::addEdge(int v1, int v2) {
+        if(numberOfVertices > 0)
+            isInit = true;
+
         if(isFull())
             throw new GraphIsFullException();
 
@@ -84,6 +94,9 @@ namespace cuGraph {
     }
 
     void Graph::removeEdge(int v1, int v2) {
+        if(numberOfVertices > 0)
+            isInit = true;
+
         if(isEmpty())
             throw new GraphIsEmptyException();
 
@@ -101,18 +114,26 @@ namespace cuGraph {
 
     // from edge prespective not vertix (because vertices is constant (cuda))
     bool Graph::isFull(void) {
-        if(numberOfEdges == pow(numberOfVertices, 2))
-            return true;
-
-        return false;
+        if(isInit) {
+            if(numberOfEdges == pow(numberOfVertices, 2))
+                return true;
+            else
+                return false;
+        }
+        else
+            throw new GraphIsNotInitException();
     }
 
     // from edge prespective not vertix (because vertices is constant (cuda))
     bool Graph::isEmpty(void) {
-        if(numberOfEdges == 0)
-            return true;
-
-        return false;
+        if(isInit) {
+            if(numberOfEdges == 0)
+                return true;
+            else
+                return false;
+        }
+        else
+            throw new GraphIsNotInitException();
     }
 
     bool Graph::isConnected(int v1, int v2) {
@@ -263,6 +284,32 @@ namespace cuGraph {
                 }
             }
         }
+    }
+
+    long Graph::getNumberOfVertices(void) {
+        return numberOfVertices;
+    }
+
+    long Graph::getNumberOfEdges(void) {
+        return numberOfEdges;
+    }
+
+    int Graph::getDirection(void) {
+        return direction;
+    }
+
+    int Graph::getLoop(void) {
+        return loop;
+    }
+
+    void Graph::checkDir(int dir) {
+        if(dir != UN_DIRECTED && dir != DIRECTED)
+            throw new GraphDirectionTypeException();
+    }
+
+    void Graph::checkLoop(int lp) {
+        if(lp != SELF_LOOP && lp != NO_SELF_LOOP)
+            throw new GraphLoopTypeException();
     }
 
     void Graph::checkVertixName(int vert) {

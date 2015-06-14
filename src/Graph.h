@@ -41,15 +41,24 @@ namespace cuGraph {
             void fillByPZER(int E, double p);
             void fillByPPreZER(int E, double p, int m);
 
+            long getNumberOfVertices(void);
+            long getNumberOfEdges(void);
+            int getDirection(void);
+            int getLoop(void);
+
         protected:
-            int  size;
             bool* content;
+
+        private:
+            bool isInit;
+            long long int  size;
             long long int  numberOfVertices;
             long long int  numberOfEdges;
             int direction;
             int loop;
 
-        private:
+            void checkDir(int dir);
+            void checkLoop(int lp);
             void checkVertixName(int vert);
             void checkEdgesBound(int edge);
             void checkVertixesBound(int verts);
