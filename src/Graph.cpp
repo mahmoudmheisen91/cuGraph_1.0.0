@@ -27,20 +27,11 @@ namespace cuGraph {
         loop = SELF_LOOP;
     }
 
-    // TODO: limitation: this will delete the contents
-    void Graph::setNumberOfVertices(int verts) {
-        checkVertixesBound(verts);
-        numberOfVertices = verts;
-        size = pow(numberOfVertices, 2);
-
-        clear();
-    }
-
     Graph::Graph(int V) :numberOfVertices(V) {
         checkVertixesBound(V);
         size = pow(numberOfVertices, 2);
         numberOfEdges = 0;
-        content = new int[size];
+        content = new bool[size];
 
         fill(content, content+size, 0);
 
@@ -54,8 +45,20 @@ namespace cuGraph {
     }
 
     void Graph::setType(int dir, int lp) {
+        if(!isEmpty())
+            clear();
+
         direction = dir;
         loop = lp;
+    }
+
+    void Graph::setNumberOfVertices(int verts) {
+        checkVertixesBound(verts);
+
+        numberOfVertices = verts;
+        size = pow(numberOfVertices, 2);
+
+        clear();
     }
 
     void Graph::clear(void) {
@@ -63,37 +66,45 @@ namespace cuGraph {
             delete content;
 
         numberOfEdges = 0;
-        content = new int[size];
+        content = new bool[size];
         fill(content, content+size, 0);
     }
 
     void Graph::addEdge(int v1, int v2) {
-        if(isFullyConnected())
-            throw new GraphEdgeOutOfBoundsException(size, pow(numberOfEdges, 2));
+        if(isFull())
+            throw new GraphIsFullException();
 
         checkVertixName(v1);
         checkVertixName(v2);
-        content[v1 * numberOfVertices + v2] = 1;
+        content[v1 * numberOfVertices + v2] = true;
+        numberOfEdges++;
 
         if (direction == UN_DIRECTED)
-            content[v2 * numberOfVertices + v1] = 1;
-        numberOfEdges++;
+            content[v2 * numberOfVertices + v1] = true;
     }
 
     void Graph::removeEdge(int v1, int v2) {
         if(isEmpty())
-            throw new GraphEdgeOutOfBoundsException(size, 0);
+            throw new GraphIsEmptyException();
 
         checkVertixName(v1);
         checkVertixName(v2);
 
         if(isDirectlyConnected(v1, v2)) {
-            content[v1 * numberOfVertices + v2] = 0;
+            content[v1 * numberOfVertices + v2] = false;
 
             if (direction == UN_DIRECTED)
-                content[v2 * numberOfVertices + v1] = 0;
+                content[v2 * numberOfVertices + v1] = false;
             numberOfEdges--;
         }
+    }
+
+    // from edge prespective not vertix (because vertices is constant (cuda))
+    bool Graph::isFull(void) {
+        if(numberOfEdges == pow(numberOfVertices, 2))
+            return true;
+
+        return false;
     }
 
     // from edge prespective not vertix (because vertices is constant (cuda))
@@ -110,13 +121,6 @@ namespace cuGraph {
 
         Path p(this, v1);
         return p.hasPathTo(v2);
-    }
-
-    bool Graph::isFullyConnected(void) {
-        if(numberOfEdges == pow(numberOfVertices, 2))
-            return true;
-
-        return false;
     }
 
     bool Graph::isDirectlyConnected(int v1, int v2) {
@@ -145,7 +149,13 @@ namespace cuGraph {
             if (theta < p) {
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                addEdge(v1, v2);
+                if(v1 != v2) {
+                    addEdge(v1, v2);
+                }
+                else {
+                    if(loop == SELF_LOOP)
+                        addEdge(v1, v2);
+                }
             }
         }
     }
@@ -166,7 +176,13 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                addEdge(v1, v2);
+                if(v1 != v2) {
+                    addEdge(v1, v2);
+                }
+                else {
+                    if(loop == SELF_LOOP)
+                        addEdge(v1, v2);
+                }
             }
         }
     }
@@ -193,7 +209,13 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                addEdge(v1, v2);
+                if(v1 != v2) {
+                    addEdge(v1, v2);
+                }
+                else {
+                    if(loop == SELF_LOOP)
+                        addEdge(v1, v2);
+                }
             }
         }
     }
@@ -232,7 +254,13 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                addEdge(v1, v2);
+                if(v1 != v2) {
+                    addEdge(v1, v2);
+                }
+                else {
+                    if(loop == SELF_LOOP)
+                        addEdge(v1, v2);
+                }
             }
         }
     }
@@ -252,5 +280,3 @@ namespace cuGraph {
             throw new GraphNumberOfVertexOutOfBoundsException(verts);
     }
 }
-
-

@@ -28,7 +28,7 @@ namespace cuGraph {
 
     void Path::dfs(Graph *G, int u) {
         visited[u] = true;
-        int *content = G->content;
+        bool *content = G->content;
         for(int v = 0; v < size; v++) {
             if(!visited[v] && content[u * size + v]) {
                 dfs(G, v);

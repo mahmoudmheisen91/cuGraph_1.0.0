@@ -28,9 +28,9 @@ namespace cuGraph {
             void addEdge(int v1, int v2);
             void removeEdge(int v1, int v2);
 
+            bool isFull(void);
             bool isEmpty(void);
             bool isConnected(int v1, int v2);
-            bool isFullyConnected(void);
             bool isDirectlyConnected(int v1, int v2);
 
             void fillByBaselineER(int E, double p);
@@ -43,9 +43,9 @@ namespace cuGraph {
 
         protected:
             int  size;
-            int* content;
-            int  numberOfVertices;
-            int  numberOfEdges;
+            bool* content;
+            long long int  numberOfVertices;
+            long long int  numberOfEdges;
             int direction;
             int loop;
 

@@ -12,12 +12,13 @@ OFLAGS = $(INCL) -Wall -Wno-unreachable-code -Wno-return-type
 
 # C++ Sources:
 CPPSOURCES += src/main.cpp src/Graph.cpp src/Path.cpp src/Exceptions.cpp  src/gstream.cpp
+TESTSOURCES += tests/maintest.cpp tests/test_graph.cpp
 
 # Executable file:
 EXECUTABLE = cuGraph_1.0.0
 
 # Shell Commands:
-all: src/Editor.o $(EXECUTABLE)
+all: src/Editor.o $(EXECUTABLE) tests
 
 run: 
 	./bin/$(EXECUTABLE)
@@ -37,6 +38,10 @@ src/Editor.o: src/Editor.cpp src/Editor.h
 	$(QT4C) src/Editor.h | $(CXX) $(OFLAGS) -c -x c++ - -include src/Editor.cpp -o src/Editor.o
 	
 $(EXECUTABLE): $(CPPSOURCES) src/Editor.h
+	$(CPP) $^ $(INCL) src/Editor.o $(FLAGS) -o bin/$@
+	
+tests: $(TESTSOURCES) src/Editor.h src/Graph.h src/Path.h src/Exceptions.h \
+tests/test_graph.h
 	$(CPP) $^ $(INCL) src/Editor.o $(FLAGS) -o bin/$@
 
 

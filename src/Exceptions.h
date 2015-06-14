@@ -29,6 +29,22 @@ namespace cuGraph {
         protected:
         private:
     };
+
+    class GraphIsFullException: public exception {
+        public:
+            GraphIsFullException(void);
+            virtual string what(int) const throw();
+        protected:
+        private:
+    };
+
+    class GraphIsEmptyException: public exception {
+        public:
+            GraphIsEmptyException(void);
+            virtual string what(int) const throw();
+        protected:
+        private:
+    };
 }
 
 #endif // EXCEPTIONS_H_

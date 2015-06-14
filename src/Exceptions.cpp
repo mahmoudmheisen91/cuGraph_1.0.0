@@ -39,4 +39,26 @@ namespace cuGraph {
         string s = sstm.str();
         return s;
     }
+
+    GraphIsFullException::GraphIsFullException(void) {
+        cout << what(0) << endl;
+    }
+
+    string GraphIsFullException::what(int) const throw() {
+        stringstream sstm;
+        sstm << "Graph is Fully connected!!";
+        string s = sstm.str();
+        return s;
+    }
+
+    GraphIsEmptyException::GraphIsEmptyException(void) {
+        cout << what(0) << endl;
+    }
+
+    string GraphIsEmptyException::what(int) const throw() {
+        stringstream sstm;
+        sstm << "Graph is Empty!!";
+        string s = sstm.str();
+        return s;
+    }
 }
