@@ -84,8 +84,11 @@ namespace cuGraph {
         if(isFull())
             throw new GraphIsFullException();
 
-        checkVertixName(v1);
-        checkVertixName(v2);
+        checkVertixName(v1, v2);
+
+        if (isDirectlyConnected(v1, v2))
+            return;
+
         content[v1 * numberOfVertices + v2] = true;
         numberOfEdges++;
 
@@ -100,8 +103,7 @@ namespace cuGraph {
         if(isEmpty())
             throw new GraphIsEmptyException();
 
-        checkVertixName(v1);
-        checkVertixName(v2);
+        checkVertixName(v1, v2);
 
         if(isDirectlyConnected(v1, v2)) {
             content[v1 * numberOfVertices + v2] = false;
@@ -137,16 +139,14 @@ namespace cuGraph {
     }
 
     bool Graph::isConnected(int v1, int v2) {
-        checkVertixName(v1);
-        checkVertixName(v2);
+        checkVertixName(v1, v2);
 
         Path p(this, v1);
         return p.hasPathTo(v2);
     }
 
     bool Graph::isDirectlyConnected(int v1, int v2) {
-        checkVertixName(v1);
-        checkVertixName(v2);
+        checkVertixName(v1, v2);
 
         if (direction == UN_DIRECTED) {
             if (content[v1 * numberOfVertices + v2] && content[v2 * numberOfVertices + v1])
@@ -312,9 +312,15 @@ namespace cuGraph {
             throw new GraphLoopTypeException();
     }
 
-    void Graph::checkVertixName(int vert) {
-        if (vert < 0 || vert >= numberOfVertices)
-            throw new GraphVertexOutOfBoundsException(numberOfVertices, vert);
+    void Graph::checkVertixName(int v1, int v2) {
+        if (v1 < 0 || v1 >= numberOfVertices)
+            throw new GraphVertexOutOfBoundsException(numberOfVertices, v1);
+
+        if (v2 < 0 || v2 >= numberOfVertices)
+            throw new GraphVertexOutOfBoundsException(numberOfVertices, v2);
+
+        if (v1 == v2 && loop == NO_SELF_LOOP)
+            throw new GraphLoopTypeException();
     }
 
     void Graph::checkEdgesBound(int edge) {

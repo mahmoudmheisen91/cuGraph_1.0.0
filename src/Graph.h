@@ -59,7 +59,7 @@ namespace cuGraph {
 
             void checkDir(int dir);
             void checkLoop(int lp);
-            void checkVertixName(int vert);
+            void checkVertixName(int v1, int v2);
             void checkEdgesBound(int edge);
             void checkVertixesBound(int verts);
         };

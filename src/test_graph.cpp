@@ -277,10 +277,110 @@ void test_clear_method(void) {
     assert(g1.isEmpty());
     assert(!g1.isFull());
 
+    Graph g2(5);
+
+    g2.clear();
+    assert(g2.getNumberOfVertices() == 5);
+    assert(g2.getNumberOfEdges() == 0);
+    assert(g2.isEmpty());
+    assert(!g2.isFull());
+
     cout<<"End of: test_clear_method" << endl;
 }
 
+void test_add_remove_methods(void) {
+    Graph g1;
 
+    try {
+        g1.addEdge(1, 3);
+    }
+    catch(GraphIsNotInitException* e) {
+        cout<<"Caught the exception: GraphIsNotInitException" << endl;
+    }
+
+    g1.setNumberOfVertices(4);
+    g1.addEdge(0, 2);
+    g1.addEdge(1, 2);
+
+    assert(g1.getNumberOfEdges() == 2);
+
+    g1.removeEdge(1, 2);
+    assert(g1.getNumberOfEdges() == 1);
+    g1.clear();
+    assert(g1.getNumberOfEdges() == 0);
+
+    try {
+        g1.addEdge(-1, 3);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.addEdge(0, 5);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.addEdge(0, 4);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.addEdge(5, 3);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    g1.addEdge(1, 2);
+
+    try {
+        g1.removeEdge(-1, 3);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.removeEdge(0, 5);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.removeEdge(0, 4);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    try {
+        g1.removeEdge(5, 3);
+    }
+    catch(GraphVertexOutOfBoundsException* e) {
+        cout<<"Caught the exception: GraphVertexOutOfBoundsException" << endl;
+    }
+
+    g1.addEdge(1, 2);
+    g1.addEdge(1, 1);
+    g1.setType(DIRECTED, NO_SELF_LOOP);
+    assert(g1.isEmpty());
+
+    try {
+        g1.addEdge(1, 1);
+    }
+    catch(GraphLoopTypeException* e) {
+        cout<<"Caught the exception: GraphLoopTypeException" << endl;
+    }
+
+    cout<<"End of: test_add_remove_methods" << endl;
+}
 
 
 

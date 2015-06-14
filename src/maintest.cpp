@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
     test_setType_method();
     test_setNumberOfVertices_method();
     test_clear_method();
+    test_add_remove_methods();
 
     return 0;
 }

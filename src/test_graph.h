@@ -7,5 +7,6 @@ void test_sec_constructor(void);
 void test_setType_method(void);
 void test_setNumberOfVertices_method(void);
 void test_clear_method(void);
+void test_add_remove_methods(void);
 
 #endif // TEST_GRAPH_H_
