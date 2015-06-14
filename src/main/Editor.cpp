@@ -1,4 +1,4 @@
-#include "Editor.h"
+#include <main/Editor.h>
 #include <QPainter>
 #include <QThread>
 #include <math.h>

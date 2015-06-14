@@ -1,10 +1,10 @@
-#include "Graph.h"
-#include "GraphDraw.h"
-#include "Editor.h"
-#include <QApplication>
+#include <main/Graph.h>
+//#include "GraphDraw.h"
+//#include "Editor.h"
+//#include <QApplication>
 #include <iostream>
-#include "gstream.h"
-#include "dataTypes.h"
+//#include "gstream.h"
+#include <main/dataTypes.h>
 
 using namespace std;
 using namespace cuGraph;
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 //    draw.randomPositions();
 //    draw.run();
 
-    ogstream gos;
+/*    ogstream gos;
     gos.open("src/gmls/test.txt");
     gos << g1;
     gos.close();
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     gis >> g2;
     cout << g2.isEmpty() << endl;
     gis.close();
-
+*/
     return 0;
 }
 

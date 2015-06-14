@@ -1,4 +1,4 @@
-#include "gstream.h"
+#include <main/gstream.h>
 
 namespace cuGraph {
 

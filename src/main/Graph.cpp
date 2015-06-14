@@ -3,9 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include "Path.h"
-#include "Graph.h"
-#include "Exceptions.h"
+
+#include <main/Path.h>
+#include <main/Graph.h>
+#include <main/Exceptions.h>
+
 #include <stdio.h>
 #include <fstream>
 #include <assert.h>
