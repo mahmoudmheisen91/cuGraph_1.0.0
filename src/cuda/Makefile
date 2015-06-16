@@ -7,7 +7,7 @@ CUDACC := nvcc
 CUDACC_FLAGS :=
 
 # project files:
-FILES := scan_algorithms.cu scan_kernal.cu test_scan.cu 
+FILES := 
 
 ##################### Build Rules ########################
 
@@ -16,8 +16,8 @@ all: cuMain
 clean: 
 	rm -f cuMain
 
-cuMain: mainPPS.cu
-	$(CUDACC) $(CUDACC_FLAGS) -o $@ $< $(FILES)
+cuMain: scanLargeArray.cu
+	$(CUDACC) $(CUDACC_FLAGS) -o $@ $< 
 	
 ##########################################################
 

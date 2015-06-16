@@ -24,7 +24,7 @@
 
 using namespace std;
 
-__device__ void cuScanBlock(int *g_odata, int *g_idata, int n);
+__device__ void cuScanBlock(int *g_odata, int *g_idata, int n, int thid);
 __global__ void scanGlobal(int *g_odata, int *g_idata, int n);
 __host__ void inclusive_scan_sum(int *array, int length);
 __host__ void exclusive_scan_sum(int *array, int length);
