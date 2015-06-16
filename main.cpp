@@ -1,7 +1,6 @@
 #include <main/Graph.h>
-//#include "GraphDraw.h"
-//#include "Editor.h"
-//#include <QApplication>
+#include <main/GraphDraw.h>
+#include <QApplication>
 #include <iostream>
 //#include "gstream.h"
 #include <main/dataTypes.h>
@@ -17,10 +16,10 @@ int main(int argc, char** argv) {
 
     cout << sizeof(long long int) << endl;
 
-//    GraphDraw draw(argc, argv);
-//    draw.setGraph(g3);
-//    draw.randomPositions();
-//    draw.run();
+    GraphDraw draw(argc, argv);
+    draw.setGraph(&g1);
+    draw.randomPositions();
+    draw.run();
 
 /*    ogstream gos;
     gos.open("src/gmls/test.txt");

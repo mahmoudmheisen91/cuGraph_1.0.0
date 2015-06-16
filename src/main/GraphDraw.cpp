@@ -1,4 +1,4 @@
-#include "GraphDraw.h"
+#include <main/GraphDraw.h>
 #include <QApplication>
 #include <iostream>
 #include <math.h>

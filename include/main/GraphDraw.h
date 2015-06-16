@@ -14,6 +14,7 @@ namespace cuGraph {
 
             void setGraph(Graph *g);
             void setDrawSettings(Settings set);
+            void setGraphDrawType(int dir, int lp);
 
             void run(void);
             void randomPositions(void);
@@ -21,6 +22,7 @@ namespace cuGraph {
         protected:
 
         private:
+        	int graph_direction, graph_loop;
             double *posx, *posy;
             Settings draw_settings;
             int verts, edges;
