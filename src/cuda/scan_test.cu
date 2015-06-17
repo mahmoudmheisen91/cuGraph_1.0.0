@@ -6,7 +6,7 @@
 #include <iostream>
 
 // includes, kernels
-#include "scan.cu" 
+#include "scan.h" 
 
 int main() {  
 	int num_elements = 16777218;
