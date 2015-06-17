@@ -1,6 +1,6 @@
 #include <main/Graph.h>
-#include <main/GraphDraw.h>
-#include <QApplication>
+//#include <main/GraphDraw.h>
+//#include <QApplication>
 #include <iostream>
 //#include "gstream.h"
 #include <main/dataTypes.h>
@@ -14,12 +14,17 @@ int main(int argc, char** argv) {
     g1.setNumberOfVertices(10);
     g1.fillByBaselineER(100, 0.5);
 
-    cout << sizeof(long long int) << endl;
+#ifdef DEBUG
+    cout << "Debug" << endl;
+#else
+    cout << "Release" << endl;
+#endif
+//    GraphDraw draw(argc, argv);
+//    draw.setGraph(&g1);
+//    draw.randomPositions();
+//    draw.run();
 
-    GraphDraw draw(argc, argv);
-    draw.setGraph(&g1);
-    draw.randomPositions();
-    draw.run();
+
 
 /*    ogstream gos;
     gos.open("src/gmls/test.txt");

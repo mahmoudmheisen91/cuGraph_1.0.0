@@ -11,13 +11,16 @@ FILES :=
 
 ##################### Build Rules ########################
 
-all: cuMain
+all: scan.o scan_test
 
 clean: 
 	rm -f cuMain
 
-cuMain: scanLargeArray.cu
-	$(CUDACC) $(CUDACC_FLAGS) -o $@ $< 
+scan.o: scan.cu
+	$(CUDACC) -o $@ -c scan.cu -arch compute_20 -code sm_20
+
+scan_test: scan_test.cu scan.o
+	$(CUDACC) $^ -o $@  -arch compute_20 -code sm_20
 	
 ##########################################################
 
