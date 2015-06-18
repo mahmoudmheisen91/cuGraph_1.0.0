@@ -1,6 +1,6 @@
 #include <main/Graph.h>
-//#include <main/GraphDraw.h>
-//#include <QApplication>
+#include <main/GraphDraw.h>
+#include <QApplication>
 #include <iostream>
 //#include "gstream.h"
 #include <main/dataTypes.h>
@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     Graph g1;
     g1.setType(UN_DIRECTED, SELF_LOOP);
     g1.setNumberOfVertices(10);
-    g1.fillByBaselineER(100, 0.5);
+    g1.fillByPZER(100, 0.5, 8);
 
 #ifdef DEBUG
     cout << "Debug" << endl;

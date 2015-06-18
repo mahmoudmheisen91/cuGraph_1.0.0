@@ -18,10 +18,16 @@ PATHC = _release/Path.o
 EXCEP = _release/Exceptions.o
 APP = output/bin/main/cuGraph_1.0.0
 FUNC_TEST = output/bin/test/functional_test
-SCAN = _release/Scan.o
+SCANK = _release/scan_kernel.o
+SCAN = _release/parallel_scan.o
+RANDK = _release/random_number_generator_kernal.o
+RAND = _release/parallel_generateRandomNumber.o
+SKIPK = _release/skipValue_kernal.o
+SKIP = _release/parallel_generateSkipValue.o
 
 # Shell Commands:
-all: $(SCAN) $(EXCEP) $(EDITOR) $(GRAPH) $(GRAPHDRAW) $(PATHC) $(APP)
+cuda: $(SCANK) $(SCAN) $(RANDK) $(RAND) $(SKIPK) $(SKIP) 
+all: $(SCANK) $(SCAN) $(RANDK) $(RAND) $(SKIPK) $(SKIP) $(EXCEP) $(EDITOR) $(GRAPH) $(GRAPHDRAW) $(PATHC) $(APP)
 functional_test: $(EXCEP) $(EDITOR) $(GRAPH) $(GRAPHDRAW) $(PATHC) $(FUNC_TEST)
 
 clean:
@@ -38,6 +44,7 @@ clean:
 	$(RM) $(shell pwd)/include/*~ 
 	$(RM) $(shell pwd)/include/main/*~ 
 	$(RM) $(shell pwd)/include/test/*~ 
+	$(RM) $(shell pwd)/include/cuda/*~ 
 	$(RM) $(shell pwd)/*~ 
 	$(RM) $(shell pwd)/*.png 
 
@@ -48,8 +55,23 @@ run_functional_test:
 	./$(FUNC_TEST)
 		
 # Build Commands:	
-$(SCAN): src/cuda/scan.cu
-	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/Scan.cu
+$(SCANK): src/cuda/scan_kernel.cu
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/scan_kernel.cu
+	
+$(SCAN): src/cuda/parallel_scan.cu _release/scan_kernel.o
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_scan.cu
+	
+$(RANDK): src/cuda/random_number_generator_kernal.cu
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/random_number_generator_kernal.cu
+	
+$(RAND): src/cuda/parallel_generateRandomNumber.cu _release/random_number_generator_kernal.o
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_generateRandomNumber.cu
+	
+$(SKIPK): src/cuda/skipValue_kernal.cu
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/skipValue_kernal.cu
+	
+$(SKIP): src/cuda/parallel_generateSkipValue.cu _release/skipValue_kernal.o
+	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_generateSkipValue.cu
 	
 $(EXCEP): src/main/Exceptions.cpp 
 	$(CPP) $(INCFLAGS) -o $(EXCEP) -c src/main/Exceptions.cpp
@@ -59,9 +81,11 @@ $(EDITOR): src/main/Editor.cpp include/main/Editor.h
 	$(QT4C) include/main/Editor.h | \
 	$(CPP) $(OFLAGS) $(INCFLAGS) -c -x c++ - -include src/main/Editor.cpp -o $(EDITOR)
 	
-$(GRAPH): src/main/Graph.cpp \
+$(GRAPH): src/main/Graph.cpp\
+_release/random_number_generator_kernal.o _release/parallel_generateRandomNumber.o\
+_release/skipValue_kernal.o _release/parallel_generateSkipValue.o \
 include/main/Path.h _release/Exceptions.o include/main/gstream.h
-	$(CPP) $(INCFLAGS) -o $(GRAPH) -c src/main/Graph.cpp -DDEBUG
+	$(CPP) $(INCFLAGS) -o $(GRAPH) -L/usr/local/cuda/lib64 -lcuda -lcudart -c src/main/Graph.cpp -DDEBUG
 
 $(GRAPHDRAW): src/main/GraphDraw.cpp _release/Graph.o \
 _release/Editor.o include/main/Editor.h
@@ -71,13 +95,12 @@ $(PATHC): src/main/Path.cpp _release/Graph.o
 	$(CPP) $(INCFLAGS) -o $(PATHC) -c src/main/Path.cpp
 
 $(APP): main.cpp \
+_release/random_number_generator_kernal.o _release/parallel_generateRandomNumber.o\
+_release/skipValue_kernal.o _release/parallel_generateSkipValue.o \
 _release/Graph.o _release/GraphDraw.o _release/Editor.o _release/Path.o _release/Exceptions.o
-	$(CPP) $^ $(INCFLAGS) $(OFLAGS) -o $(APP) $(FLAGS) -DDEBUG
+	$(CPP) $^ $(INCFLAGS) $(OFLAGS) -L/usr/local/cuda/lib64 -lcuda -lcudart -o $(APP) $(FLAGS) -DDEBUG
 	
 $(FUNC_TEST): src/test/maintest.cpp src/test/functional_test.cpp \
 _release/Graph.o _release/Path.o _release/Exceptions.o include/test/functional_test.h
 	$(CPP) $^ $(INCFLAGS) -o $(FUNC_TEST)
 	
-#$(EXECUTABLE): $(CPPSOURCES) src/Editor.h
-#	$(CPP) $^ $(INCL) src/Editor.o $(FLAGS) -o bin/$@
-

@@ -211,6 +211,7 @@ namespace cuGraph {
             /** \brief Parallel CUDA generator: PZER
 			  * \param E: maximum number of edges
 			  * \param p: probability of adding edge to the graph
+              * \param lambda: parameter of the block size
 			  * \return void
 			  * \see fillByBaselineER(int E, double p);
               * \see fillByZER(int E, double p);
@@ -219,7 +220,7 @@ namespace cuGraph {
 	          * \see fillByPER(int E, double p);
 	          * \see fillByPPreZER(int E, double p, int m);
 			  */
-            void fillByPZER(int E, double p);
+            void fillByPZER(int E, double p, int lambda);
             
             /** \brief Parallel CUDA generator: PPreZER
 			  * \param E: maximum number of edges

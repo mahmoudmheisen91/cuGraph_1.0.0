@@ -7,6 +7,7 @@
 #include <main/Path.h>
 #include <main/Graph.h>
 #include <main/Exceptions.h>
+#include <cuda/Parallel_functions.h>
 
 #include <stdio.h>
 #include <fstream>
@@ -27,6 +28,7 @@ namespace cuGraph {
         // Default values:
         direction = UN_DIRECTED;
         loop = SELF_LOOP;
+
         isInit = false;
     }
 
@@ -61,9 +63,10 @@ namespace cuGraph {
     }
 
     void Graph::setNumberOfVertices(int verts) {
-        checkVertixesBound(verts);
 
+        checkVertixesBound(verts);
         isInit = true;
+
         numberOfVertices = verts;
         size = pow(numberOfVertices, 2);
 
@@ -80,6 +83,8 @@ namespace cuGraph {
     }
 
     void Graph::addEdge(int v1, int v2) {
+
+#ifdef DEBUG
         if(numberOfVertices > 0)
             isInit = true;
 
@@ -90,7 +95,9 @@ namespace cuGraph {
 
         if (isDirectlyConnected(v1, v2))
             return;
-
+#else
+        isInit = true;
+#endif
         content[v1 * numberOfVertices + v2] = true;
         numberOfEdges++;
 
@@ -99,6 +106,8 @@ namespace cuGraph {
     }
 
     void Graph::removeEdge(int v1, int v2) {
+
+#ifdef DEBUG
         if(numberOfVertices > 0)
             isInit = true;
 
@@ -106,6 +115,9 @@ namespace cuGraph {
             throw new GraphIsEmptyException();
 
         checkVertixName(v1, v2);
+#else
+        isInit = true;
+#endif
 
         if(isDirectlyConnected(v1, v2)) {
             content[v1 * numberOfVertices + v2] = false;
@@ -118,12 +130,14 @@ namespace cuGraph {
 
     // from edge prespective not vertix (because vertices is constant (cuda))
     bool Graph::isFull(void) {
+
         if(isInit) {
             if(numberOfEdges == pow(numberOfVertices, 2))
                 return true;
             else
                 return false;
         }
+
         else
             throw new GraphIsNotInitException();
     }
@@ -162,6 +176,7 @@ namespace cuGraph {
 
     void Graph::fillByBaselineER(int E, double p) {// TODO: check p
         checkEdgesBound(E);
+
         srand(time(0));
         double theta;
 
@@ -185,6 +200,7 @@ namespace cuGraph {
 
     void Graph::fillByZER(int E, double p) {
         checkEdgesBound(E);
+
         srand(time(0));
         double theta, logp;
 
@@ -212,6 +228,7 @@ namespace cuGraph {
 
     void Graph::fillByPreLogZER(int E, double p) {
         checkEdgesBound(E);
+
         srand(time(0));
         double *logp = new double[RAND_MAX];
         double c;
@@ -245,6 +262,7 @@ namespace cuGraph {
 
     void Graph::fillByPreZER(int E, double p, int m) {
         checkEdgesBound(E);
+
         srand(time(0));
         double theta, logp;
         double *F = new double[m+1];
@@ -285,6 +303,42 @@ namespace cuGraph {
                         addEdge(v1, v2);
                 }
             }
+        }
+    }
+
+    void Graph::fillByPZER(int E, double p, int lambda) {
+        checkEdgesBound(E);
+
+        int B, L = 0;
+        double segma = sqrt(p * (1 - p) * E);
+
+        if((int)(p * E + lambda * segma) > 16777218 / 2)
+            B = 16777218 / 2;
+        else
+            B = (int)(p * E + lambda * segma);
+
+        float *R;
+        int *S;
+        int v1, v2;
+
+        while(L < E) {
+            R = new float[B];
+            S = new int[B];
+
+            parallel_generateRandomNumber(R, B);
+            parallel_generateSkipValue(S, R, B, p);
+            parallel_scan(S, B);
+
+            for(int i = 0; i < B && !isFull(); i++) {
+                v1 = S[i] / numberOfVertices;
+                v2 = S[i] % numberOfVertices;
+                addEdge(v1, v2);
+            }
+
+            L = S[B];
+
+            delete R;
+            delete S;
         }
     }
 

@@ -1,7 +1,4 @@
-#include "main.hpp"
-
-// grid config:
-//   dim3 grid(gridSize-1); dim3 block(blockSize);
+#include <cuda/Parallel_functions.h> 
 
 __global__ void random_number_generator_kernal(int *masterSeed, int *size, float *PRNG) {
 	long int a = 16807;                      	// same as apple c++ imp
