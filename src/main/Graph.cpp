@@ -30,6 +30,7 @@ namespace cuGraph {
         loop = SELF_LOOP;
 
         isInit = false;
+        initDevice();
     }
 
     Graph::Graph(int V) :numberOfVertices(V) {
@@ -46,6 +47,7 @@ namespace cuGraph {
         loop = SELF_LOOP;
 
         isInit = true;
+        initDevice();
     }
 
     Graph::~Graph(void) {
@@ -309,55 +311,14 @@ namespace cuGraph {
     void Graph::fillByPZER(int E, double p, int lambda) {
         checkEdgesBound(E);
 
-        int B, L = 0;
-        double segma = sqrt(p * (1 - p) * E);
-
-        if((int)(p * E + lambda * segma) > 16777218)
-            B = 16777218;
-        else
-            B = (int)(p * E + lambda * segma);
-
-        float *R;
-        float *S;
-        int v1, v2;
-
-        while(L < E) {
-            R = new float[B];
-            S = new float[B];
-
-            parallel_generateRandomNumber(R, B, time(0)-1000000000);
-
-            parallel_generateSkipValue(S, R, B, p);
-
-            parallel_scan(S, B);
-
-#ifdef DEBUGS
-           // for(int i = 0; i < B; i++){
-          //  v1 = (int)S[i] / numberOfVertices;
-          //  v2 = (int)S[i] % numberOfVertices;
-            std::cout << "L = "<<L<<std::endl;//" ,v1= "<< v1 <<" ,v2= "<< v2<<" ,i = " << i << " ,S[i] = "<< S[i]<< std::endl;
-//}
-#endif
-            parallel_addEdges(content, S, numberOfVertices, B);
-
-//            for(int i = 0; i < B && !isFull(); i++) {
-//                v1 = (int)S[i] / numberOfVertices;
-//                v2 = (int)S[i] % numberOfVertices;
-//                addEdge(v1, v2);
-//            }
-
-            L += S[B-1];
-
-            delete R;
-            delete S;
-        }
+        parallel_PZER(content, p, lambda, numberOfVertices, E, numberOfEdges);
     }
 
-    long Graph::getNumberOfVertices(void) {
+    int Graph::getNumberOfVertices(void) {
         return numberOfVertices;
     }
 
-    long Graph::getNumberOfEdges(void) {
+    int Graph::getNumberOfEdges(void) {
         return numberOfEdges;
     }
 

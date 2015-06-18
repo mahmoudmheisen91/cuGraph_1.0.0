@@ -15,13 +15,10 @@
 
 #include <ctime>
 
+void initDevice(void);
 void preallocBlockSums(unsigned int maxNumElements);
 void prescanArray(float *outArray, float *inArray, int numElements);
 void deallocBlockSums();
-
-void parallel_scan(float* S, int B);
-void parallel_generateRandomNumber(float *R, int B, int seed);
-void parallel_generateSkipValue(float *S, float *R, int B, float p);
-void parallel_addEdges(bool *content, float *S, int numberOfVertices, int B);
+void parallel_PZER(bool *content, float p, int lambda, int V, int E, int &numberOfEdges);
 
 #endif

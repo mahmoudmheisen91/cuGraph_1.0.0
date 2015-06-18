@@ -239,12 +239,12 @@ namespace cuGraph {
 			/** \brief return number of vertices
 			  * \return number of vertices
 			  */
-            long getNumberOfVertices(void);
+            int getNumberOfVertices(void);
             
             /** \brief return number of edges
               * \return number of edges
 			  */
-            long getNumberOfEdges(void);
+            int getNumberOfEdges(void);
             
             /** \brief return type of the graph (directed/undirected)
               * \return type of the graph (directed/undirected)
@@ -262,8 +262,8 @@ namespace cuGraph {
         private:
             bool isInit; 
             long long int  size; 
-            long long int  numberOfVertices; 
-            long long int  numberOfEdges; 
+            int  numberOfVertices;
+            int  numberOfEdges;
             int direction; 
             int loop;
 
