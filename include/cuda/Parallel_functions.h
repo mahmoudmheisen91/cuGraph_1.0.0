@@ -19,8 +19,9 @@ void preallocBlockSums(unsigned int maxNumElements);
 void prescanArray(float *outArray, float *inArray, int numElements);
 void deallocBlockSums();
 
-void parallel_scan(int num_elements, float* h_data);
-void parallel_generateRandomNumber(float *R, int B);
-void parallel_generateSkipValue(int *S, float *R, int B, float p);
+void parallel_scan(float* S, int B);
+void parallel_generateRandomNumber(float *R, int B, int seed);
+void parallel_generateSkipValue(float *S, float *R, int B, float p);
+void parallel_addEdges(bool *content, float *S, int numberOfVertices, int B);
 
 #endif

@@ -1,15 +1,15 @@
 #include <cuda/Parallel_functions.h> 
 
-__global__ void skipValue_kernal(int *S, float *R, int *B, float *p);
+__global__ void skipValue_kernal(float *S, float *R, int *B, float *p);
 
-void parallel_generateSkipValue(int *S, float *R, int B, float p) {
-	int *d_S, *d_B, *h_B;
-	float *d_R, *h_p, *d_p;
+void parallel_generateSkipValue(float *S, float *R, int B, float p) {
+	int *d_B, *h_B;
+	float *d_S, *d_R, *h_p, *d_p;
 	
 	// allocate:
 	h_B = new int[1];
 	h_p = new float[1];
-	cudaMalloc((void**) &d_S, B * sizeof(int));
+	cudaMalloc((void**) &d_S, B * sizeof(float));
 	cudaMalloc((void**) &d_B, sizeof(int));
 	cudaMalloc((void**) &d_R, B * sizeof(float));
 	cudaMalloc((void**) &d_p, sizeof(float));
