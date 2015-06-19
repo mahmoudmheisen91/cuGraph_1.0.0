@@ -311,7 +311,7 @@ namespace cuGraph {
     void Graph::fillByPZER(int E, double p, int lambda) {
         checkEdgesBound(E);
 
-        parallel_PZER(content, p, lambda, numberOfVertices, E, numberOfEdges);
+        parallel_PZER(content, p, lambda, numberOfVertices, E);
     }
 
     int Graph::getNumberOfVertices(void) {
@@ -328,6 +328,24 @@ namespace cuGraph {
 
     int Graph::getLoop(void) {
         return loop;
+    }
+
+    int Graph::countEdges(void) {
+        int E = 0;
+        for(int i = 0; i < numberOfVertices; i++) {
+            for(int j = 0; j < numberOfVertices; j++) {
+                if(content[i * numberOfVertices + j])
+                    E++;
+            }
+        }
+
+        if(getDirection() == DIRECTED) {
+            numberOfEdges = E;
+            return E;
+        }
+
+        numberOfEdges = E/2;
+        return E/2;
     }
 
     void Graph::checkDir(int dir) {

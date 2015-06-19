@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
     t1 = omp_get_wtime() - t1;
 
     cout << g1.getNumberOfEdges() << " , time = " << t1 << endl;
+    cout << g1.countEdges() << endl << endl;
 
 #ifdef DEBUG
     cout << "Debug" << endl;
@@ -35,6 +36,7 @@ int main(int argc, char** argv) {
     t1 = omp_get_wtime() - t1;
 
     cout << g2.getNumberOfEdges() << " , time = " << t1 << endl;
+    cout << g2.countEdges() << endl << endl;
 
 //    GraphDraw draw(argc, argv);
 //    draw.setGraph(&g1);

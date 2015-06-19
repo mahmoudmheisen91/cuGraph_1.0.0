@@ -9,7 +9,7 @@ __global__ void skipValue_kernal(float *S, float *R, int *B, float *p) {
 	
 	while (tid < *B) {
 		theta = log10f(R[tid]) / logp;
-		k = max(0, (int)ceil(theta) - 1);
+		k = max(0, (int)ceil(theta) );
 		
 		S[tid] = k;
 		tid += blockDim.x * gridDim.x;
