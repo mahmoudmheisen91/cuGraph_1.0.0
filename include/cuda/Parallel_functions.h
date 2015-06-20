@@ -14,11 +14,17 @@
 #endif
 
 #include <ctime>
+#include <cstdlib>
+#include<curand.h>
+#include<curand_kernel.h>
 
 void initDevice(void);
 void preallocBlockSums(unsigned int maxNumElements);
 void prescanArray(float *outArray, float *inArray, int numElements);
 void deallocBlockSums();
-void parallel_PZER(bool *content, float p, int lambda, int V, int E, int &numberOfEdges);
+
+void parallel_PER(bool *content, float p, int V, int E);
+void parallel_PZER(bool *content, float p, int lambda, int V, int E);
+void parallel_PPreZER(bool *content, float p, int lambda, int m, int V, int E);
 
 #endif

@@ -184,7 +184,7 @@ namespace cuGraph {
             /** \brief Serial generator: PreZER
 			  * \param E: maximum number of edges
 			  * \param p: probability of adding edge to the graph
-			  * \param m: number of iteration of skipping value, best is 8
+              * \param m: number of pre-computations, best is 8
 			  * \return void
 			  * \see fillByBaselineER(int E, double p);
               * \see fillByZER(int E, double p);
@@ -211,7 +211,7 @@ namespace cuGraph {
             /** \brief Parallel CUDA generator: PZER
 			  * \param E: maximum number of edges
 			  * \param p: probability of adding edge to the graph
-              * \param lambda: parameter of the block size
+              * \param lambda: parameter of the block size, best is 3
 			  * \return void
 			  * \see fillByBaselineER(int E, double p);
               * \see fillByZER(int E, double p);
@@ -225,7 +225,8 @@ namespace cuGraph {
             /** \brief Parallel CUDA generator: PPreZER
 			  * \param E: maximum number of edges
 			  * \param p: probability of adding edge to the graph
-			  * \param m: number of iteration of skipping value, best is 8
+              * \param m: number of pre-computations, best is 8
+              * \param lambda: parameter of the block size best is 3
 			  * \return void
 			  * \see fillByBaselineER(int E, double p);
               * \see fillByZER(int E, double p);
@@ -234,7 +235,7 @@ namespace cuGraph {
 	          * \see fillByPER(int E, double p);
 	          * \see fillByPZER(int E, double p);
 			  */
-            void fillByPPreZER(int E, double p, int m);
+            void fillByPPreZER(int E, double p, int lambda, int m);
 
 			/** \brief return number of vertices
 			  * \return number of vertices
@@ -255,6 +256,8 @@ namespace cuGraph {
               * \return type of the graph (has self loops / no self loops)
 			  */
             int getLoop(void);
+
+            int countEdges(void);
 
         protected:
             bool* content; ///< adjacancy matrix of size = v^2

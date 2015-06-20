@@ -86,7 +86,6 @@ namespace cuGraph {
 
     void Graph::addEdge(int v1, int v2) {
 
-#ifdef DEBUG
         if(numberOfVertices > 0)
             isInit = true;
 
@@ -95,21 +94,17 @@ namespace cuGraph {
 
         checkVertixName(v1, v2);
 
-        if (isDirectlyConnected(v1, v2))
-            return;
-#else
-        isInit = true;
-#endif
-        content[v1 * numberOfVertices + v2] = true;
-        numberOfEdges++;
+        if (!isDirectlyConnected(v1, v2)) {
+            content[v1 * numberOfVertices + v2] = true;
 
-        if (direction == UN_DIRECTED)
-            content[v2 * numberOfVertices + v1] = true;
+            if (direction == UN_DIRECTED)
+                content[v2 * numberOfVertices + v1] = true;
+            numberOfEdges++;
+        }
     }
 
     void Graph::removeEdge(int v1, int v2) {
 
-#ifdef DEBUG
         if(numberOfVertices > 0)
             isInit = true;
 
@@ -117,9 +112,6 @@ namespace cuGraph {
             throw new GraphIsEmptyException();
 
         checkVertixName(v1, v2);
-#else
-        isInit = true;
-#endif
 
         if(isDirectlyConnected(v1, v2)) {
             content[v1 * numberOfVertices + v2] = false;
@@ -308,10 +300,22 @@ namespace cuGraph {
         }
     }
 
+    void Graph::fillByPER(int E, double p) {
+        checkEdgesBound(E);
+
+        parallel_PER(content, p, numberOfVertices, E);
+    }
+
     void Graph::fillByPZER(int E, double p, int lambda) {
         checkEdgesBound(E);
 
         parallel_PZER(content, p, lambda, numberOfVertices, E);
+    }
+
+    void Graph::fillByPPreZER(int E, double p, int lambda, int m) {
+        checkEdgesBound(E);
+
+        parallel_PPreZER(content, p, lambda, m, numberOfVertices, E);
     }
 
     int Graph::getNumberOfVertices(void) {
@@ -334,7 +338,7 @@ namespace cuGraph {
         int E = 0;
         for(int i = 0; i < numberOfVertices; i++) {
             for(int j = 0; j < numberOfVertices; j++) {
-                if(content[i * numberOfVertices + j])
+                if(isDirectlyConnected(i, j))
                     E++;
             }
         }
