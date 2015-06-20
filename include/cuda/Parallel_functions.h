@@ -15,8 +15,7 @@
 
 #include <ctime>
 #include <cstdlib>
-#include<curand.h>
-#include<curand_kernel.h>
+#include <thrust/scan.h>
 
 void initDevice(void);
 void preallocBlockSums(unsigned int maxNumElements);
