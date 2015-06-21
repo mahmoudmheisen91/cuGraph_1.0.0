@@ -24,6 +24,7 @@ namespace cuGraph {
             ofstream myfile;
             void toTXT(Graph *g);
             void toGML(Graph *g);
+            void toMTX(Graph *g);
     };
 
     class igstream {

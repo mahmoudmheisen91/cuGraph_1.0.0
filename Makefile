@@ -19,17 +19,15 @@ EXCEP = _release/Exceptions.o
 APP = output/bin/main/cuGraph_1.0.0
 FUNC_TEST = output/bin/test/functional_test
 SCANK = _release/scan_kernel.o 
-SCAN = _release/parallel_scan.o
 RANDK = _release/random_number_generator_kernal.o
-RAND = _release/parallel_generateRandomNumber.o
 SKIPK = _release/skipValue_kernal.o
-SKIP = _release/parallel_generateSkipValue.o
 ADDK = _release/addEdges_kernal.o
 PZER = _release/parallel_PZER.o
+GSTM = _release/gstream.o
 
 # Shell Commands:
 cuda: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) 
-all: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(EDITOR) $(GRAPH) $(GRAPHDRAW) $(PATHC) $(APP)
+all: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(EDITOR) $(GRAPH) $(GSTM) $(GRAPHDRAW) $(PATHC) $(APP)
 functional_test: $(EXCEP) $(EDITOR) $(GRAPH) $(GRAPHDRAW) $(PATHC) $(FUNC_TEST)
 
 clean:
@@ -60,26 +58,14 @@ run_functional_test:
 $(SCANK): src/cuda/scan_kernel.cu
 	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/scan_kernel.cu
 	
-#$(SCAN): src/cuda/parallel_scan.cu _release/scan_kernel.o
-#	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_scan.cu
-	
 $(RANDK): src/cuda/random_number_generator_kernal.cu
 	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/random_number_generator_kernal.cu
 	
-#$(RAND): src/cuda/parallel_generateRandomNumber.cu _release/random_number_generator_kernal.o
-#	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_generateRandomNumber.cu
-	
 $(SKIPK): src/cuda/skipValue_kernal.cu
 	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/skipValue_kernal.cu
-	
-#$(SKIP): src/cuda/parallel_generateSkipValue.cu _release/skipValue_kernal.o
-#	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_generateSkipValue.cu
 
 $(ADDK): src/cuda/addEdges_kernal.cu
 	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/addEdges_kernal.cu
-	
-#$(ADD): src/cuda/parallel_addEdges.cu _release/addEdges_kernal.o
-#	$(NVCC) $(INCFLAGS) -o $@ -arch compute_20 -code sm_20 -c src/cuda/parallel_addEdges.cu
 
 $(PZER): src/cuda/parallel_PZER.cu \
 _release/scan_kernel.o _release/random_number_generator_kernal.o _release/skipValue_kernal.o _release/addEdges_kernal.o
@@ -101,6 +87,9 @@ _release/addEdges_kernal.o _release/parallel_PZER.o\
 include/main/Path.h _release/Exceptions.o include/main/gstream.h
 	$(CPP) $(INCFLAGS) -o $(GRAPH) -L/usr/local/cuda/lib64 -lcuda -lcudart -c src/main/Graph.cpp -DDEBUG
 
+$(GSTM): src/main/gstream.cpp _release/Graph.o
+	$(CPP) $(INCFLAGS) -o $(GSTM) -c src/main/gstream.cpp -DDEBUG
+	
 $(GRAPHDRAW): src/main/GraphDraw.cpp _release/Graph.o \
 _release/Editor.o include/main/Editor.h
 	$(CPP) $(INCFLAGS) $(INCL) $(FLAGS) -o $(GRAPHDRAW) -c src/main/GraphDraw.cpp
@@ -113,7 +102,7 @@ _release/scan_kernel.o\
 _release/random_number_generator_kernal.o\
 _release/skipValue_kernal.o\
 _release/addEdges_kernal.o _release/parallel_PZER.o\
-_release/Graph.o _release/GraphDraw.o _release/Editor.o _release/Path.o _release/Exceptions.o
+_release/Graph.o _release/GraphDraw.o _release/Editor.o _release/Path.o _release/Exceptions.o _release/gstream.o
 	$(CPP) $^ $(INCFLAGS) $(OFLAGS) -L/usr/local/cuda/lib64 -lcuda -lcudart -o $(APP) $(FLAGS) -fopenmp -DDEBUG
 	
 $(FUNC_TEST): src/test/maintest.cpp src/test/functional_test.cpp \

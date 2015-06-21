@@ -7,13 +7,13 @@ namespace cuGraph {
 
     ofstream &ogstream::operator <<(Graph &g) {
         string str1 = local_name.substr(local_name.length() - 4,local_name.length() - 4);
-        string str2 = ".txt";
-        string str3 = ".gml";
 
-        if(str1.compare(str2) == 0)
+        if(!str1.compare(".txt"))
             toTXT(&g);
-        else if(str1.compare(str3) == 0)
+        else if(!str1.compare(".gml"))
             toGML(&g);
+        else if(!str1.compare(".mtx"))
+            toMTX(&g);
         else
             toTXT(&g);
 
@@ -67,6 +67,19 @@ namespace cuGraph {
         }
 
         myfile << "}" << "\n";
+    }
+
+    void ogstream::toMTX(Graph *g) {
+        myfile << g->numberOfVertices << " " << g->numberOfVertices << " ";
+        myfile << g->countEdges() << "\n";
+
+        for(int i=0; i < g->numberOfVertices; i++) {
+            for(int j=0; j < g->numberOfVertices; j++) {
+                if(g->isDirectlyConnected(i, j)) {
+                    myfile << i+1 << "\t" << j+1 << "\n";
+                }
+            }
+        }
     }
 
     igstream::igstream() {
