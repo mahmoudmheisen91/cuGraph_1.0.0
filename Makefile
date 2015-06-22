@@ -32,7 +32,7 @@ FUNC_TEST 	= output/bin/test/functional_test
 # Shell Commands:
 cuda: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) 
 all: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(GRAPHDRAW) $(EDITOR) $(APP)
-functional_test: $(EXCEP) $(PATHC) $(GRAPH) $(GRAPHDRAW) $(EDITOR) $(FUNC_TEST)
+functional_test: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(GRAPHDRAW) $(EDITOR) $(FUNC_TEST)
 
 run: 
 	./$(APP)
@@ -96,6 +96,7 @@ $(EDITOR): src/main/Editor.cpp include/main/Editor.h
 $(APP): main.cpp $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(GRAPHDRAW) $(EDITOR) $(PATHC) $(EXCEP) $(GSTM)
 	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) $(QTLIBS) -o $@
 	
-$(FUNC_TEST): src/test/maintest.cpp src/test/functional_test.cpp $(GRAPH) $(PATHC) $(EXCEP)
-	$(CPP) $(INCFLAGS) -o $@ $^
+$(FUNC_TEST): src/test/maintest.cpp src/test/functional_test.cpp\
+$(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(GRAPHDRAW) $(EDITOR) $(PATHC) $(EXCEP) $(GSTM)
+	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) $(QTLIBS) -o $@
 	
