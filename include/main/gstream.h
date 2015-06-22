@@ -1,7 +1,6 @@
 #ifndef GSTREAM_H
 #define GSTREAM_H
 
-#include <iostream>
 #include <string>
 #include <fstream>
 #include "Graph.h"

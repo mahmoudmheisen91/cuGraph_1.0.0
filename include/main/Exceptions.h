@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+
 using namespace std;
 
 namespace cuGraph {

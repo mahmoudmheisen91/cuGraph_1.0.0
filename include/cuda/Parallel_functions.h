@@ -15,7 +15,6 @@
 
 #include <ctime>
 #include <cstdlib>
-#include <thrust/scan.h>
 
 void initDevice(void);
 void preallocBlockSums(unsigned int maxNumElements);

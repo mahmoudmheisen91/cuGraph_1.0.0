@@ -1,4 +1,5 @@
 #include <main/gstream.h>
+#include <main/dataTypes.h>
 
 namespace cuGraph {
 

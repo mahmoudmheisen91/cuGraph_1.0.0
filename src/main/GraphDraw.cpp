@@ -1,7 +1,6 @@
-#include <main/GraphDraw.h>
-#include <QApplication>
 #include <iostream>
-#include <math.h>
+#include <cstdio>
+#include <main/GraphDraw.h>
 
 namespace cuGraph {
 

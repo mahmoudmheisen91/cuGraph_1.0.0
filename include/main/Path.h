@@ -4,13 +4,15 @@
 #include "Graph.h"
 
 namespace cuGraph {
-    class Path
-    {
+    class Path {
+
         public:
             Path(Graph *G, int s);
             virtual ~Path();
             bool hasPathTo(int v);
+
         protected:
+
         private:
             int fromHere;
             int size;

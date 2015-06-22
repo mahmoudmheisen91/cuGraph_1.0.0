@@ -2,9 +2,9 @@
 #define EDITOR_H_
 
 #include "dataTypes.h"
+#include <QPen>
 #include <QPixmap>
 #include <QWidget>
-#include <QString>
 #include <QPaintEvent>
 
 namespace cuGraph {

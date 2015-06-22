@@ -1,7 +1,9 @@
-#include <main/Editor.h>
+#include <cmath>
 #include <QPainter>
 #include <QThread>
-#include <math.h>
+#include <QString>
+
+#include <main/Editor.h>
 
 namespace cuGraph {
 

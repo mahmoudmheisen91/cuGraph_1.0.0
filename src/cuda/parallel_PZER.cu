@@ -6,7 +6,7 @@ __global__ void skipValue_kernal(float *S, float *R, int *B, float *p);
 __global__ void skipValuePre_kernal(float *S, float *R, int *B, float *p, int *m, float *F);
 __global__ void addEdges_kernal(bool *content, float *S, int *V, int *B, float *L, float *last);
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int *B, int *i, float *p);
-__global__ void compact_kernel(int *T, float *PL, int *SC, int *B);
+__global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int *B);
 __global__ void addEdges_kernel2(bool *content, int *SC, int *V, int *B);
 
 void initDevice(void) {
@@ -266,12 +266,9 @@ void parallel_PER(bool *content, float p, int V, int E) {
 		
 		random_number_generator_kernal	<<<1 , pow(2, 10)>>>	(d_seed, d_B, d_R);
 		generatePredicateList_kernel	<<<32, pow(2, 10)>>>	(d_PL, d_T, d_R, d_B, d_i, d_p);
-		//preallocBlockSums(B);
-		//prescanArray(d_S, d_PL, B);
-		cudaMemcpy(hh, d_PL, B * sizeof(float), cudaMemcpyDeviceToHost);
-		thrust::exclusive_scan(hh, hh+B, hh);
-		cudaMemcpy(d_PL, hh, B * sizeof(float), cudaMemcpyHostToDevice);
-		compact_kernel					<<<32, pow(2, 10)>>>	(d_T, d_PL, d_SC, d_B);
+		preallocBlockSums(B);
+		prescanArray(d_S, d_PL, B);
+		compact_kernel					<<<32, pow(2, 10)>>>	(d_T, d_S, d_PL, d_SC, d_B);
 		addEdges_kernel2				<<<32, pow(2, 10)>>>	(d_content, d_SC, d_V, d_B);
 	}
 	
@@ -337,13 +334,14 @@ __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int *B
 	}
 }
 
-__global__ void compact_kernel(int *T, float *PL, int *SC, int *B) {
+__global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int *B) {
 	
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	
 	while(tid < *B) {
 		
-		SC[(int)PL[tid]] = T[tid];
+		if((int)PL[tid] == 1)
+			SC[(int)S[tid]] = T[tid];
 			
 		tid += blockDim.x * gridDim.x;
 	}

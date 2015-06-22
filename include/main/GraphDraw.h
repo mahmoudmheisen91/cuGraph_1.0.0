@@ -3,6 +3,7 @@
 
 #include "Editor.h"
 #include "Graph.h"
+#include <QApplication>
 
 namespace cuGraph {
 

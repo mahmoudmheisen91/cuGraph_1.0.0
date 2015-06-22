@@ -1,10 +1,6 @@
 #include <iostream>
-#include <exception>
-#include <string>
 #include <sstream>
 #include <main/Exceptions.h>
-
-using namespace std;
 
 namespace cuGraph {
     GraphVertexOutOfBoundsException::GraphVertexOutOfBoundsException(long long int size, int vert) {

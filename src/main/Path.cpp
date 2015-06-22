@@ -1,21 +1,18 @@
 #include <main/Path.h>
 #include <algorithm>
-#include <iostream>
-
-using namespace std;
 
 namespace cuGraph {
 
     // Find paths in G from s:
     Path::Path(Graph *G, int s) {
-        // init data structures:
+
         fromHere = s;
         size = G->numberOfVertices;
         visited = new bool[size];
         edgeTo = new int[size];
 
-        fill(visited, visited+size, false);
-        fill(edgeTo, edgeTo+size, -1);
+        std::fill(visited, visited+size, false);
+        std::fill(edgeTo, edgeTo+size, -1);
 
         // find vertices connected to s:
         dfs(G, s);
@@ -42,17 +39,6 @@ namespace cuGraph {
     }
 
     // TODO: know the path
-    /*
-     public Iterable<Integer> pathTo(int v)
-     {
-     if (!hasPathTo(v)) return null;
-     Stack<Integer> path = new Stack<Integer>();
-     for (int x = v; x != s; x = edgeTo[x])
-     path.push(x);
-     path.push(s);
-     return path;
-     }
-    */
 }
 
 

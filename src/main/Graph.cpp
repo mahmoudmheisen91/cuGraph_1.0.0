@@ -1,20 +1,13 @@
-#include <iostream>
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include <algorithm>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
 
 #include <main/Path.h>
 #include <main/Graph.h>
+#include <main/dataTypes.h>
 #include <main/Exceptions.h>
 #include <cuda/Parallel_functions.h>
-
-#include <stdio.h>
-#include <fstream>
-#include <assert.h>
-#include <string>
-#include <cstdlib>
-#include <cstring>
 
 using namespace std;
 

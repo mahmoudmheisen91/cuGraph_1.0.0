@@ -2,6 +2,7 @@
 #include <test/functional_test.h>
 #include <main/Graph.h>
 #include <main/Exceptions.h>
+#include <cuda/Parallel_functions.h>
 #include <assert.h>
 
 using namespace std;

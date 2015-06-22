@@ -26,12 +26,6 @@
 #define GRAPH_H_
 // acycle graph
 
-#include <iostream>
-#include <string>
-#include "dataTypes.h"
-
-using namespace std;
-
 namespace cuGraph {
 
     class Graph {
