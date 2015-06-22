@@ -78,6 +78,14 @@ namespace cuGraph {
 			  */
             void setNumberOfVertices(int verts);
 
+            /** \brief Set number of edges
+              * \param edges: number of edges
+              * \return void
+              * set the number of edges
+              * \see clear();
+              */
+            void setNumberOfEdges(int edges);
+
 			/** \brief clear the graph from all edges, but keep the vertices
 			  * \return void
 			  * \see setNumberOfVertices(int verts);

@@ -88,13 +88,13 @@ namespace cuGraph {
 
     ifstream &igstream::operator >>(Graph &g) {
         string str1 = local_name.substr(local_name.length() - 4,local_name.length() - 4);
-        string str2 = ".txt";
-        string str3 = ".gml";
 
-        if(str1.compare(str2) == 0)
+        if(!str1.compare(".txt"))
             fromTXT(&g);
-        else if(str1.compare(str3) == 0)
+        else if(!str1.compare(".gml"))
             fromGML(&g);
+        else if(!str1.compare(".mtx"))
+            fromMTX(&g);
         else
             fromTXT(&g);
 
@@ -126,5 +126,24 @@ namespace cuGraph {
 
     void igstream::fromGML(Graph *g) {
 
+    }
+
+    void igstream::fromMTX(Graph *g) {
+
+        int verts, edges;
+        myfile >> verts;
+        myfile >> verts;
+        g->setNumberOfVertices(verts);
+
+        myfile >> edges;
+
+        int v1, v2;
+        while (myfile >> v1) {
+            myfile >> v2;
+            g->addEdge(v1-1, v2-1);
+        }
+
+        g->setNumberOfEdges(edges);
+        myfile.close();
     }
 }

@@ -75,6 +75,11 @@ namespace cuGraph {
         clear();
     }
 
+    void Graph::setNumberOfEdges(int edges) {
+        checkEdgesBound(edges);
+        numberOfEdges = edges;
+    }
+
     void Graph::clear(void) {
         if(content != NULL)
             delete content;

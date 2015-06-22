@@ -41,6 +41,7 @@ namespace cuGraph {
             ifstream myfile;
             void fromTXT(Graph *g);
             void fromGML(Graph *g);
+            void fromMTX(Graph *g);
     };
 }
 

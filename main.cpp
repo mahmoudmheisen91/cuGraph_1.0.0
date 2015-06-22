@@ -102,6 +102,15 @@ of two numbers: the source node number and the target node number
     gos << g1;
     gos.close();
 
+    Graph g2;
+    g2.setType(UN_DIRECTED, SELF_LOOP);
+
+    igstream gis;
+    gis.open("output/MTX/test.mtx");
+    gis >> g2;
+    gis.close();
+    cout << g2.countEdges() << " " << g2.getNumberOfVertices() << endl;
+
     /*igstream gis;
     gis.open("src/gmls/test.txt");
     Graph g2;
