@@ -313,7 +313,7 @@ namespace cuGraph {
     void Graph::fillByPPreZER(int E, double p, int lambda, int m) {
         checkEdgesBound(E);
 
-        //parallel_PPreZER(content, p, lambda, m, numberOfVertices, E);
+        parallel_PPreZER(content, p, lambda, m, numberOfVertices, E);
     }
 
     int Graph::getNumberOfVertices(void) {
