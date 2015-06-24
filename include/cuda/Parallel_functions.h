@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <thrust/scan.h>
+#include <thrust/remove.h>
 #include <thrust/device_vector.h>
 #include <thrust/device_ptr.h>
 
