@@ -55,14 +55,6 @@ namespace cuGraph {
         private:
     };
 
-    class GraphLoopTypeException: public exception {
-        public:
-            GraphLoopTypeException(void);
-            virtual string what(int) const throw();
-        protected:
-        private:
-    };
-
     class GraphIsNotInitException: public exception {
         public:
             GraphIsNotInitException(void);

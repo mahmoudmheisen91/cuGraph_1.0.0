@@ -28,10 +28,7 @@
 
 namespace cuGraph {
 
-    class Graph {
-    	/// This class is friend with GraphDraw class to let it make use of the protected member (content)
-        friend class GraphDraw;
-        
+    class Graph {        
         /// This class is friend with Path class to let it make use of the protected member (content)
         friend class Path;
         
@@ -58,11 +55,10 @@ namespace cuGraph {
 
 			/** \brief Set the type of the graph
 			  * \param dir: (directed/undirected)
-			  * \param lp: (has self loops / no self loops)
 			  * \return void
 			  * \see setNumberOfVertices(int verts);
 			  */
-            void setType(int dir, int lp);
+            void setType(int dir);
             
             /** \brief Set number of vertices
 			  * \param verts: number of vertices
@@ -253,11 +249,6 @@ namespace cuGraph {
               * \return type of the graph (directed/undirected)
 			  */
             int getDirection(void);
-            
-            /** \brief return type of the graph (has self loops / no self loops)
-              * \return type of the graph (has self loops / no self loops)
-			  */
-            int getLoop(void);
 
             int countEdges(void);
 
@@ -270,10 +261,8 @@ namespace cuGraph {
             int  numberOfVertices;
             int  numberOfEdges;
             int direction; 
-            int loop;
 
             void checkDir(int dir);
-            void checkLoop(int lp);
             void checkVertixName(int v1, int v2);
             void checkEdgesBound(int edge);
             void checkVertixesBound(int verts);

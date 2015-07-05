@@ -69,17 +69,6 @@ namespace cuGraph {
         return s;
     }
 
-    GraphLoopTypeException::GraphLoopTypeException(void) {
-        cout << what(0) << endl;
-    }
-
-    string GraphLoopTypeException::what(int) const throw() {
-        stringstream sstm;
-        sstm << "Graph Loop Type is wrong!!";
-        string s = sstm.str();
-        return s;
-    }
-
     GraphIsNotInitException::GraphIsNotInitException(void) {
         cout << what(0) << endl;
     }

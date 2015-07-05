@@ -20,7 +20,6 @@ namespace cuGraph {
 
         // Default values:
         direction = UN_DIRECTED;
-        loop = SELF_LOOP;
 
         isInit = false;
         initDevice();
@@ -37,7 +36,6 @@ namespace cuGraph {
 
         // Default values:
         direction = UN_DIRECTED;
-        loop = SELF_LOOP;
 
         isInit = true;
         initDevice();
@@ -47,14 +45,12 @@ namespace cuGraph {
         delete content;
     }
 
-    void Graph::setType(int dir, int lp) {
+    void Graph::setType(int dir) {
         clear();
 
         checkDir(dir);
-        checkLoop(lp);
 
         direction = dir;
-        loop = lp;
     }
 
     void Graph::setNumberOfVertices(int verts) {
@@ -179,13 +175,7 @@ namespace cuGraph {
             if (theta < p) {
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                if(v1 != v2) {
-                    addEdge(v1, v2);
-                }
-                else {
-                    if(loop == SELF_LOOP)
-                        addEdge(v1, v2);
-                }
+                addEdge(v1, v2);
             }
         }
     }
@@ -207,13 +197,7 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                if(v1 != v2) {
-                    addEdge(v1, v2);
-                }
-                else {
-                    if(loop == SELF_LOOP)
-                        addEdge(v1, v2);
-                }
+                addEdge(v1, v2);
             }
         }
     }
@@ -241,13 +225,7 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                if(v1 != v2) {
-                    addEdge(v1, v2);
-                }
-                else {
-                    if(loop == SELF_LOOP)
-                        addEdge(v1, v2);
-                }
+                addEdge(v1, v2);
             }
         }
     }
@@ -287,13 +265,7 @@ namespace cuGraph {
             if(i < E) { // equavelent to: Discard last edge, because i > E
                 v1 = i / numberOfVertices;
                 v2 = i % numberOfVertices;
-                if(v1 != v2) {
-                    addEdge(v1, v2);
-                }
-                else {
-                    if(loop == SELF_LOOP)
-                        addEdge(v1, v2);
-                }
+                addEdge(v1, v2);
             }
         }
     }
@@ -328,10 +300,6 @@ namespace cuGraph {
         return direction;
     }
 
-    int Graph::getLoop(void) {
-        return loop;
-    }
-
     int Graph::countEdges(void) {
         int E = 0;
         for(int i = 0; i < numberOfVertices; i++) {
@@ -355,20 +323,12 @@ namespace cuGraph {
             throw new GraphDirectionTypeException();
     }
 
-    void Graph::checkLoop(int lp) {
-        if(lp != SELF_LOOP && lp != NO_SELF_LOOP)
-            throw new GraphLoopTypeException();
-    }
-
     void Graph::checkVertixName(int v1, int v2) {
         if (v1 < 0 || v1 >= numberOfVertices)
             throw new GraphVertexOutOfBoundsException(numberOfVertices, v1);
 
         if (v2 < 0 || v2 >= numberOfVertices)
             throw new GraphVertexOutOfBoundsException(numberOfVertices, v2);
-
-        if (v1 == v2 && loop == NO_SELF_LOOP)
-            throw new GraphLoopTypeException();
     }
 
     void Graph::checkEdgesBound(int edge) {
