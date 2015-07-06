@@ -5,17 +5,17 @@ __global__ void addEdges_kernal(bool *content, float *S, int V, int B, int *L, i
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
     int v1, v2;
 	
+	if (tid == 0) L[0] = S[B-1] + last;	
+	
     while (tid < B) {
         S[tid] += last;
         v1 = (int)S[tid] / V;
         v2 = (int)S[tid] % V;
         content[v1 * V + v2] = 1;
-        content[v2 * V + v1] = 1;
-		
-        if(tid == B-1) L[0] = S[tid];
+        //content[v2 * V + v1] = 1;
 		
 		tid += blockDim.x * gridDim.x;
-	}	
+	}
 }
 
 __global__ void addEdges_kernel2(bool *content, float *SC, int V, int B) {
