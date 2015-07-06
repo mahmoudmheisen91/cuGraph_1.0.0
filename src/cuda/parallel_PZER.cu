@@ -8,6 +8,7 @@ __global__ void addEdges_kernal(bool *content, float *S, int V, int B, int *L, i
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p);
 __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B);
 __global__ void addEdges_kernel2(bool *content, float *SC, int V, int B);
+__global__ void fill_kernal(bool *content, bool val, int size);
 
 void initDevice(void) {
     cudaFree(0);
@@ -37,7 +38,8 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
     thrust::device_ptr<float> d = thrust::device_pointer_cast(d_S);
 
     // copy:
-    cudaMemcpy(d_content, content, V * V * sizeof(bool), cudaMemcpyHostToDevice);
+    //cudaMemcpy(d_content, content, V * V * sizeof(bool), cudaMemcpyHostToDevice);
+    fill_kernal<<<32, pow(2, 10)>>>(d_content, false, V * V);
 
     // run kernals:
     while(L < E) {
@@ -191,4 +193,23 @@ __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B) {
         tid += blockDim.x * gridDim.x;
     }
 }
+
+__global__ void fill_kernal(bool *content, bool val, int size) {
+
+	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	
+	while(tid < size) {
+		content[tid] = val;
+		
+		tid += blockDim.x * gridDim.x;
+	}
+}
+
+
+
+
+
+
+
+
 
