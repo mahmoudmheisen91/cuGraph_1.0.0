@@ -8,11 +8,12 @@ __device__ int single_warp_scan(int *data_in, int idx);
 __device__ int single_block_scan(int *data_in, int idx);
 __global__ void global_scan_kernel_1(int *data_in, int *block_results);
 __global__ void global_scan_kernel_2(int *block_results);
+__global__ void global_scan_kernel_3(int *data_in, int *block_results);
 
 int main() {
 
 	// params:
-	int size = 2048;
+	int size = 1024*1024;
 	
 	// allocate host:
 	int *data_in_host = NULL;
@@ -37,20 +38,16 @@ int main() {
 	cudaMemcpy(data_in_device, data_in_host, size * sizeof(int), cudaMemcpyHostToDevice);
 	
 	// kernel:
-	global_scan_kernel_1 <<<2, 1024>>> (data_in_device, block_results);
+	global_scan_kernel_1 <<<1024, 1024>>> (data_in_device, block_results);
 	global_scan_kernel_2 <<<1, 1024>>> (block_results);
+	global_scan_kernel_3 <<<1024, 1024>>> (data_in_device, block_results);
 	
 	// copy device to host:
 	cudaMemcpy(data_out_host, data_in_device, size * sizeof(int), cudaMemcpyDeviceToHost);
 	
 	// print:
-	for(int i = 0; i < size; i++) {
-		//cout << data_out_host[i] << " ";
-	}
-	cout << endl;
-	
-	for(int i = 1024; i < 1024+32; i++) {
-		//cout << data_out_host[i] << " ";
+	for(int i = size-1; i < size; i++) {
+		cout << data_out_host[i] << " ";
 	}
 	cout << endl;
 	
@@ -104,7 +101,7 @@ __device__ int single_block_scan(int *data_in, int idx) {
 
 	
 	// Step 4: Accumulate results from Steps 1 and 3
-	if (warpid > 0) val = data_in[warpid - 1] + val;
+	if (warpid > 0) val = data_in[(warpid - 1)+blockIdx.x*1024] + val;
 	__syncthreads ();
 	
 	// Step 5: Write and return the final result
@@ -145,7 +142,20 @@ __global__ void global_scan_kernel_2(int *block_results) {
 	//}
 }
 
+__global__ void global_scan_kernel_3(int *data_in, int *block_results) {
 
+	int tid = threadIdx.x;
+	int bid = blockIdx.x;
+	int gid = tid + bid * blockDim.x;
+	
+	// Step 4: Each thread of block i adds element i from Step 3 to its output element from Step 1:
+	if (bid > 0) {
+		int val = block_results[bid - 1];
+		data_in[gid] += val;
+	}
+	
+	__syncthreads ();
+}
 
 
 
