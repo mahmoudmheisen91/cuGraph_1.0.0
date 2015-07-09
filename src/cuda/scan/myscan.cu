@@ -43,7 +43,12 @@ int main() {
 	cudaMemcpy(data_out_host, data_in_device, size * sizeof(int), cudaMemcpyDeviceToHost);
 	
 	// print:
-	for(int i = 0; i < size; i++) {
+	for(int i = 0; i < 32; i++) {
+		cout << data_out_host[i] << " ";
+	}
+	cout << endl;
+	
+	for(int i = 1024; i < 1024+32; i++) {
 		cout << data_out_host[i] << " ";
 	}
 	cout << endl;
@@ -59,8 +64,8 @@ int main() {
 
 __device__ int single_warp_scan(int *data_in, int idx) {
 
-	//int idx = threadIdx.x;
-	const unsigned int lane = idx & 31; // index of thread in warp (0..31)
+	int tid = threadIdx.x;
+	const unsigned int lane = tid & 31; // index of thread in warp (0..31)
 	
 	if ( lane >= 1)  data_in[idx] = data_in[idx] + data_in[idx - 1];
 	if ( lane >= 2)  data_in[idx] = data_in[idx] + data_in[idx - 2];
@@ -74,21 +79,28 @@ __device__ int single_warp_scan(int *data_in, int idx) {
 
 __device__ int single_block_scan(int *data_in, int idx) {
 
-	//int idx = threadIdx.x;
-	const unsigned int lane = idx & 31;
-	const unsigned int warpid = idx >> 5;
+	int tid = threadIdx.x;
+	const unsigned int lane = tid & 31;
+	const unsigned int warpid = tid >> 5;
 	
 	// Step 1: Intra - warp scan in each warp
 	int val = single_warp_scan(data_in, idx);
 	__syncthreads ();
-	
+		
 	// Step 2: Collect per - warp partial results
-	if( lane ==31 ) data_in[warpid] = data_in[idx];
+	if( lane == 31 ) { 
+		data_in[warpid+blockIdx.x*1024] = data_in[idx]; // last thread in each warp
+		//printf("%d ", warpid+blockIdx.x*1024);
+	}
 	__syncthreads ();
-	
+	/*
 	// Step 3: Use 1 st warp to scan per - warp results
-	if( warpid ==0 ) single_warp_scan(data_in, idx);
+	if( warpid == 0) {
+		single_warp_scan(data_in, idx);
+		//printf("warpid: %d, data_in[%d]: %d\n", warpid, idx, data_in[idx]);
+	}
 	__syncthreads ();
+
 	
 	// Step 4: Accumulate results from Steps 1 and 3
 	if (warpid > 0) val = data_in[warpid - 1] + val;
@@ -96,7 +108,7 @@ __device__ int single_block_scan(int *data_in, int idx) {
 	
 	// Step 5: Write and return the final result
 	data_in[idx] = val;
-	__syncthreads ();
+	__syncthreads ();*/
 	
 	return val ;
 }
