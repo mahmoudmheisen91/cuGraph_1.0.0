@@ -7,6 +7,7 @@ using namespace std;
 __device__ int single_warp_scan(int *data_in, int idx);
 __device__ int single_block_scan(int *data_in, int idx);
 __global__ void global_scan_kernel_1(int *data_in, int *block_results);
+__global__ void global_scan_kernel_2(int *block_results);
 
 int main() {
 
@@ -37,19 +38,19 @@ int main() {
 	
 	// kernel:
 	global_scan_kernel_1 <<<2, 1024>>> (data_in_device, block_results);
-	//single_block_scan <<<1, pow(2, 10)>>> (data_in_device, data_out_device, size, items_per_thread);
+	global_scan_kernel_2 <<<1, 1024>>> (block_results);
 	
 	// copy device to host:
 	cudaMemcpy(data_out_host, data_in_device, size * sizeof(int), cudaMemcpyDeviceToHost);
 	
 	// print:
-	for(int i = 0; i < 32; i++) {
-		cout << data_out_host[i] << " ";
+	for(int i = 0; i < size; i++) {
+		//cout << data_out_host[i] << " ";
 	}
 	cout << endl;
 	
 	for(int i = 1024; i < 1024+32; i++) {
-		cout << data_out_host[i] << " ";
+		//cout << data_out_host[i] << " ";
 	}
 	cout << endl;
 	
@@ -93,7 +94,7 @@ __device__ int single_block_scan(int *data_in, int idx) {
 		//printf("%d ", warpid+blockIdx.x*1024);
 	}
 	__syncthreads ();
-	/*
+	
 	// Step 3: Use 1 st warp to scan per - warp results
 	if( warpid == 0) {
 		single_warp_scan(data_in, idx);
@@ -108,7 +109,7 @@ __device__ int single_block_scan(int *data_in, int idx) {
 	
 	// Step 5: Write and return the final result
 	data_in[idx] = val;
-	__syncthreads ();*/
+	__syncthreads ();
 	
 	return val ;
 }
@@ -128,8 +129,26 @@ __global__ void global_scan_kernel_1(int *data_in,int *block_results) {
 		block_results[bid] = data_in[gid];
 		//printf("%d ", block_results[bid]);
 	}
-	
 }
+
+__global__ void global_scan_kernel_2(int *block_results) {
+
+	int tid = threadIdx.x;
+	
+	// step 3: block scan of block_results:
+	int val = single_block_scan(block_results, tid);
+	//__syncthreads ();
+	
+	//if (tid == 0) {
+	//	for(int i = 0; i <1024; i++)
+	//		printf("%d ", block_results[i]);
+	//}
+}
+
+
+
+
+
 
 
 
