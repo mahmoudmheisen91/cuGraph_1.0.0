@@ -15,6 +15,7 @@ INCLQT 		= -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
 OFLAGS 		= $(INCLQT) -Wall -Wno-unreachable-code -Wno-return-type
 
 # Directories:
+SCANK		= _obj/scan_kernels.o
 RANDK 		= _obj/random_number_generator_kernal.o
 SKIPK 		= _obj/skipValue_kernal.o
 ADDK 		= _obj/addEdges_kernal.o
@@ -27,7 +28,7 @@ APP 		= output/bin/cuGraph_1.0.0
 
 # Shell Commands:
 cuda: $(RANDK) $(SKIPK) $(ADDK) $(PZER) 
-all: $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
+all: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
 
 run: 
 	./$(APP)
@@ -53,6 +54,9 @@ clean:
 	$(RM) $(shell pwd)/_obj/*
 		
 # Build Commands:	
+$(SCANK): src/cuda/scan_kernels.cu
+	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
+	
 $(RANDK): src/cuda/random_number_generator_kernal.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
@@ -77,5 +81,5 @@ $(PATHC): src/main/Path.cpp
 $(GRAPH): src/main/Graph.cpp
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
-$(APP): main.cpp $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
+$(APP): main.cpp $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
 	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) $(QTLIBS) -o $@
