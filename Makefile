@@ -39,6 +39,7 @@ clean:
 	$(RM) $(shell pwd)/*~ 
 	$(RM) $(shell pwd)/src/*~ 
 	$(RM) $(shell pwd)/src/cuda/*~ 
+	$(RM) $(shell pwd)/src/cuda/scan/*~ 
 	$(RM) $(shell pwd)/src/main/*~ 
 	$(RM) $(shell pwd)/src/test/*~ 
 	$(RM) $(shell pwd)/include/*~ 
