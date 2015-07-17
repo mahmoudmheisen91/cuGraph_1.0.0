@@ -1,4 +1,4 @@
-#include "scan_kernels.cuh"
+#include <cuda/Parallel_functions.h> 
 
 // Scan across a single warp (32 threads):
 __device__ int single_warp_scan(int *data, int idx) {
