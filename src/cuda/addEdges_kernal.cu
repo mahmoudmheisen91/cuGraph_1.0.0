@@ -1,6 +1,6 @@
 #include <cuda/Parallel_functions.h> 
 
-__global__ void addEdges_kernal(bool *content, float *S, int V, int B, int *L, int last) {
+__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L, int last) {
 	
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
     int v1, v2;

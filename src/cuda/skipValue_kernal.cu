@@ -1,6 +1,6 @@
 #include <cuda/Parallel_functions.h> 
 
-__global__ void skipValue_kernal(float *S, float *R, int B, float p) {
+__global__ void skipValue_kernal(int *S, float *R, int B, float p) {
 
 	int k;
 	float theta, logp;

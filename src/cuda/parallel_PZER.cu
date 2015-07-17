@@ -2,13 +2,18 @@
 #include <iostream>
 
 __global__ void random_number_generator_kernal(int masterSeed, int size, float *PRNG);
-__global__ void skipValue_kernal(float *S, float *R, int B, float p);
+__global__ void skipValue_kernal(int *S, float *R, int B, float p);
 __global__ void skipValuePre_kernal(float *S, float *R, int B, float p, int m, float *F);
-__global__ void addEdges_kernal(bool *content, float *S, int V, int B, int *L, int last);
+__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L, int last);
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p);
 __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B);
 __global__ void addEdges_kernel2(bool *content, float *SC, int V, int B);
 __global__ void fill_kernal(bool *content, bool val, int size);
+__device__ int single_warp_scan(int *data, int idx);
+__device__ int single_block_scan(int *data, int idx);
+__global__ void global_scan_kernel_1(int *data, int *block_results);
+__global__ void global_scan_kernel_2(int *block_results);
+__global__ void global_scan_kernel_3(int *data, int *block_results);
 
 void initDevice(void) {
     cudaFree(0);
@@ -17,36 +22,41 @@ void initDevice(void) {
 void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
     // declerations:
     bool *d_content;
-    float *d_R, *d_S;
-    int *d_L, *h_L;
+    float *d_R;
+    int *d_L, *h_L, *d_S;
 
     int B, L = 0;
-    int seed = time(0)-1000000000;
+    int seed = time(0) - 1000000000;
     double segma = sqrt(p * (1 - p) * E);
 
+	int *block_results = NULL;
+	cudaMalloc((void**) &block_results, 1024 * sizeof(int));
+	
     if((int)(p * E + lambda * segma) < 1000000)
         B = (int)(p * E + lambda * segma);
     else
-        B = 1000000;
+        B = 1024*1024;
 
     // allocation:
     h_L = new int[1];
     cudaMalloc((void**) &d_content, V * V * sizeof(bool)); 	// 100 MB
     cudaMalloc((void**) &d_R, B * sizeof(float)); 			// 4 MB
-    cudaMalloc((void**) &d_S, B * sizeof(float));			// 4 MB
+    cudaMalloc((void**) &d_S, B * sizeof(int));			// 4 MB
     cudaMalloc((void**) &d_L, sizeof(int));
-    thrust::device_ptr<float> d = thrust::device_pointer_cast(d_S);
 
-    // copy:
-    //cudaMemcpy(d_content, content, V * V * sizeof(bool), cudaMemcpyHostToDevice);
+    // fill content instead of copying it:
     fill_kernal<<<32, pow(2, 10)>>>(d_content, false, V * V);
 
     // run kernals:
     while(L < E) {
         random_number_generator_kernal<<<8, pow(2, 10)>>>(seed, B, d_R);
         skipValue_kernal<<<32, pow(2, 10)>>>(d_S, d_R, B, p);
-        thrust::inclusive_scan(d, d+B, d);
-        addEdges_kernal<<<32, pow(2, 10)>>>(d_content, raw_pointer_cast(&d[0]), V, B, d_L, L);
+		
+		global_scan_kernel_1 <<<1024, 1024>>> (d_S, block_results);
+		global_scan_kernel_2 <<<1, 1024>>> (block_results);
+		global_scan_kernel_3 <<<1024, 1024>>> (d_S, block_results);
+        
+        addEdges_kernal<<<32, pow(2, 10)>>>(d_content, d_S, V, B, d_L, L);
 
         cudaMemcpy(h_L, d_L, sizeof(float), cudaMemcpyDeviceToHost);
         L = h_L[0];
@@ -66,7 +76,7 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
 
 void parallel_PPreZER(bool *content, float p, int lambda, int m, int V, int E) {
     // declerations:
-    bool *d_content;
+    /*bool *d_content;
     float *d_R, *d_S, *h_F, *d_F;
     int *d_L, *h_L;
 
@@ -119,13 +129,13 @@ void parallel_PPreZER(bool *content, float p, int lambda, int m, int V, int E) {
     cudaFree(d_content);
     cudaFree(d_R);
     cudaFree(d_S);
-    cudaFree(d_F);
+    cudaFree(d_F);*/
 }
 
 void parallel_PER(bool *content, float p, int V, int E) {
 
     // declerations:
-    bool *d_content;
+    /*bool *d_content;
     float *d_R, *d_PL;
     int *d_T, *d_SC;
 
@@ -159,7 +169,7 @@ void parallel_PER(bool *content, float p, int V, int E) {
     cudaFree(d_R);
     cudaFree(d_SC);
     cudaFree(d_T);
-    cudaFree(d_PL);
+    cudaFree(d_PL);*/
 }
 
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p) {
