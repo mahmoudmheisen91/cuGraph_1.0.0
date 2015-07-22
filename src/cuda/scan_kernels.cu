@@ -37,29 +37,29 @@ __device__ int single_block_scan(int *data, int idx) {
 	
 	// Step 1: Single warp scan:
 	int val = single_warp_scan(data, idx);
-	__syncthreads ();
+	__syncthreads();
 		
 	// Step 2: Collect partial results per warp:
 	if( lane == 31 ) { 
 		data[warpid + (bid*bdim) ] = data[idx]; // last thread in each warp
 	}
-	__syncthreads ();
+	__syncthreads();
 	
 	// Step 3: Scan partail results:
 	if( warpid == 0) {
 		single_warp_scan(data, idx);
 	}
-	__syncthreads ();
+	__syncthreads();
 
 	// Step 4: Accumulate results from Steps 1 and 3:
 	if (warpid > 0) {
 		val = data[(warpid - 1) + (bid*bdim)] + val;
 	}
-	__syncthreads ();
+	__syncthreads();
 	
 	// Step 5: Write and return the final result:
 	data[idx] = val;
-	__syncthreads ();
+	__syncthreads();
 	
 	return val ;
 }
@@ -73,7 +73,7 @@ __global__ void global_scan_kernel_1(int *data,int *block_results) {
 	
 	// step 1: block scan:
 	int val = single_block_scan(data, gid);
-	__syncthreads ();
+	__syncthreads();
 	
 	// step 2: store partial result from each block:
 	if (tid == 1023) {

@@ -1,19 +1,33 @@
 #include <cuda/Parallel_functions.h> 
 
-__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L, int last) {
+#include <cstdio>
+
+__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *d_L) {
 	
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
     int v1, v2;
+    int Stid;
 	
-	if (tid == 0) L[0] = S[B-1] + last;	
+	if (tid == 0)
+		d_L[0] = S[B-1];
 	
     while (tid < B) {
-        S[tid] += last;
-        v1 = (int)S[tid] / V;
-        v2 = (int)S[tid] % V;
+    	Stid = S[tid];
+        v1 = Stid / V;
+        v2 = Stid % V;
         content[v1 * V + v2] = 1;
-        //content[v2 * V + v1] = 1;
 		
+		tid += blockDim.x * gridDim.x;
+	}
+}
+
+__global__ void modify_S(int *S, int L, int B) {
+	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	
+    while (tid < B) {
+    	S[tid] = S[tid] + L;
+		
+		//printf("S[%d] = %d\n", tid, S[tid]);
 		tid += blockDim.x * gridDim.x;
 	}
 }

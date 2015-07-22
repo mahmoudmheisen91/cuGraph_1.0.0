@@ -1,5 +1,7 @@
 #include <cuda/Parallel_functions.h> 
 
+#include <cstdio>
+
 __global__ void skipValue_kernal(int *S, float *R, int B, float p) {
 
 	int k;
@@ -12,6 +14,7 @@ __global__ void skipValue_kernal(int *S, float *R, int B, float p) {
 		k = max(0, (int)ceil(theta) );
 		
 		S[tid] = k;
+		//printf("S[%d] = %d\n", tid, S[tid]);
 		tid += blockDim.x * gridDim.x;
 	}
 }

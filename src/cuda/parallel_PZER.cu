@@ -4,7 +4,7 @@
 __global__ void random_number_generator_kernal(int masterSeed, int size, float *PRNG);
 __global__ void skipValue_kernal(int *S, float *R, int B, float p);
 __global__ void skipValuePre_kernal(float *S, float *R, int B, float p, int m, float *F);
-__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L, int last);
+__global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L);
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p);
 __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B);
 __global__ void addEdges_kernel2(bool *content, float *SC, int V, int B);
@@ -14,6 +14,7 @@ __device__ int single_block_scan(int *data, int idx);
 __global__ void global_scan_kernel_1(int *data, int *block_results);
 __global__ void global_scan_kernel_2(int *block_results);
 __global__ void global_scan_kernel_3(int *data, int *block_results);
+__global__ void modify_S(int *S, int L, int B);
 
 void initDevice(void) {
     cudaFree(0);
@@ -23,45 +24,48 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
     // declerations:
     bool *d_content;
     float *d_R;
-    int *d_L, *h_L, *d_S;
+    int *d_L, *h_L, *d_S, *block_results;
 
-    int B, L = 0;
-    int seed = time(0) - 1000000000;
-    double segma = sqrt(p * (1 - p) * E);
-
-	int *block_results = NULL;
-	cudaMalloc((void**) &block_results, 1024 * sizeof(int));
-	
-    if((int)(p * E + lambda * segma) < 1000000)
-        B = (int)(p * E + lambda * segma);
-    else
-        B = 1024*1024;
+	int L = 0;
+    int B = 1024*1024;
+    const unsigned int seed = time(0) - 1000000000;
+    
+    //double segma = sqrt(p * (1 - p) * E);
+    //if((int)(p * E + lambda * segma) < 1000000)
+    //    B = (int)(p * E + lambda * segma);
+    //else
+    //    B = 1024*1024;
 
     // allocation:
     h_L = new int[1];
+    h_L[0] = L;
     cudaMalloc((void**) &d_content, V * V * sizeof(bool)); 	// 100 MB
     cudaMalloc((void**) &d_R, B * sizeof(float)); 			// 4 MB
     cudaMalloc((void**) &d_S, B * sizeof(int));			// 4 MB
-    cudaMalloc((void**) &d_L, sizeof(int));
+    cudaMalloc((void**) &d_L, 1 * sizeof(int));
+    cudaMalloc((void**) &block_results, 1024 * sizeof(int));
 
     // fill content instead of copying it:
     fill_kernal<<<32, pow(2, 10)>>>(d_content, false, V * V);
 
     // run kernals:
     while(L < E) {
-        random_number_generator_kernal<<<8, pow(2, 10)>>>(seed, B, d_R);
-        skipValue_kernal<<<32, pow(2, 10)>>>(d_S, d_R, B, p);
+
+        random_number_generator_kernal<<<8, 1024>>>(seed, B, d_R);
+        skipValue_kernal<<<32, 1024>>>(d_S, d_R, B, p);
 		
 		global_scan_kernel_1 <<<1024, 1024>>> (d_S, block_results);
 		global_scan_kernel_2 <<<1, 1024>>> (block_results);
 		global_scan_kernel_3 <<<1024, 1024>>> (d_S, block_results);
         
-        addEdges_kernal<<<32, pow(2, 10)>>>(d_content, d_S, V, B, d_L, L);
+        modify_S <<<1024, 1024>>>(d_S, L, B);
+        
+        addEdges_kernal<<<1024, 1024>>>(d_content, d_S, V, B, d_L);
 
-        cudaMemcpy(h_L, d_L, sizeof(float), cudaMemcpyDeviceToHost);
+        cudaMemcpy(h_L, d_L, sizeof(int), cudaMemcpyDeviceToHost);
         L = h_L[0];
 
-        //std::cout << L << " " << last << std::endl;
+        //std::cout << L << std::endl;
     }
 
     cudaMemcpy(content, d_content, sizeof(bool) * V * V, cudaMemcpyDeviceToHost);
@@ -72,6 +76,7 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
     cudaFree(d_R);
     cudaFree(d_S);
     cudaFree(d_L);
+    cudaFree(block_results);
 }
 
 void parallel_PPreZER(bool *content, float p, int lambda, int m, int V, int E) {

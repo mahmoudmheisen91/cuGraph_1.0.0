@@ -1,5 +1,7 @@
 #include <cuda/Parallel_functions.h> 
 
+#include <cstdio>
+
 __global__ void random_number_generator_kernal(int masterSeed, int size, float *PRNG) {
 	long int a = 16807;                      	// same as apple c++ imp
 	long int m = 2147483647;                 	// 2^31 − 1
@@ -14,6 +16,7 @@ __global__ void random_number_generator_kernal(int masterSeed, int size, float *
 		theta = temp - m * floor(temp * rec);  	// is the same as (temp mod m) ((Xn * a) mod m)
 		seed = theta;
 		PRNG[tid] = (float)theta/m;			   	// between 1/m - 1
+		//printf("R[%d] = %.2f\n", tid, PRNG[tid]);
 		tid += blockDim.x * gridDim.x;
 	}
 }
