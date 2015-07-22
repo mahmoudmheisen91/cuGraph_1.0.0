@@ -1,11 +1,9 @@
 # Compilers Definitions:
 CPP  		= g++
-QT4C 		= moc-qt4
 NVCC 		= nvcc
 
 # Compilers Flags:
 CPPFLAGS 	= -g -Wall -fopenmp -DDEBUG
-QTLIBS 		= -lQtCore -lQtGui
 CUDAFLAGS 	= -arch compute_20 -code sm_20
 CUDALIBS 	= -L/usr/local/cuda/lib64 -lcuda -lcudart
 INCFLAGS 	= -I./include
@@ -82,4 +80,4 @@ $(GRAPH): src/main/Graph.cpp
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
 $(APP): main.cpp $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
-	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) $(QTLIBS) -o $@
+	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) -o $@
