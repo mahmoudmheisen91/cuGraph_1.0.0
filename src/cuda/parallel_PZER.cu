@@ -8,7 +8,6 @@ __global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *L);
 __global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p);
 __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B);
 __global__ void addEdges_kernel2(bool *content, float *SC, int V, int B);
-__global__ void fill_kernal(bool *content, bool val, int size);
 __device__ int single_warp_scan(int *data, int idx);
 __device__ int single_block_scan(int *data, int idx);
 __global__ void global_scan_kernel_1(int *data, int *block_results);
@@ -45,8 +44,8 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
     cudaMalloc((void**) &d_L, 1 * sizeof(int));
     cudaMalloc((void**) &block_results, 1024 * sizeof(int));
 
-    // fill content instead of copying it:
-    fill_kernal<<<32, pow(2, 10)>>>(d_content, false, V * V);
+    // fill content instead of copying/filling it:
+    cudaMemset(d_content, false, V * V * sizeof(bool));
 
     // run kernals:
     while(L < E) {
@@ -58,7 +57,7 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
 		global_scan_kernel_2 <<<1, 1024>>> (block_results);
 		global_scan_kernel_3 <<<1024, 1024>>> (d_S, block_results);
         
-        modify_S <<<1024, 1024>>>(d_S, L, B);
+        modify_S <<<1024, 1024>>> (d_S, L, B);
         
         addEdges_kernal<<<1024, 1024>>>(d_content, d_S, V, B, d_L);
 
@@ -208,21 +207,6 @@ __global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B) {
         tid += blockDim.x * gridDim.x;
     }
 }
-
-__global__ void fill_kernal(bool *content, bool val, int size) {
-
-	int tid = threadIdx.x + blockIdx.x * blockDim.x;
-	
-	while(tid < size) {
-		content[tid] = val;
-		
-		tid += blockDim.x * gridDim.x;
-	}
-}
-
-
-
-
 
 
 
