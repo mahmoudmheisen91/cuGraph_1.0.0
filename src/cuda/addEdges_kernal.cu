@@ -8,8 +8,9 @@ __global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *d_L) {
     int v1, v2;
     int Stid;
 	
-	if (tid == 0)
-		d_L[0] = S[B-1];
+	//if (tid == 0)
+	*d_L = S[B-1];
+	//printf("d_L[0] = %d\n", d_L[0]);
 	
     while (tid < B) {
     	Stid = S[tid];

@@ -1,6 +1,8 @@
 #include <cuda/Parallel_functions.h>
 #include <iostream>
 
+#define cudaDeviceScheduleBlockingSync   0x04
+
 __global__ void random_number_generator_kernal(int masterSeed, int size, float *PRNG);
 __global__ void skipValue_kernal(int *S, float *R, int B, float p);
 __global__ void skipValuePre_kernal(float *S, float *R, int B, float p, int m, float *F);
@@ -49,22 +51,30 @@ void parallel_PZER(bool *content, float p, int lambda, int V, int E) {
 
     // run kernals:
     while(L < E) {
-
+		cudaDeviceSynchronize();
+		
         random_number_generator_kernal<<<8, 1024>>>(seed, B, d_R);
+        cudaDeviceSynchronize();
+        
         skipValue_kernal<<<32, 1024>>>(d_S, d_R, B, p);
+		cudaDeviceSynchronize();
 		
 		global_scan_kernel_1 <<<1024, 1024>>> (d_S, block_results);
 		global_scan_kernel_2 <<<1, 1024>>> (block_results);
 		global_scan_kernel_3 <<<1024, 1024>>> (d_S, block_results);
+        cudaDeviceSynchronize();
         
         modify_S <<<1024, 1024>>> (d_S, L, B);
+        cudaDeviceSynchronize();
         
         addEdges_kernal<<<1024, 1024>>>(d_content, d_S, V, B, d_L);
-
+		cudaDeviceSynchronize();
+		
         cudaMemcpy(h_L, d_L, sizeof(int), cudaMemcpyDeviceToHost);
         L = h_L[0];
 
         //std::cout << L << std::endl;
+        cudaDeviceSynchronize();
     }
 
     cudaMemcpy(content, d_content, sizeof(bool) * V * V, cudaMemcpyDeviceToHost);
