@@ -49,7 +49,7 @@ clean:
 	$(RM) $(shell pwd)/output/TXT/*~
 	$(RM) $(shell pwd)/output/MTX/*~
 	$(RM) $(shell pwd)/output/bin/cuGraph_1.0.0
-	$(RM) $(shell pwd)/_obj/*
+	$(RM) $(shell pwd)/_obj/*~
 		
 # Build Commands:	
 $(SCANK): src/cuda/scan_kernels.cu
