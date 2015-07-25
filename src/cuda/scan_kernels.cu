@@ -79,6 +79,7 @@ __global__ void global_scan_kernel_1(int *data,int *block_results) {
 	if (tid == 1023) {
 		block_results[bid] = data[gid];
 	}
+	__syncthreads();
 }
 
 // Second global scan kernal: step 3:

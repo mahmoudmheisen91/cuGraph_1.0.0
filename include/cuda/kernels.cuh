@@ -25,7 +25,7 @@ __global__ void random_number_generator_kernel(int masterSeed, /* in */
  */
 __global__ void skipValue_kernel(float *Rands, 				/* in */ 
 								 int size, 					/* in */ 
-								 float skipping_prob		/* in */ 
+								 float skipping_prob,		/* in */ 
 								 int *Skips);				/* out */
 
 /** Single warp scan algorithm.
@@ -63,9 +63,9 @@ __global__ void global_scan_kernel_3(int *data, 			/* in\out */
 /** Update S array.
  * cancatate S from previous loop with current loop.
  */
-__global__ void update_cancatate(int *Skips, 			/* in\out */ 
-								 int size,				/* in */ 
-								 int cancatate_val); 	/* in */ 
+__global__ void update_cancatate_kernel(int *Skips, 			/* in\out */ 
+								 		int size,				/* in */ 
+								 		int cancatate_val); 	/* in */ 
 								 
 
 /** Add Edges to the graph.
@@ -76,12 +76,6 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
 								int vertex_num,		/* in */
 								bool *content,		/* out */
 								int *L);			/* out */
-
-// unfactored code:								 
-__global__ void skipValuePre_kernal(float *S, float *R, int B, float p, int m, float *F);
-__global__ void generatePredicateList_kernel(float *PL, int *T, float *R, int B, int i, float p);
-__global__ void compact_kernel(int *T, float *S, float *PL, int *SC, int B);
-__global__ void addEdges_kernel2(bool *content, float *SC, int V, int B);
 
 #endif
 

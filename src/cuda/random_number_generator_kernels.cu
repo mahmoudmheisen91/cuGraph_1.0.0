@@ -1,8 +1,22 @@
-#include <cuda/Parallel_functions.h> 
+/*
+ * random_number_generator_kernels.cu
+ *
+ *  Created: 2015-05-18, Modified: 2015-07-25
+ *
+ */
 
-#include <cstdio>
+// Headers includes:
+#include <cuda/kernels.cuh>
+#include <cuda/Parallel_functions.h>
 
-__global__ void random_number_generator_kernal(int masterSeed, int size, float *PRNG) {
+/** Parallel random number generator.
+ * with a master seed and local seed per thread, 
+ * seed = masterseed + thread_global_id
+ */
+__global__ void random_number_generator_kernel(int masterSeed, /* in */ 
+											   int size, 	   /* in */
+											   float *PRNG)   /* out */
+{
 	long int a = 16807;                      	// same as apple c++ imp
 	long int m = 2147483647;                 	// 2^31 − 1
 	float rec  = 1.0 / m;
@@ -16,7 +30,12 @@ __global__ void random_number_generator_kernal(int masterSeed, int size, float *
 		theta = temp - m * floor(temp * rec);  	// is the same as (temp mod m) ((Xn * a) mod m)
 		seed = theta;
 		PRNG[tid] = (float)theta/m;			   	// between 1/m - 1
-		//printf("R[%d] = %.2f\n", tid, PRNG[tid]);
+		
 		tid += blockDim.x * gridDim.x;
 	}
 }
+
+//printf("R[%d] = %.2f\n", tid, PRNG[tid]);
+
+
+
