@@ -7,16 +7,17 @@ __global__ void addEdges_kernal(bool *content, int *S, int V, int B, int *d_L) {
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
     int v1, v2;
     int Stid;
+    int VV = V*V;
 	
 	//if (tid == 0)
-	*d_L = S[B-1];
+		d_L[0] = S[B-1];
 	//printf("d_L[0] = %d\n", d_L[0]);
 	
     while (tid < B) {
     	Stid = S[tid];
         v1 = Stid / V;
         v2 = Stid % V;
-        content[v1 * V + v2] = 1;
+        content[(v1 * V + v2) % VV] = true;
 		
 		tid += blockDim.x * gridDim.x;
 	}

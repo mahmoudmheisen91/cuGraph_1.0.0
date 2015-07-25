@@ -5,13 +5,12 @@
 __global__ void skipValue_kernal(int *S, float *R, int B, float p) {
 
 	int k;
-	float theta, logp;
+	float logp;
     logp = log10f(1 - p);
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	
     while (tid < B) {
-		theta = log10f(R[tid]) / logp;
-		k = max(0, (int)ceil(theta) );
+		k = max(0, (int)ceil( log10f(R[tid]) / logp ) );
 		
 		S[tid] = k;
 		//printf("S[%d] = %d\n", tid, S[tid]);
