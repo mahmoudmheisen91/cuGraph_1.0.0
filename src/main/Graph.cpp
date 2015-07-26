@@ -273,7 +273,7 @@ namespace cuGraph {
     void Graph::fillByPER(int E, double p) {
         checkEdgesBound(E);
 
-        parallel_PER(content, p, numberOfVertices, E);
+        PER_Generator(content, p, numberOfVertices, E);
     }
 
     void Graph::fillByPZER(int E, double p, int lambda) {

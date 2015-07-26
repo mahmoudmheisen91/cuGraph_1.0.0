@@ -63,10 +63,10 @@ using namespace std;
 void initDevice(void);
 
 // Parallel CUDA random graph generator 1, PER:
-void parallel_PER(bool *content, 		/* in\out */ 
-				  float p, 		 		/* in */ 
-				  int V, 		 		/* in */ 
-				  int E);		 		/* in */ 
+void PER_Generator(bool *content, 			/* in\out */ 
+				   float skipping_prob, 	/* in */ 
+				   int vertex_num, 		 	/* in */ 
+				   int edges_num);		 	/* in */ 
 
 // Parallel CUDA random graph generator 2, PZER:
 void PZER_Generator(bool *content,   		/* in\out */ 

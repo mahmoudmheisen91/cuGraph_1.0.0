@@ -7,7 +7,7 @@
 
 // Must be defined before any header to use GPU_TIMER:
 // Must be defined in just one file of the project (to be fixed):
-#define TIMER
+//#define TIMER
 
 // Headers includes:
 #include <cuda/kernels.cuh>

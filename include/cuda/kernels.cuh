@@ -1,7 +1,7 @@
 /*
  * kernels.cuh
  *
- *  Created: 2015-07-24, Modified: 2015-07-25
+ *  Created: 2015-07-24, Modified: 2015-07-26
  *
  */
  
@@ -37,7 +37,17 @@ __global__ void skipValuePre_kernel(float *Rands, 			/* in */
 									float skipping_prob, 	/* in */ 
 									int m, 					/* in */ 
 									float *cumulative_dist,	/* in */ 
-									int *Skips);			/* in */ 
+									int *Skips);			/* out */ 
+
+/** Non-Prediction algorithm.
+ * generate predicate list, to add edges to the graph
+ */
+__global__ void generate_predicate_list_kernel(float *Rands,   		/* in */ 
+											   int size, 			/* in */ 
+											   float prob,			/* in */ 
+											   int i, 				/* in */ 
+											   int *predicate_list, /* out */ 
+											   int *T);				/* out */ 
 
 /** Single warp scan algorithm.
  * device function that scan a single warp of threads
@@ -87,6 +97,23 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
 								int vertex_num,		/* in */
 								bool *content,		/* out */
 								int *L);			/* out */
+
+/** Add Edges to the graph.
+ * directed graph with self loops
+ */
+__global__ void addEdges_kernel_2(int *predicate_list, 	/* in */
+								  int skips_size, 		/* in */
+								  int vertex_num, 		/* in */
+								  bool *content);		/* out */
+
+/** Stream Compcation Algorithm.
+ * directed graph with self loops
+ */
+__global__ void stream_compaction_kernel(int *T, 				/* in */
+										 int *S, 				/* in */
+										 int *predicate_list, 	/* in */
+										 int size,				/* in */
+										 int *SC);				/* in */
 
 #endif
 

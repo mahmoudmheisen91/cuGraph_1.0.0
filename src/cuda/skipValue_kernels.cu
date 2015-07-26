@@ -40,7 +40,7 @@ __global__ void skipValuePre_kernel(float *Rands, 			/* in */
 									float skipping_prob, 	/* in */ 
 									int m, 					/* in */ 
 									float *cumulative_dist,	/* in */ 
-									int *Skips)			/* in */ 
+									int *Skips)				/* out */ 
 {
 	int k;
 	float logp;
@@ -69,6 +69,31 @@ __global__ void skipValuePre_kernel(float *Rands, 			/* in */
 		
 		tid += blockDim.x * gridDim.x;
 	}
+}
+
+/** Non-Prediction algorithm.
+ * generate predicate list, to add edges to the graph
+ */
+__global__ void generate_predicate_list_kernel(float *Rands,   		/* in */ 
+											   int size, 			/* in */ 
+											   float prob,			/* in */ 
+											   int i, 				/* in */ 
+											   int *predicate_list, /* out */ 
+											   int *T)				/* out */ 
+{
+    int tid = threadIdx.x + blockIdx.x * blockDim.x;
+
+    while(tid < size) {
+
+        T[tid] = tid + i * size;
+
+        if (Rands[tid] < prob)
+            predicate_list[tid] = tid + i * size;
+        else
+            predicate_list[tid] = -1;
+
+        tid += blockDim.x * gridDim.x;
+    }
 }
 
 //printf("S[%d] = %d\n", tid, S[tid]);

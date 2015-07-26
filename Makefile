@@ -15,9 +15,11 @@ OFLAGS 		= $(INCLQT) -Wall -Wno-unreachable-code -Wno-return-type
 # Directories:
 UTIL		= _obj/util.o
 SCANK		= _obj/scan_kernels.o
+COMPK		= _obj/Stream_compaction_kernels.o
 RANDK 		= _obj/random_number_generator_kernels.o
 SKIPK 		= _obj/skipValue_kernels.o
 ADDK 		= _obj/addEdges_kernels.o
+PER 		= _obj/PER_Generator.o
 PZER 		= _obj/PZER_Generator.o
 PPreZER 	= _obj/PPreZER_Generator.o
 EXCEP 		= _obj/Exceptions.o
@@ -27,7 +29,7 @@ GRAPH  		= _obj/Graph.o
 APP 		= output/bin/cuGraph_1.0.0
 
 # Shell Commands:
-all: $(UTIL) $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(PPreZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
+all: $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
 
 run: 
 	./$(APP)
@@ -59,6 +61,9 @@ $(UTIL): src/cuda/util.cu
 $(SCANK): src/cuda/scan_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
+$(COMPK): src/cuda/Stream_compaction_kernels.cu
+	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
+	
 $(RANDK): src/cuda/random_number_generator_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
@@ -68,6 +73,9 @@ $(SKIPK): src/cuda/skipValue_kernels.cu
 $(ADDK): src/cuda/addEdges_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 
+$(PER): src/cuda/PER_Generator.cu
+	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
+	
 $(PZER): src/cuda/PZER_Generator.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 
@@ -86,7 +94,7 @@ $(PATHC): src/main/Path.cpp
 $(GRAPH): src/main/Graph.cpp
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
-$(APP): main.cpp $(UTIL) $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(PPreZER) \
+$(APP): main.cpp $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) \
 $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
 	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) -o $@
 

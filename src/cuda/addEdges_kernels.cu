@@ -19,10 +19,10 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
 								int *L)				/* out */
 
 {	
-	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int Stid;
     int v1, v2;
-    int Stid;
     int max_size = vertex_num * vertex_num;
+    int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	
 	if(tid == 0) {
 		L[0] = Skips[skips_size-1];
@@ -38,6 +38,32 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
 	}
 }
 
+/** Add Edges to the graph.
+ * directed graph with self loops
+ */
+__global__ void addEdges_kernel_2(int *predicate_list, 	/* in */
+								  int skips_size, 		/* in */
+								  int vertex_num, 		/* in */
+								  bool *content)		/* out */
+{
+	int Stid;
+    int v1, v2;
+    int max_size = vertex_num * vertex_num;
+    int tid = threadIdx.x + blockIdx.x * blockDim.x;
+
+    while (tid < skips_size) {
+		Stid = predicate_list[tid];
+		
+        if(Stid > 0) {
+            v1 = Stid / vertex_num;
+            v2 = Stid % vertex_num;
+            content[(v1 * vertex_num + v2) % max_size] = true;
+        }
+
+        tid += blockDim.x * gridDim.x;
+    }
+}
+								  
 /** Update S array.
  * cancatate S from previous loop with current loop.
  */
