@@ -7,7 +7,7 @@
 
 // Headers includes:
 #include <cuda/kernels.cuh>
-#include <cuda/Parallel_functions.h>
+#include <cuda/Cuda_Prototypes_Macros.h>
 
 /** Add Edges to the graph.
  * directed graph with self loops
@@ -24,7 +24,9 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
     int Stid;
     int max_size = vertex_num * vertex_num;
 	
-	*L = S[skips_size-1];
+	if(tid == 0) {
+		L[0] = Skips[skips_size-1];
+	}
 	
     while (tid < skips_size) {
     	Stid = Skips[tid];

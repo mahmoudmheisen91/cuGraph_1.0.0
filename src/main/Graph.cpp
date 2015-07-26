@@ -7,7 +7,7 @@
 #include <main/Graph.h>
 #include <main/dataTypes.h>
 #include <main/Exceptions.h>
-#include <cuda/Parallel_functions.h>
+#include <cuda/Cuda_Prototypes_Macros.h>
 
 using namespace std;
 
@@ -279,13 +279,13 @@ namespace cuGraph {
     void Graph::fillByPZER(int E, double p, int lambda) {
         checkEdgesBound(E);
 
-        parallel_PZER(content, p, lambda, numberOfVertices, E);
+        PZER_Generator(content, p, lambda, numberOfVertices, E);
     }
 
     void Graph::fillByPPreZER(int E, double p, int lambda, int m) {
         checkEdgesBound(E);
 
-        parallel_PPreZER(content, p, lambda, m, numberOfVertices, E);
+        PPreZER_Generator(content, p, lambda, m, numberOfVertices, E);
     }
 
     int Graph::getNumberOfVertices(void) {

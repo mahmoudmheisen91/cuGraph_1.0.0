@@ -13,11 +13,13 @@ INCLQT 		= -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
 OFLAGS 		= $(INCLQT) -Wall -Wno-unreachable-code -Wno-return-type
 
 # Directories:
+UTIL		= _obj/util.o
 SCANK		= _obj/scan_kernels.o
-RANDK 		= _obj/random_number_generator_kernal.o
-SKIPK 		= _obj/skipValue_kernal.o
-ADDK 		= _obj/addEdges_kernal.o
-PZER 		= _obj/parallel_PZER.o
+RANDK 		= _obj/random_number_generator_kernels.o
+SKIPK 		= _obj/skipValue_kernels.o
+ADDK 		= _obj/addEdges_kernels.o
+PZER 		= _obj/PZER_Generator.o
+PPreZER 	= _obj/PPreZER_Generator.o
 EXCEP 		= _obj/Exceptions.o
 GSTM 		= _obj/gstream.o
 PATHC 		= _obj/Path.o
@@ -25,8 +27,7 @@ GRAPH  		= _obj/Graph.o
 APP 		= output/bin/cuGraph_1.0.0
 
 # Shell Commands:
-cuda: $(RANDK) $(SKIPK) $(ADDK) $(PZER) 
-all: $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
+all: $(UTIL) $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(PPreZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
 
 run: 
 	./$(APP)
@@ -52,21 +53,27 @@ clean:
 	$(RM) $(shell pwd)/_obj/*~
 		
 # Build Commands:	
+$(UTIL): src/cuda/util.cu
+	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
+	
 $(SCANK): src/cuda/scan_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
-$(RANDK): src/cuda/random_number_generator_kernal.cu
+$(RANDK): src/cuda/random_number_generator_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
-$(SKIPK): src/cuda/skipValue_kernal.cu
+$(SKIPK): src/cuda/skipValue_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 
-$(ADDK): src/cuda/addEdges_kernal.cu
+$(ADDK): src/cuda/addEdges_kernels.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 
-$(PZER): src/cuda/parallel_PZER.cu
+$(PZER): src/cuda/PZER_Generator.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
-		
+
+$(PPreZER): src/cuda/PPreZER_Generator.cu
+	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
+	
 $(EXCEP): src/main/Exceptions.cpp 
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
@@ -79,5 +86,14 @@ $(PATHC): src/main/Path.cpp
 $(GRAPH): src/main/Graph.cpp
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
-$(APP): main.cpp $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
+$(APP): main.cpp $(UTIL) $(SCANK) $(RANDK) $(SKIPK) $(ADDK) $(PZER) $(PPreZER) \
+$(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
 	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) -o $@
+
+
+
+
+
+
+
+

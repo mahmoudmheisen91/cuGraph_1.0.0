@@ -28,6 +28,17 @@ __global__ void skipValue_kernel(float *Rands, 				/* in */
 								 float skipping_prob,		/* in */ 
 								 int *Skips);				/* out */
 
+/** Prediction algorithm.
+ * predicte the next edge that will be counted in the graph 
+ * using cumulative distribution function
+ */
+__global__ void skipValuePre_kernel(float *Rands, 			/* in */ 
+									int size, 				/* in */ 
+									float skipping_prob, 	/* in */ 
+									int m, 					/* in */ 
+									float *cumulative_dist,	/* in */ 
+									int *Skips);			/* in */ 
+
 /** Single warp scan algorithm.
  * device function that scan a single warp of threads
  */

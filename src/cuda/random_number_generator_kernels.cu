@@ -7,7 +7,7 @@
 
 // Headers includes:
 #include <cuda/kernels.cuh>
-#include <cuda/Parallel_functions.h>
+#include <cuda/Cuda_Prototypes_Macros.h>
 
 /** Parallel random number generator.
  * with a master seed and local seed per thread, 
