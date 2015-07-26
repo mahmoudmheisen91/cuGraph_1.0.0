@@ -1,8 +1,20 @@
-#include <cuda/Parallel_functions.h> 
+/*
+ * scan_kernels.cu
+ *
+ *  Created: 2015-06-18, Modified: 2015-07-26
+ *
+ */
 
-// Scan across a single warp (32 threads):
-__device__ int single_warp_scan(int *data, int idx) {
+// Headers includes:
+#include <cuda/kernels.cuh>
+#include <cuda/Cuda_Prototypes_Macros.h>
 
+/** Single warp scan algorithm.
+ * device function that scan a single warp of threads
+ */
+__device__ int single_warp_scan(int *data, /* in\out */ 
+								int idx)  /* in */ 
+{
 	const unsigned int tid = threadIdx.x;					 // thread id in a block: (0 to 1023)
 	const unsigned int lane = tid & 31; 					 // index of thread in warp (0..31):
 	
@@ -25,10 +37,13 @@ __device__ int single_warp_scan(int *data, int idx) {
 	return data[idx];
 }
 
-// Scan across a single block (1024 threads):
-__device__ int single_block_scan(int *data, int idx) {
-
-	
+/** Single block scan algorithm.
+ * device function that scan a single block of threads
+ * internally depend on single_warp_scan
+ */								
+__device__ int single_block_scan(int *data, /* in\out */ 
+								 int idx)   /* in */ 
+{	
 	const unsigned int tid = threadIdx.x;  	// thread id in a block: (0 to 1023)
 	const unsigned int bid = blockIdx.x;  	// block id in a grid: (0 to 1023)
 	const unsigned int bdim = blockDim.x;  	// block size: 1024
@@ -64,9 +79,13 @@ __device__ int single_block_scan(int *data, int idx) {
 	return val ;
 }
 
-// First global scan kernal: step 1 and 2:
-__global__ void global_scan_kernel_1(int *data,int *block_results) {
-
+/** First kernel of global scan algorithm.
+ * scan data array as blocks
+ * store partail results in block_results
+ */										
+__global__ void global_scan_kernel_1(int *data, 			/* in\out */ 
+									 int *block_results)	/* out */ 
+{
 	const unsigned int tid = threadIdx.x;				// thread id in a block: (0 to 1023)
 	const unsigned int bid = blockIdx.x;				// block id in a grid: (0 to 1023)
 	const unsigned int gid = tid + bid * blockDim.x;  	// global id of the thread
@@ -82,18 +101,24 @@ __global__ void global_scan_kernel_1(int *data,int *block_results) {
 	__syncthreads();
 }
 
-// Second global scan kernal: step 3:
-__global__ void global_scan_kernel_2(int *block_results) {
-
+/** Second kernel of global scan algorithm.
+ * scan block_results array
+ */									
+__global__ void global_scan_kernel_2(int *block_results)	/* in\out */ 
+{
 	const unsigned int tid = threadIdx.x;				// thread id in a block: (0 to 1023)
 	
 	// step 3: block scan of block_results:
 	single_block_scan(block_results, tid);
 }
 
-// Third global scan kernal: step 4:
-__global__ void global_scan_kernel_3(int *data, int *block_results) {
-
+/** Third kernel of global scan algorithm.
+ * accumalte data from scanned block_results
+ * store partail results in block_results
+ */	
+__global__ void global_scan_kernel_3(int *data, 			/* in\out */ 
+									 int *block_results)	/* in */ 
+{
 	const unsigned int tid = threadIdx.x;				// thread id in a block: (0 to 1023)
 	const unsigned int bid = blockIdx.x;				// block id in a grid: (0 to 1023)
 	const unsigned int gid = tid + bid * blockDim.x;  	// global id of the thread
