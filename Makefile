@@ -3,7 +3,8 @@ CPP  		= g++
 NVCC 		= nvcc
 
 # Compilers Flags:
-CPPFLAGS 	= -g -Wall -fopenmp -DDEBUG
+CPPSTAND	= -std=c++11
+CPPFLAGS 	= -g -Wall -fopenmp
 CUDAFLAGS 	= -arch compute_20 -code sm_20
 CUDALIBS 	= -L/usr/local/cuda/lib64 -lcuda -lcudart
 INCFLAGS 	= -I./include
@@ -13,6 +14,7 @@ INCLQT 		= -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui
 OFLAGS 		= $(INCLQT) -Wall -Wno-unreachable-code -Wno-return-type
 
 # Directories:
+PARSE       = _obj/parse.o
 UTIL		= _obj/util.o
 SCANK		= _obj/scan_kernels.o
 COMPK		= _obj/Stream_compaction_kernels.o
@@ -26,10 +28,10 @@ EXCEP 		= _obj/Exceptions.o
 GSTM 		= _obj/gstream.o
 PATHC 		= _obj/Path.o
 GRAPH  		= _obj/Graph.o
-APP 		= output/bin/cuGraph_1.0.0
+APP 		= output/cuGraph
 
 # Shell Commands:
-all: $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
+all: $(PARSE) $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) $(EXCEP) $(GSTM) $(PATHC) $(GRAPH) $(APP)
 
 run: 
 	./$(APP)
@@ -48,13 +50,13 @@ clean:
 	$(RM) $(shell pwd)/include/cuda/*~ 
 	$(RM) $(shell pwd)/include/main/*~ 
 	$(RM) $(shell pwd)/include/test/*~ 
-	$(RM) $(shell pwd)/output/GML/*~
-	$(RM) $(shell pwd)/output/TXT/*~
-	$(RM) $(shell pwd)/output/MTX/*~
-	$(RM) $(shell pwd)/output/bin/cuGraph_1.0.0
+	$(RM) $(shell pwd)/output/cuGraph
 	$(RM) $(shell pwd)/_obj/*~
 		
 # Build Commands:	
+$(PARSE): src/main/argvparser.cpp
+	$(CPP) $(CPPSTAND) $(INCFLAGS) -o $@ -c $^
+	
 $(UTIL): src/cuda/util.cu
 	$(NVCC) $(CUDAFLAGS) $(INCFLAGS) -o $@ -c $^
 	
@@ -94,9 +96,9 @@ $(PATHC): src/main/Path.cpp
 $(GRAPH): src/main/Graph.cpp
 	$(CPP) $(INCFLAGS) -o $@ -c $^
 
-$(APP): main.cpp $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) \
+$(APP): main.cpp $(PARSE) $(UTIL) $(SCANK) $(COMPK) $(RANDK) $(SKIPK) $(ADDK) $(PER) $(PZER) $(PPreZER) \
 $(GRAPH) $(PATHC) $(EXCEP) $(GSTM)
-	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) -o $@
+	$(CPP) $(CUDALIBS) $(INCFLAGS) $(OFLAGS) $^ $(CPPFLAGS) $(CPPSTAND) -o $@
 
 
 
