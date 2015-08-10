@@ -1,9 +1,18 @@
+/*
+ * Path.h
+ *
+ *  Created: 2015-05-24, Modified: 2015-08-10
+ *
+ */
 #ifndef PATH_H_
 #define PATH_H_
 
+// Headers includes:
 #include "Graph.h"
 
 namespace cuGraph {
+
+	// depth first search to find a path between two nodes:
     class Path {
 
         public:
