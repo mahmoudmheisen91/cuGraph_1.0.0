@@ -78,10 +78,12 @@ int main(int argc, char** argv)
     cout << " ms, Edge count = " << generatedGraph.countEdges() << endl << endl;
 
 	// Save to file:
+	cout << "Saving the graph...." << endl;
 	ogstream graphStream;
     graphStream.open(file);
     graphStream << generatedGraph;
     graphStream.close();
+    cout << "Save complete." << endl;
 
 	// End:
     return 0;
@@ -148,7 +150,7 @@ void parse_options(int argc, 		/* in */
   	if (cmd.foundOption("type")) {
     	type = cmd.optionValue("type");
   	} else { // Default value:
-  		type = "PZER";
+  		type = "PER";
   	}
   	
   	// File:
