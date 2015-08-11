@@ -106,8 +106,8 @@ void parse_options(int argc, 		/* in */
   	cmd.defineOption("vertix"	, "Graph size in term of vertix, default: 10000"		, ArgvParser::OptionRequiresValue);
   	cmd.defineOption("edge"		, "Maximum number of egdes in graph, default: vertix^2"	, ArgvParser::OptionRequiresValue);
   	cmd.defineOption("prob"		, "Probability to choose an edge, default: 0.5"			, ArgvParser::OptionRequiresValue);
-  	cmd.defineOption("type"		, "Type of the generator, default: PZER"				, ArgvParser::OptionRequiresValue);
-  	cmd.defineOption("file"		, "Destination file, default: output/MTX/graph1.mtx"	, ArgvParser::OptionRequiresValue);
+  	cmd.defineOption("type"		, "Type of the generator, default: PER"					, ArgvParser::OptionRequiresValue);
+  	cmd.defineOption("file"		, "Destination file, default: output/graph1.mtx"		, ArgvParser::OptionRequiresValue);
   	
   	// Options alternatives:
   	cmd.defineOptionAlternative("vertix","v");
