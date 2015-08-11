@@ -16,15 +16,15 @@ __global__ void stream_compaction_kernel(int *T, 				/* in */
 										 int *S, 				/* in */
 										 int *predicate_list, 	/* in */
 										 int size,				/* in */
-										 int *SC)				/* in */
+										 int *SC)				/* out */
 {
     int tid = threadIdx.x + blockIdx.x * blockDim.x;
 
     while(tid < size) {
 
-        if((int)predicate_list[tid] == 1) {
-            float j = S[tid];
-            SC[(int)j] = T[tid];
+        if(predicate_list[tid] == 1) {
+            int j = S[tid];
+            SC[j] = T[tid];
         }
 
         tid += blockDim.x * gridDim.x;

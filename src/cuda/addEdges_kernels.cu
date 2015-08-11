@@ -23,6 +23,7 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
     int v1, v2;
     int max_size = vertex_num * vertex_num;
     int tid = threadIdx.x + blockIdx.x * blockDim.x;
+    int stride = blockDim.x * gridDim.x;
 	
 	if(tid == 0) {
 		L[0] = Skips[skips_size-1];
@@ -34,7 +35,7 @@ __global__ void addEdges_kernel(int *Skips, 		/* in */
         v2 = Stid % vertex_num;
         content[(v1 * vertex_num + v2) % max_size] = true;
 		
-		tid += blockDim.x * gridDim.x;
+		tid += stride;
 	}
 }
 
@@ -50,6 +51,7 @@ __global__ void addEdges_kernel_2(int *predicate_list, 	/* in */
     int v1, v2;
     int max_size = vertex_num * vertex_num;
     int tid = threadIdx.x + blockIdx.x * blockDim.x;
+    int stride = blockDim.x * gridDim.x;
 
     while (tid < skips_size) {
 		Stid = predicate_list[tid];
@@ -60,7 +62,7 @@ __global__ void addEdges_kernel_2(int *predicate_list, 	/* in */
             content[(v1 * vertex_num + v2) % max_size] = true;
         }
 
-        tid += blockDim.x * gridDim.x;
+        tid += stride;
     }
 }
 								  
@@ -72,11 +74,12 @@ __global__ void update_cancatate_kernel(int *Skips, 			/* in\out */
 								 		int cancatate_val)	 	/* in */ 
 {								 		
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
 	
     while (tid < size) {
     	Skips[tid] = Skips[tid] + cancatate_val;
 		
-		tid += blockDim.x * gridDim.x;
+		tid += stride;
 	}
 }
 

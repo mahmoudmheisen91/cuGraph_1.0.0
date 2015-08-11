@@ -1,7 +1,7 @@
 /*
  * PPreZER_Generator.cu
  *
- *  Created: 2015-07-26, Modified: 
+ *  Created: 2015-07-26, Modified: 2015-08-10
  *
  */
 
@@ -30,24 +30,25 @@ void PPreZER_Generator(bool *content, 		/* in\out */
     float *d_R, *h_F, *d_F;
     int *d_L, *d_S, *d_block_results, L; 
 
+    // Cumulative distibution function Definition:
     h_F = new float[m+1];
     for(int i = 0; i <= m; i++) {
         h_F[i] = 1 - pow(1-skipping_prob, i+1);
     }
 
 	// Allocations:
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_content, vertex_num * vertex_num * sizeof(bool)));
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_R, B * sizeof(float)));
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_S, B * sizeof(int)));
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_L, sizeof(int)));
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_block_results, GRID_SIZE * sizeof(int)));
-    CUDA_SAFE_CALL(cudaMalloc((void**) &d_F, (m+1) * sizeof(float)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_content		, vertex_num * vertex_num * sizeof(bool)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_R				, B * sizeof(float)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_S				, B * sizeof(int)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_L				, sizeof(int)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_block_results	, GRID_SIZE * sizeof(int)));
+    CUDA_SAFE_CALL(cudaMalloc((void**) &d_F				, (m+1) * sizeof(float)));
 
 	// Init d_content with false values using cudaMemset:
     CUDA_SAFE_CALL(cudaMemset(d_content, false, vertex_num * vertex_num * sizeof(bool)));
     
     // Copy Cumulative distibution function:
-    cudaMemcpy(d_F, h_F, (m+1) * sizeof(float), cudaMemcpyHostToDevice);
+    CUDA_SAFE_CALL(cudaMemcpy(d_F, h_F, (m+1) * sizeof(float), cudaMemcpyHostToDevice));
 
 	// Main loop:
     L = 0;

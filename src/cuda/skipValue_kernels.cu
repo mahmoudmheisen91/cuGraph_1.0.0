@@ -22,12 +22,13 @@ __global__ void skipValue_kernel(float *Rands, 				/* in */
 	float logp;
     logp = log10f(1 - skipping_prob);
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
 	
     while (tid < size) {
 		k = max(0, (int)ceil( log10f(Rands[tid]) / logp ) );
 		Skips[tid] = k;
 		
-		tid += blockDim.x * gridDim.x;
+		tid += stride;
 	}
 }
 
@@ -45,6 +46,7 @@ __global__ void skipValuePre_kernel(float *Rands, 			/* in */
 	int k;
 	float logp;
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
 		
     while (tid < size) {
 		int j = 0;
@@ -67,7 +69,7 @@ __global__ void skipValuePre_kernel(float *Rands, 			/* in */
 		
 		Skips[tid] = k;
 		
-		tid += blockDim.x * gridDim.x;
+		tid += stride;
 	}
 }
 
@@ -82,6 +84,7 @@ __global__ void generate_predicate_list_kernel(float *Rands,   		/* in */
 											   int *T)				/* out */ 
 {
     int tid = threadIdx.x + blockIdx.x * blockDim.x;
+    int stride = blockDim.x * gridDim.x;
 
     while(tid < size) {
 
@@ -92,7 +95,7 @@ __global__ void generate_predicate_list_kernel(float *Rands,   		/* in */
         else
             predicate_list[tid] = -1;
 
-        tid += blockDim.x * gridDim.x;
+        tid += stride;
     }
 }
 
