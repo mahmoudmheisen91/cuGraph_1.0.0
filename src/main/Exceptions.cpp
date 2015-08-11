@@ -1,8 +1,19 @@
+/*
+ * Exceptions.cpp
+ *
+ *  Created: 2015-05-24, Modified: 2015-08-11
+ *
+ */
+ 
+// Standard C++ libraries includes:
 #include <iostream>
 #include <sstream>
+
+// Headers includes:
 #include <main/Exceptions.h>
 
 namespace cuGraph {
+	// Throw this exception, if the vertix out of bound (0 - max-1):
     GraphVertexOutOfBoundsException::GraphVertexOutOfBoundsException(long long int size, int vert) {
         cout << what(size, vert) << endl;
     }
@@ -13,7 +24,8 @@ namespace cuGraph {
         string s = sstm.str();
         return s;
     }
-
+	
+	// Throw this exception, if the edge count exceeded max size:
     GraphEdgeOutOfBoundsException::GraphEdgeOutOfBoundsException(long long int size, int edge) {
         cout << what(size, edge) << endl;
     }
@@ -25,6 +37,7 @@ namespace cuGraph {
         return s;
     }
 
+	// Throw this exception, if the vertix size exceeded max size:
     GraphNumberOfVertexOutOfBoundsException::GraphNumberOfVertexOutOfBoundsException(long long int verts) {
         cout << what(verts) << endl;
     }
@@ -36,6 +49,7 @@ namespace cuGraph {
         return s;
     }
 
+	// Throw this exception, if the graph is full:
     GraphIsFullException::GraphIsFullException(void) {
         cout << what(0) << endl;
     }
@@ -47,6 +61,7 @@ namespace cuGraph {
         return s;
     }
 
+	// Throw this exception, if the graph is empty:
     GraphIsEmptyException::GraphIsEmptyException(void) {
         cout << what(0) << endl;
     }
@@ -58,6 +73,7 @@ namespace cuGraph {
         return s;
     }
 
+	// Throw this exception, if the direction is undefined:
     GraphDirectionTypeException::GraphDirectionTypeException(void) {
         cout << what(0) << endl;
     }
@@ -68,7 +84,8 @@ namespace cuGraph {
         string s = sstm.str();
         return s;
     }
-
+	
+	// Throw this exception, if the graph is not initalized:
     GraphIsNotInitException::GraphIsNotInitException(void) {
         cout << what(0) << endl;
     }

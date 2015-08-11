@@ -1,3 +1,11 @@
+/*
+ * Path.cpp
+ *
+ *  Created: 2015-05-24, Modified: 2015-08-11
+ *
+ */
+ 
+// Headers includes:
 #include <main/Path.h>
 #include <algorithm>
 
@@ -23,6 +31,7 @@ namespace cuGraph {
         delete edgeTo;
     }
 
+	// depth first search to find a path between two nodes:
     void Path::dfs(Graph *G, int u) {
         visited[u] = true;
         bool *content = G->content;
@@ -37,8 +46,6 @@ namespace cuGraph {
     bool Path::hasPathTo(int v) {
         return visited[v];
     }
-
-    // TODO: know the path
 }
 
 

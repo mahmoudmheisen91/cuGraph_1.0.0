@@ -113,7 +113,7 @@ __global__ void stream_compaction_kernel(int *T, 				/* in */
 										 int *S, 				/* in */
 										 int *predicate_list, 	/* in */
 										 int size,				/* in */
-										 int *SC);				/* in */
+										 int *SC);				/* out */
 
 #endif
 

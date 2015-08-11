@@ -1,12 +1,25 @@
+/*
+ * functional_test.cpp
+ *
+ *  Created: 2015-05-24, Modified: 2015-08-11
+ *
+ */
+ 
+// Standard C++ libraries includes:
 #include <iostream>
+#include <assert.h>
+
+// Headers includes:
 #include <test/functional_test.h>
 #include <main/Graph.h>
 #include <main/Exceptions.h>
 #include <cuda/Parallel_functions.h>
-#include <assert.h>
 
+// Namespaces:
 using namespace std;
 using namespace cuGraph;
+
+/* TEST CODES */
 
 void test_empty_constructor(void) {
     Graph g1;

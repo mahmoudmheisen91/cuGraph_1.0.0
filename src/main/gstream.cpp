@@ -1,11 +1,21 @@
+/*
+ * gstream.cpp
+ *
+ *  Created: 2015-05-24, Modified: 2015-08-10
+ *
+ */
+ 
+// Headers includes:
 #include <main/gstream.h>
 #include <main/dataTypes.h>
 
 namespace cuGraph {
 
+	// Output Graph stream:
     ogstream::ogstream() {
     }
 
+	// overload <<:
     ofstream &ogstream::operator <<(Graph &g) {
         string str1 = local_name.substr(local_name.length() - 4,local_name.length() - 4);
 
@@ -21,16 +31,19 @@ namespace cuGraph {
         return myfile;
     }
 
+	// open/create file:
     void ogstream::open(string name) {
         local_name = name;
         char *cstr = &local_name[0u];
         myfile.open(cstr);
     }
 
+	// close:
     void ogstream::close(void) {
         myfile.close();
     }
 
+	// to txt format:
     void ogstream::toTXT(Graph *g) {
         myfile << g->numberOfVertices << "\n";
         myfile << g->numberOfEdges << "\n";
@@ -44,6 +57,7 @@ namespace cuGraph {
         }
     }
 
+	// to gml format:
     void ogstream::toGML(Graph *g) {
 
         myfile << "graph {" << "\n";
@@ -70,6 +84,7 @@ namespace cuGraph {
         myfile << "}" << "\n";
     }
 
+	// to mtx format:
     void ogstream::toMTX(Graph *g) {
         myfile << g->numberOfVertices << " " << g->numberOfVertices << " ";
         myfile << g->countEdges() << "\n";
@@ -83,10 +98,12 @@ namespace cuGraph {
         }
     }
 
+	// Input Graph stream:
     igstream::igstream() {
 
     }
 
+	// overload >>:
     ifstream &igstream::operator >>(Graph &g) {
         string str1 = local_name.substr(local_name.length() - 4,local_name.length() - 4);
 
@@ -102,16 +119,19 @@ namespace cuGraph {
         return myfile;
     }
 
+	// open file:
     void igstream::open(string name) {
         local_name = name;
         char *cstr = &local_name[0u];
         myfile.open(cstr);
     }
 
+	// close file:
     void igstream::close(void) {
         myfile.close();
     }
 
+	// read from txt format:
     void igstream::fromTXT(Graph *g) {
 
         myfile >> g->numberOfVertices;
@@ -125,10 +145,12 @@ namespace cuGraph {
         myfile.close();
     }
 
+	// read from gml format:
     void igstream::fromGML(Graph *g) {
 
     }
 
+	// read from mtx format:
     void igstream::fromMTX(Graph *g) {
 
         int verts, edges;
