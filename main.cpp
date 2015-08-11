@@ -88,7 +88,8 @@ int main(int argc, char** argv)
 }
 
 /* Parse command line arguments */
-void parse_options(int argc, char *argv[])
+void parse_options(int argc, 		/* in */ 
+				   char *argv[])	/* in */ 
 {
 	// Parser object:
 	ArgvParser cmd;

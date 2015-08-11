@@ -23,6 +23,7 @@ __global__ void random_number_generator_kernel(int masterSeed, /* in */
 	long int theta, temp;
 	
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
     long int seed = masterSeed + tid;         	// every thread has diffrent seed
 	
     while (tid < size) {
@@ -31,7 +32,7 @@ __global__ void random_number_generator_kernel(int masterSeed, /* in */
 		seed = theta;
 		PRNG[tid] = (float)theta/m;			   	// between 1/m - 1
 		
-		tid += blockDim.x * gridDim.x;
+		tid += stride;
 	}
 }
 
